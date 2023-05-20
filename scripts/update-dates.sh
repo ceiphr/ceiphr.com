@@ -12,9 +12,6 @@ fi
 
 # Update the date of each modified post.
 for post in ${modified_posts}; do
-    # Get the date of the last commit.
-    date=$(git log -1 --format="%aI" "${post}")
-
-    # Update the date in the post.
-    sed -i "s/date: .*/date: '${date}'/" "${post}"
+    # Update the date in the post to the current date.
+    sed -i "s/date: .*/date: '$(date --iso-8601=seconds)'/" "${post}"
 done
