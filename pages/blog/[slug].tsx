@@ -44,42 +44,35 @@ interface Props {
  */
 export default function PostPage({ source, frontmatter }: Props) {
     return (
-        <Layout>
-            <header>
-                <nav>
-                    <Link href="/" legacyBehavior>
-                        <a>👈 Go back home</a>
-                    </Link>
-                </nav>
-            </header>
-            <div className="post-header">
-                <h1>{frontmatter.title}</h1>
-                {frontmatter.description && (
-                    <p className="description">{frontmatter.description}</p>
-                )}
-            </div>
-            <main>
-                <MDXRemote
-                    {...source}
-                    frontmatter={frontmatter}
-                    components={components}
-                    lazy={false}
-                />
-            </main>
-
-            <style jsx>{`
-                .post-header h1 {
-                    margin-bottom: 0;
-                }
-
-                .post-header {
-                    margin-bottom: 2rem;
-                }
-                .description {
-                    opacity: 0.6;
-                }
-            `}</style>
-        </Layout>
+        <>
+            <Head>
+                <title>{frontmatter.title}</title>
+                <meta name="description" content={frontmatter.description} />
+            </Head>
+            <Layout>
+                <header>
+                    <nav>
+                        <Link href="/" legacyBehavior>
+                            <a>👈 Go back home</a>
+                        </Link>
+                    </nav>
+                </header>
+                <div className="post-header">
+                    <h1>{frontmatter.title}</h1>
+                    {frontmatter.description && (
+                        <p className="description">{frontmatter.description}</p>
+                    )}
+                </div>
+                <main>
+                    <MDXRemote
+                        {...source}
+                        frontmatter={frontmatter}
+                        components={components}
+                        lazy={false}
+                    />
+                </main>
+            </Layout>
+        </>
     );
 }
 
