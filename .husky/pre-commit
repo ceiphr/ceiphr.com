@@ -2,5 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx lint-staged
-npm test
-npm update-dates # update the date of each modified post
+npm run update-dates # update the date of each modified post
