@@ -39,7 +39,7 @@ fi
 slug=$(echo "${title}" | sed -e 's/[^[:alnum:]]/-/g' | tr -s '-' | tr "[:upper:]" "[:lower:]")
 
 # Check if a post with the same slug already exists.
-if [[ -f "posts/${slug}.mdx" ]]; then
+if [[ -f "content/posts/${slug}.mdx" ]]; then
     echo -e "${TXT_RED}!${TXT_DEFAULT} A post with the slug ${TXT_BOLD}${slug}${TXT_DEFAULT} already exists."
 
     # Ask if the user wants to modify the slug.
@@ -61,7 +61,7 @@ if [[ -f "posts/${slug}.mdx" ]]; then
     fi
 
     # Check if a post with the same slug already exists.
-    if [[ -f "posts/${slug}.mdx" ]]; then
+    if [[ -f "content/posts/${slug}.mdx" ]]; then
         echo -e "${TXT_RED}!${TXT_DEFAULT} A post with the slug ${TXT_BOLD}${slug}${TXT_DEFAULT} already exists."
         exit 1
     fi
@@ -71,7 +71,7 @@ fi
 echo -e "${TXT_GREEN}>${TXT_DEFAULT} What template do you want to use? [default]"
 
 # Get the list of templates.
-templates=$(find "scripts/templates" -type f -name "*.mdx" -printf "%f\n" | sed -e 's/\.mdx$//g')
+templates=$(find "content/templates" -type f -name "*.mdx" -printf "%f\n" | sed -e 's/\.mdx$//g')
 
 # Print the list of templates.
 for template in ${templates}; do
@@ -87,19 +87,19 @@ if [[ -z "${template}" ]]; then
 fi
 
 # Check if the provided template is valid.
-if [[ ! -f "scripts/templates/${template}.mdx" ]]; then
+if [[ ! -f "content/templates/${template}.mdx" ]]; then
     echo -e "${TXT_RED}!${TXT_DEFAULT} The template ${TXT_BOLD}${template}${TXT_DEFAULT} does not exist."
     exit 1
 fi
 
 # Create the post.
 echo -e "${TXT_GREEN}>${TXT_DEFAULT} Creating the post ${TXT_BOLD}${slug}.mdx${TXT_DEFAULT} from the template ${TXT_BOLD}${template}.mdx${TXT_DEFAULT}..."
-cp "scripts/templates/${template}.mdx" "posts/${slug}.mdx"
+cp "content/templates/${template}.mdx" "content/posts/${slug}.mdx"
 
 # Replace frontmatter.
-sed -i "s/title:/title: ${title}/g" "posts/${slug}.mdx"
-sed -i "s/description:/description: ${description}/g" "posts/${slug}.mdx"
-sed -i "s/date:/date: $(date --iso-8601=seconds)/g" "posts/${slug}.mdx"
+sed -i "s/title:/title: ${title}/g" "content/posts/${slug}.mdx"
+sed -i "s/description:/description: ${description}/g" "content/posts/${slug}.mdx"
+sed -i "s/date:/date: '$(date --iso-8601=seconds)'/g" "content/posts/${slug}.mdx"
 
 # Open the post in the editor.
-code "posts/${slug}.mdx"
+code "content/posts/${slug}.mdx"
