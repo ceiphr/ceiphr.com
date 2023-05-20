@@ -21,7 +21,7 @@ const components = {
     // It also works with dynamically-imported components, which is especially
     // useful for conditionally loading components for certain routes.
     // See the notes in README.md for more details.
-    TestComponent: dynamic(() => import('@components/TestComponent')),
+    TestComponent: dynamic(() => import('@components/blog/TestComponent')),
     Head
 };
 
@@ -91,6 +91,7 @@ interface StaticProps {
 export const getStaticProps = async ({ params }: StaticProps) => {
     const postFilePath = path.join(POSTS_PATH, `${params.slug}.mdx`);
     const source = fs.readFileSync(postFilePath);
+    console.log(postFilePath);
 
     const { content, data } = matter(source);
 
