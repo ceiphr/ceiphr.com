@@ -7,8 +7,10 @@ import path from 'path';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeKatex from 'rehype-katex';
+import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
-import remarkMdxEnhanced from 'remark-mdx-math-enhanced';
 
 import Layout from '@components/Layout';
 import { POSTS_PATH, postFilePaths } from '@utils/mdxUtils';
@@ -22,7 +24,14 @@ const components = {
     // useful for conditionally loading components for certain routes.
     // See the notes in README.md for more details.
     TestComponent: dynamic(() => import('@components/blog/TestComponent')),
-    Head
+    Sandpack: dynamic(
+        () => import('@codesandbox/sandpack-react').then((mod) => mod.Sandpack),
+        {
+            ssr: false
+        }
+    ),
+    Head,
+    Link
 };
 
 interface Props {
@@ -39,8 +48,8 @@ interface Props {
 /**
  * PostPage will render the post content using MDX.
  *
- * @param {Props} props The props object contains the post `source` and `frontMatter`.
- * @returns {JSX.Element} The post page.
+ * @param {Props} props     The props object contains the post `source` and `frontMatter`.
+ * @returns {JSX.Element}   The post page.
  */
 export default function PostPage({ source, frontmatter }: Props) {
     return (
@@ -91,18 +100,17 @@ interface StaticProps {
 export const getStaticProps = async ({ params }: StaticProps) => {
     const postFilePath = path.join(POSTS_PATH, `${params.slug}.mdx`);
     const source = fs.readFileSync(postFilePath);
-    console.log(postFilePath);
 
     const { content, data } = matter(source);
 
     const mdxSource = await serialize(content, {
         // Optionally pass remark/rehype plugins
         mdxOptions: {
-            remarkPlugins: [
-                remarkMath,
-                [remarkMdxEnhanced, { component: 'Math' }]
-            ],
-            rehypePlugins: []
+            remarkPlugins: [remarkMath, remarkCapitalize],
+            rehypePlugins: [
+                [rehypeKatex, { throwOnError: true, strict: true }],
+                rehypeHighlight
+            ]
         },
         scope: data
     });
