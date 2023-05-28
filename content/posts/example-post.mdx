@@ -1,15 +1,21 @@
 ---
 title: Very Cool
 description: This frontmatter description will appear below the title
-date: '2023-05-20T19:31:58-04:00'
+date: '2023-05-28T18:39:45-04:00'
 published: false
 ---
 
+# Latex
+
 This is an example post, with a [link](https://nextjs.org) and a React component:
 
-<TestComponent name="next-mdx-remote" />
-
 $\sqrt{a^2 + b^2}$
+
+$$
+f(x) = \int_{-\infty}^\infty
+    \hat f(\xi)\,e^{2 \pi i \xi x}
+    \,d\xi
+$$
 
 Wowowow.
 
@@ -17,9 +23,11 @@ The title and description are pulled from the MDX file and processed using `gray
 
 Go back [home](/).
 
-# wow this is neat
+# Assets
 
-<Sandpack template="react" />;
+![Framework Laptop](/blog/example-post/framework.jpg)
+
+# Normal Snippet
 
 ```tsx
 import React from 'react';
@@ -30,3 +38,31 @@ const Example = () => {
 
 export default Example;
 ```
+
+# Code Hike Snippet
+
+Lorem ipsum dolor sit amet.
+
+<CH.Code>
+
+```python hello.py
+print("Rendered with Code Hike")
+
+# mark
+hello():
+    print("Hello, world!")
+```
+
+```python goodbye.py
+print("Also rendered with Code Hike")
+```
+
+</CH.Code>
+
+# Spline
+
+<Spline scene="/blog/example-post/round-ari.splinecode" />
+
+# Rive
+
+<Rive src="/blog/example-post/vehicles.riv" artboard="Truck" />

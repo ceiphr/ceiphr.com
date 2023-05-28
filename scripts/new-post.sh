@@ -92,6 +92,18 @@ if [[ ! -f "content/templates/${template}.mdx" ]]; then
     exit 1
 fi
 
+# Ask if the post will have assets.
+echo -e "${TXT_GREEN}>${TXT_DEFAULT} Will the post have assets? [y/N]"
+read -r has_assets
+
+if [[ "${has_assets}" == "y" ]]; then
+    # Create the assets directory.
+    mkdir -p "public/blog/${slug}"
+
+    # Create the .gitkeep file.
+    touch "public/blog/${slug}/.gitkeep"
+fi
+
 # Create the post.
 echo -e "${TXT_GREEN}>${TXT_DEFAULT} Creating the post ${TXT_BOLD}${slug}.mdx${TXT_DEFAULT} from the template ${TXT_BOLD}${template}.mdx${TXT_DEFAULT}..."
 cp "content/templates/${template}.mdx" "content/posts/${slug}.mdx"
