@@ -14,6 +14,13 @@ if [[ -n "${NO_COLOR}" ]]; then
     TXT_GREEN='\033[0m'
 fi
 
+# If we're running in Vercel, we need to install jq.
+if [[ -n "${VERCEL}" ]]; then
+    mkdir -p .bin
+    curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /vercel/path0/.bin/jq 2>/dev/null
+    export PATH=$PATH:/vercel/path0/.bin
+fi
+
 # History for project
 
 # Get the git commit history related to the project.

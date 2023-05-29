@@ -3,7 +3,6 @@
     "framework": "nextjs",
     "trailingSlash": false,
     "cleanUrls": true,
-    "buildCommand": "npm run install-jq && npm run build",
     "headers": [
         {
             "source": "/(.*)",
@@ -33,6 +32,5 @@
     ],
     "github": {
         "silent": true
-    },
-    "collectMetrics": false
+    }
 }

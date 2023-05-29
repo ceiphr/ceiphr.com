@@ -14,8 +14,7 @@
         "prepare": "husky install",
         "new-post": "bash scripts/new-post.sh",
         "update-dates": "bash scripts/update-dates.sh",
-        "update-history": "bash scripts/update-history.sh",
-        "install-jq": "bash scripts/install-jq.sh"
+        "update-history": "bash scripts/update-history.sh"
     },
     "lint-staged": {
         "**/*": "prettier --write . --ignore-unknown --ignore-path .gitignore"
@@ -32,7 +31,6 @@
         "gray-matter": "^4.0.3",
         "next": "^13.2.4",
         "next-mdx-remote": "^4.4.1",
-        "node-jq": "^2.3.5",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "rehype-katex": "^6.0.3",
