@@ -1,15 +1,19 @@
 ---
 title: Very Cool
 description: This frontmatter description will appear below the title
-date: '2023-05-28T18:39:45-04:00'
+date: '2023-05-29T02:10:32-04:00'
 published: false
 ---
 
-# Latex
+The title and description are pulled from the MDX file and processed using
+`gray-matter`. Additionally, links are rendered using a custom component passed
+to `next-mdx-remote`.
 
-This is an example post, with a [link](https://nextjs.org) and a React component:
+## KaTeX
 
-$\sqrt{a^2 + b^2}$
+KaTeX is a cross-browser JavaScript library that displays mathematical notation
+in web browsers. It puts special emphasis on being fast and easy to use. Here's
+an inline equation: $\sqrt{a^2 + b^2}$ . And here's a block equation:
 
 $$
 f(x) = \int_{-\infty}^\infty
@@ -17,17 +21,41 @@ f(x) = \int_{-\infty}^\infty
     \,d\xi
 $$
 
-Wowowow.
+KaTeX was initially developed by Khan Academy, and became one of the top five
+trending projects on GitHub in September 2014.
 
-The title and description are pulled from the MDX file and processed using `gray-matter`. Additionally, links are rendered using a custom component passed to `next-mdx-remote`.
+## Assets
 
-Go back [home](/).
-
-# Assets
+This is a local image.
 
 ![Framework Laptop](/blog/example-post/framework.jpg)
 
-# Normal Snippet
+## Tailwind
+
+This is a Tailwind CSS component using grids.
+
+<div class="grid grid-cols-2 gap-6 py-6">
+    <div class="shadow-sm border border-neutral-800 p-2 rounded-lg">
+        shadow-sm
+    </div>
+    <div class="shadow border border-neutral-800 p-2 rounded-lg">shadow</div>
+    <div class="shadow-md border border-neutral-800 p-2 rounded-lg">
+        shadow-md
+    </div>
+    <div class="shadow-lg border border-neutral-800 p-2 rounded-lg">
+        shadow-lg
+    </div>
+    <div class="shadow-xl border border-neutral-800 p-2 rounded-lg">
+        shadow-xl
+    </div>
+    <div class="shadow-2xl border border-neutral-800 p-2 rounded-lg">
+        shadow-2xl
+    </div>
+</div>
+
+## Normal Snippet
+
+This is a basic TypeScript React component.
 
 ```tsx
 import React from 'react';
@@ -39,9 +67,11 @@ const Example = () => {
 export default Example;
 ```
 
-# Code Hike Snippet
+## Code Hike Snippet
 
-Lorem ipsum dolor sit amet.
+Build first-class code walkthroughs for the web. Whether you are writing blog
+posts, documentation, tutorials, coding videos, or any type of technical
+content, Code Hike helps you create a superior code reading experience.
 
 <CH.Code>
 
@@ -59,10 +89,19 @@ print("Also rendered with Code Hike")
 
 </CH.Code>
 
-# Spline
+## Spline
 
-<Spline scene="/blog/example-post/round-ari.splinecode" />
+Spline is a free, real-time collaborative 3D design tool to create interactive
+experiences within the browser. Easy 3d design animations, models, textures, and
+more. Introducing Community platform. Explore, inspire and publish your next
+design all-in-one place. Explore Community.
 
-# Rive
+<Spline className="h-[32rem]" scene="/blog/example-post/round-ari.splinecode" />
 
-<Rive src="/blog/example-post/vehicles.riv" artboard="Truck" />
+## Rive
+
+Use our familiar design and animation tools with our ground-breaking State
+Machine to create interactive motion graphics for your products, apps, sites,
+...
+
+<Rive className="h-[405px]" src="/blog/example-post/vehicles.riv" />

@@ -1,6 +1,20 @@
 {
     "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "eslint.options": {
+        "extensions": [".js", ".jsx", ".md", ".mdx", ".ts", ".tsx"]
+    },
+    "eslint.validate": [
+        "markdown",
+        "mdx",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
     // JavaScript/TypeScript
     "javascript.updateImportsOnFileMove.enabled": "always",
     "javascript.format.semicolons": "insert",
@@ -24,6 +38,5 @@
     // Bash
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
-    },
-    "ansible.python.interpreterPath": "/bin/python"
+    }
 }

@@ -1,0 +1,4 @@
+{
+    "settings": {},
+    "plugins": ["remark-math"]
+}

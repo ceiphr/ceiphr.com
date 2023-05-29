@@ -7,7 +7,6 @@ import path from 'path';
 import { remarkCodeHike } from '@code-hike/mdx';
 import { CH } from '@code-hike/mdx/components';
 import Giscus from '@giscus/react';
-import riveWASMResource from '@rive-app/canvas/rive.wasm';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -31,11 +30,11 @@ const components = {
     // See the notes in README.md for more details.
     img: (props: any) => <CustomImage {...props} />,
     a: (props: any) => <CustomLink {...props} />,
-    Spline: dynamic(() => import('@components/blog/Spline')),
-    Rive: dynamic(() => import('@components/blog/Rive')),
     Head,
     Link,
-    CH
+    CH,
+    Spline: dynamic(() => import('@components/blog/Spline')),
+    Rive: dynamic(() => import('@components/blog/Rive'))
 };
 
 interface Props {
@@ -63,21 +62,26 @@ export default function PostPage({ source, frontmatter }: Props) {
                 <meta name="description" content={frontmatter.description} />
             </Head>
             <Layout>
-                <header>
-                    <nav>
-                        <Link href="/" legacyBehavior>
-                            <a>👈 Go back home</a>
-                        </Link>
-                    </nav>
-                </header>
-                <div className="post-header">
-                    <h1>{frontmatter.title}</h1>
-                    {frontmatter.description && (
-                        <p className="description">{frontmatter.description}</p>
-                    )}
-                </div>
-                <div className="mx-auto max-w-4xl px-6">
-                    <article>
+                <div className="mx-auto max-w-3xl px-6 mb-4">
+                    <header>
+                        <nav>
+                            <Link href="/" legacyBehavior>
+                                <a>👈 Go back home</a>
+                            </Link>
+                        </nav>
+                    </header>
+                    <div className="post-header">
+                        <h1 className="text-5xl mt-4 mb-2">
+                            {frontmatter.title}
+                        </h1>
+                        {frontmatter.description && (
+                            <p className="description">
+                                {frontmatter.description}
+                            </p>
+                        )}
+                        <hr className="my-4" />
+                    </div>
+                    <article className="mb-4">
                         <MDXRemote
                             {...source}
                             frontmatter={frontmatter}
@@ -87,13 +91,15 @@ export default function PostPage({ source, frontmatter }: Props) {
                     </article>
                     <Giscus
                         repo="ceiphr/ceiphr.com"
-                        repoId="R_kgDOJk10cA"
-                        category="Announcements"
-                        categoryId="DIC_kwDOJk10cM4CWnI5"
+                        repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
+                        category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? ''}
+                        categoryId={
+                            process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
+                        }
+                        term={frontmatter.title}
                         mapping="specific"
                         reactionsEnabled="0"
                         theme="dark_dimmed"
-                        term={frontmatter.title}
                         loading="lazy"
                     />
                 </div>
@@ -126,7 +132,15 @@ export const getStaticProps = async ({ params }: StaticProps) => {
             remarkPlugins: [
                 remarkMath,
                 remarkCapitalize,
-                [remarkCodeHike, { autoImport: false, theme }]
+                [
+                    remarkCodeHike,
+                    {
+                        theme,
+                        autoImport: false,
+                        showCopyButton: true,
+                        lineNumbers: false
+                    }
+                ]
             ],
             rehypePlugins: [
                 [rehypeKatex, { throwOnError: true, output: 'mathml' }]

@@ -10,7 +10,7 @@ const Image: FunctionComponent<Props> = (props) => {
     return (
         <NextImage
             priority
-            className="h-auto w-auto"
+            className="h-auto w-auto mx-auto rounded-lg my-6"
             {...props}
             alt={props.alt}
             width={500}

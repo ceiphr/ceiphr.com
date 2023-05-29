@@ -2,4 +2,22 @@ article {
     h1 {
         @apply text-4xl mt-4 mb-2;
     }
+
+    h2 {
+        @apply text-3xl mt-4 mb-2;
+    }
+
+    .ch-frame-buttons {
+        @apply hidden;
+    }
+
+    .ch-codeblock {
+        .ch-code-button {
+            @apply hidden transition duration-200 ease-in-out;
+        }
+
+        &:hover .ch-code-button {
+            @apply block;
+        }
+    }
 }

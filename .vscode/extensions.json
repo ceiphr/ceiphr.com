@@ -4,6 +4,7 @@
     // List of extensions which should be recommended for users of this workspace.
     "recommendations": [
         "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
         // JavaScript
         "christian-kohler.npm-intellisense",
         "christian-kohler.path-intellisense",
@@ -16,6 +17,7 @@
         // Markdown
         "davidanson.vscode-markdownlint",
         "unifiedjs.vscode-mdx",
+        "unifiedjs.vscode-remark",
         // Bash
         "foxundermoon.shell-format",
         "timonwong.shellcheck"
