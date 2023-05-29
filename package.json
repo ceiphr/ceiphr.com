@@ -14,7 +14,8 @@
         "prepare": "husky install",
         "new-post": "bash scripts/new-post.sh",
         "update-dates": "bash scripts/update-dates.sh",
-        "update-history": "bash scripts/update-history.sh"
+        "update-history": "bash scripts/update-history.sh",
+        "install-jq": "bash scripts/install-jq.sh"
     },
     "lint-staged": {
         "**/*": "prettier --write . --ignore-unknown --ignore-path .gitignore"

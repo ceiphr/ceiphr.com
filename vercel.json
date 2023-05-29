@@ -3,7 +3,7 @@
     "framework": "nextjs",
     "trailingSlash": false,
     "cleanUrls": true,
-    "buildCommand": "bash scripts/install-jq.sh && npm run build",
+    "buildCommand": "npm run install-jq && npm run build",
     "headers": [
         {
             "source": "/(.*)",
