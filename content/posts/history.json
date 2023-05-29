@@ -3,6 +3,12 @@
         "slug": "example-post",
         "history": [
             {
+                "commit": "543b518",
+                "author": "Ari",
+                "date": "2023-05-29T02:10:29-04:00",
+                "message": "Improved Rive performance. Added git history support. Added kv env vars. Added linting for mdx, latex and remark."
+            },
+            {
                 "commit": "472fb57",
                 "author": "Ari",
                 "date": "2023-05-28T18:39:42-04:00",
@@ -43,6 +49,12 @@
     {
         "slug": "not-stripe-codehike-demo",
         "history": [
+            {
+                "commit": "543b518",
+                "author": "Ari",
+                "date": "2023-05-29T02:10:29-04:00",
+                "message": "Improved Rive performance. Added git history support. Added kv env vars. Added linting for mdx, latex and remark."
+            },
             {
                 "commit": "472fb57",
                 "author": "Ari",
