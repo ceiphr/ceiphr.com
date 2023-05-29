@@ -16,10 +16,13 @@ fi
 
 # If we're running in Vercel, we need to install jq.
 if [[ -n "${VERCEL}" ]]; then
-    mkdir -p .bin
+    mkdir -p /vercel/path0/.bin
     curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /vercel/path0/.bin/jq 2>/dev/null
+    chmod +x /vercel/path0/.bin/jq
     export PATH=$PATH:/vercel/path0/.bin
 fi
+
+mkdir -p .generated
 
 # History for project
 
