@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 import riveWASMResource from '@rive-app/canvas/rive.wasm';
 import { RiveParameters, RuntimeLoader, useRive } from '@rive-app/react-canvas';

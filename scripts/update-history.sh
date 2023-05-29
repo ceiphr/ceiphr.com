@@ -1,12 +1,46 @@
 #!/usr/bin/env bash
 
-# Update the git history of each post.
+# Update the generated history files in the .generated directory
+# with the latest git history for the project and each post.
+
+# For echo -e color support.
+TXT_DEFAULT='\033[0m'
+TXT_GREEN='\033[0;32m'
+TXT_BOLD='\033[1m'
+
+# https://no-color.org/
+if [[ -n "${NO_COLOR}" ]]; then
+    TXT_DEFAULT='\033[0m'
+    TXT_GREEN='\033[0m'
+fi
+
+# History for project
+
+# Get the git commit history related to the project.
+project_history=("$(
+    git log --pretty=format:'{%n  "commit": "%h",%n  "author": "%an",%n  "date": "%ad",%n  "message": "%B"%n},' --date=iso8601-strict |
+        tr '\n' ' ' |
+        perl -pe 'BEGIN{print "["}; END{print "]\n"}' |
+        perl -pe 's/},]/}]/'
+)")
+
+# Write the git history of the project to a JSON file.
+trimmed_json=$(echo "${project_history[@]}" | jq 'walk(if type == "string" then sub("^ +"; "") | sub(" +$"; "") else . end)')
+echo "$trimmed_json" >.generated/history.json
+
+# Format the JSON.
+npx prettier --write .generated/history.json
+
+echo -e "${TXT_GREEN}>${TXT_DEFAULT} Updated ${TXT_BOLD}.generated/history.json${TXT_DEFAULT} with the latest git history."
+
+# History for all posts
 
 # Get all posts
 posts=$(git ls-files content/posts/ | grep "content/posts/.*\.mdx")
 
 # If there are no posts, exit.
 if [[ -z "${posts}" ]]; then
+    echo -e "${TXT_GREEN}>${TXT_DEFAULT} No need to update the git history, no posts exist."
     exit 0
 fi
 
@@ -39,7 +73,9 @@ json=$(echo "${posts_history[@]}" |
     sed '$ s/.$//' |
     awk 'BEGIN{print "["} {print} END{print "]"}')
 trimmed_json=$(echo "$json" | jq 'walk(if type == "string" then sub("^ +"; "") | sub(" +$"; "") else . end)')
-echo "$trimmed_json" >content/posts/history.json
+echo "$trimmed_json" >.generated/posts-history.json
 
 # Format the JSON.
-npx prettier --write content/posts/history.json
+npx prettier --write .generated/posts-history.json
+
+echo -e "${TXT_GREEN}>${TXT_DEFAULT} Updated ${TXT_BOLD}.generated/posts-history.json${TXT_DEFAULT} with the latest git history of each post."

@@ -16,9 +16,11 @@ import remarkMath from 'remark-math';
 import theme from 'shiki/themes/github-dark.json';
 
 import Layout from '@components/Layout';
+import History from '@components/blog/History';
 import CustomImage from '@components/blog/Image';
 import CustomLink from '@components/blog/Link';
-import { POSTS_PATH, postFilePaths } from '@utils/mdxUtils';
+import { POSTS_HISTORY_PATH } from '@utils/git';
+import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -46,6 +48,7 @@ interface Props {
     frontmatter: {
         [key: string]: string;
     };
+    history: HistoryEntry[];
 }
 
 /**
@@ -54,7 +57,7 @@ interface Props {
  * @param {Props} props     The props object contains the post `source` and `frontMatter`.
  * @returns {JSX.Element}   The post page.
  */
-export default function PostPage({ source, frontmatter }: Props) {
+export default function PostPage({ source, frontmatter, history }: Props) {
     return (
         <>
             <Head>
@@ -62,7 +65,7 @@ export default function PostPage({ source, frontmatter }: Props) {
                 <meta name="description" content={frontmatter.description} />
             </Head>
             <Layout>
-                <div className="mx-auto max-w-3xl px-6 mb-4">
+                <main className="mx-auto max-w-3xl px-6 mb-4">
                     <header>
                         <nav>
                             <Link href="/" legacyBehavior>
@@ -89,6 +92,7 @@ export default function PostPage({ source, frontmatter }: Props) {
                             lazy
                         />
                     </article>
+                    <History history={history} />
                     <Giscus
                         repo="ceiphr/ceiphr.com"
                         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
@@ -102,7 +106,7 @@ export default function PostPage({ source, frontmatter }: Props) {
                         theme="dark_dimmed"
                         loading="lazy"
                     />
-                </div>
+                </main>
             </Layout>
         </>
     );
@@ -152,10 +156,21 @@ export const getStaticProps = async ({ params }: StaticProps) => {
         scope: data
     });
 
+    // Git history
+    const history = JSON.parse(fs.readFileSync(POSTS_HISTORY_PATH).toString());
+    const historyDict = history.reduce(
+        (acc: Record<string, HistoryEntry[]>, curr: HistoryItem) => {
+            acc[curr.slug] = curr.history;
+            return acc;
+        },
+        {}
+    );
+
     return {
         props: {
             source: mdxSource,
-            frontmatter: data
+            frontmatter: data,
+            history: historyDict[params.slug].slice(0, 10) ?? []
         }
     };
 };

@@ -2,11 +2,23 @@
 
 # Update the date of each modified post.
 
+# For echo -e color support.
+TXT_DEFAULT='\033[0m'
+TXT_GREEN='\033[0;32m'
+TXT_BOLD='\033[1m'
+
+# https://no-color.org/
+if [[ -n "${NO_COLOR}" ]]; then
+    TXT_DEFAULT='\033[0m'
+    TXT_GREEN='\033[0m'
+fi
+
 # Get all posts that have been modified.
 modified_posts=$(git diff --name-only HEAD | grep "content/posts/.*\.mdx")
 
 # If there are no modified posts, exit.
 if [[ -z "${modified_posts}" ]]; then
+    echo -e "${TXT_GREEN}>${TXT_DEFAULT} No need to update the dates, no posts have been modified."
     exit 0
 fi
 
@@ -14,4 +26,7 @@ fi
 for post in ${modified_posts}; do
     # Update the date in the post to the current date.
     sed -i "s/date: .*/date: '$(date --iso-8601=seconds)'/" "${post}"
+
+    # Log the updated post.
+    echo -e "${TXT_GREEN}>${TXT_DEFAULT} Updated the date of ${TXT_BOLD}${post}${TXT_DEFAULT}."
 done

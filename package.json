@@ -3,8 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "NODE_ENV=development next-remote-watch content/posts",
-        "build": "next build",
+        "dev": "npm run update-history && NODE_ENV=development next-remote-watch content/posts .generated",
+        "build": "npm run update-history && next build",
         "analyze": "ANALYZE=true npm run build",
         "start": "next start",
         "lint": "next lint",

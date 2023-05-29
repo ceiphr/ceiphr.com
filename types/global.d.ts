@@ -10,3 +10,15 @@ interface Post {
     };
     filePath: string;
 }
+
+interface HistoryEntry {
+    commit: string;
+    author: string;
+    date: string;
+    message: string;
+}
+
+interface HistoryItem {
+    slug: string;
+    history: HistoryEntry[];
+}

@@ -19,7 +19,8 @@
             "@assets/*": ["./assets/*"],
             "@components/*": ["./components/*"],
             "@utils/*": ["./utils/*"],
-            "@styles/*": ["./styles/*"]
+            "@styles/*": ["./styles/*"],
+            "@generated/*": ["./.generated/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
