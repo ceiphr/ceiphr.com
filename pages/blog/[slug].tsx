@@ -185,6 +185,7 @@ export const getStaticProps = async ({ params }: StaticProps) => {
     });
 
     // Git history
+    // TODO Fix this, history length is off
     const history = JSON.parse(fs.readFileSync(POSTS_HISTORY_PATH).toString());
     const historyDict = history.reduce(
         (acc: Record<string, HistoryEntry[]>, curr: HistoryItem) => {
