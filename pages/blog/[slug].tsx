@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Link from 'next/link';
 import path from 'path';
+import { useEffect, useState } from 'react';
 
 import { remarkCodeHike } from '@code-hike/mdx';
 import { CH } from '@code-hike/mdx/components';
@@ -58,6 +59,14 @@ interface Props {
  * @returns {JSX.Element}   The post page.
  */
 export default function PostPage({ source, frontmatter, history }: Props) {
+    const [likes, setLikes] = useState(0);
+
+    useEffect(() => {
+        fetch(`/api/blog/like?slug=${frontmatter.slug}`)
+            .then((response) => response.json())
+            .then((data) => setLikes(data.likes));
+    }, [frontmatter.slug]);
+
     return (
         <>
             <Head>
@@ -82,6 +91,19 @@ export default function PostPage({ source, frontmatter, history }: Props) {
                                 {frontmatter.description}
                             </p>
                         )}
+                        <p>{likes} Likes</p>
+                        <button
+                            onClick={() => {
+                                fetch('/api/like', {
+                                    method: 'POST',
+                                    body: JSON.stringify({
+                                        slug: frontmatter.slug
+                                    })
+                                }).then(() => setLikes(likes + 1));
+                            }}
+                        >
+                            Like this post?
+                        </button>
                         <hr className="my-4" />
                     </div>
                     <article className="mb-4">
