@@ -52,11 +52,17 @@ interface Props {
     history: HistoryEntry[];
 }
 
+// TODO Add anchor links to headers
+// TODO Add table of contents
+// TODO Add Carbon Ads
+// TODO Add embed support for YouTube, Instagram, etc.
+// TODO Make sure like button works
+
 /**
  * PostPage will render the post content using MDX.
  *
- * @param {Props} props     The props object contains the post `source` and `frontMatter`.
- * @returns {JSX.Element}   The post page.
+ * @param props The props object contains the post `source` and `frontMatter`.
+ * @returns     The post page.
  */
 export default function PostPage({ source, frontmatter, history }: Props) {
     const [likes, setLikes] = useState(0);
@@ -143,8 +149,8 @@ interface StaticProps {
 /**
  * getStaticProps will fetch and serialize the MDX for the requested post.
  *
- * @param {StaticProps} params  The params object contains the post `slug`.
- * @returns {Promise<Props>}    The props object contains the post `source` and `frontMatter`.
+ * @param params    The params object contains the post `slug`.
+ * @returns         The props object contains the post `source` and `frontMatter`.
  */
 export const getStaticProps = async ({ params }: StaticProps) => {
     const postFilePath = path.join(POSTS_PATH, `${params.slug}.mdx`);
@@ -200,7 +206,7 @@ export const getStaticProps = async ({ params }: StaticProps) => {
 /**
  * getStaticPaths will return a list of possible values for `slug`.
  *
- * @returns {Promise<{ params: { slug: string } }[]>}  The paths object contains the list of posts `slug`.
+ * @returns The paths object contains the list of posts `slug`.
  */
 export const getStaticPaths = async () => {
     const paths = postFilePaths

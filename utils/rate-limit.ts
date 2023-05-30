@@ -13,6 +13,8 @@ const DEFAULT_UNIQUE_TOKENS_PER_INTERVAL = 100;
 const DEFAULT_INTERVAL_MS = 1000 * 60 * 60; // 1 hour in milliseconds
 const DEFAULT_TIME_WAIT = 60;
 
+// TODO Check if this is the correct way to do this
+
 /**
  * Rate limit a request
  *

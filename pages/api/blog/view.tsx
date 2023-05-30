@@ -5,6 +5,8 @@ import { getClientIp } from 'request-ip';
 
 import rateLimit from '@utils/rate-limit';
 
+// TODO: Move to https://docs.simpleanalytics.com/api/stats
+
 enum DateRange {
     day = 1,
     week = 7,

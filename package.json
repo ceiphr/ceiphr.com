@@ -56,6 +56,7 @@
         "postcss-import": "^15.1.0",
         "postcss-preset-env": "^8.4.1",
         "prettier": "2.8.8",
+        "remark": "^14.0.3",
         "remark-capitalize": "^1.1.0",
         "remark-math": "^5.1.1",
         "typescript": "^5.0.4",

@@ -3,6 +3,8 @@ declare module '*.wasm' {
     export default content;
 }
 
+// TODO Move types to separate files
+
 interface Post {
     content: string;
     data: {

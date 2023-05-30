@@ -5,6 +5,8 @@ import { Analytics } from '@vercel/analytics/react';
 
 import '@styles/globals.css';
 
+// TODO: Move to https://simpleanalytics.com/
+
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <>
