@@ -19,7 +19,7 @@ const limiter = rateLimit({
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.query;
     const likes =
-        ((await kv.hget(`blog/${slug}`, 'likes')) as number | null) || 0;
+        ((await kv.hget(`blog:${slug}`, 'likes')) as number | null) || 0;
 
     return res.status(200).json({ likes });
 }
@@ -33,10 +33,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.body;
     const likes =
-        ((await kv.hget(`blog/${slug}`, 'likes')) as number | null) || 0;
+        ((await kv.hget(`blog:${slug}`, 'likes')) as number | null) || 0;
 
     const newLikes = likes ? likes + 1 : 1;
-    await kv.hset(`blog/${slug}`, { likes: newLikes.toString() });
+    await kv.hset(`blog:${slug}`, { likes: newLikes.toString() });
 
     return res.status(200).json({ likes: newLikes });
 }
