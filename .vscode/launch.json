@@ -5,7 +5,7 @@
             "name": "Web: debug server-side",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npm run dev",
+            "command": "npm run debug",
             "cwd": "${workspaceFolder}"
         },
         {
@@ -19,13 +19,21 @@
             "name": "Web: debug full stack",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npm run dev",
+            "command": "npm run debug",
             "cwd": "${workspaceFolder}",
             "serverReadyAction": {
                 "pattern": "started server on .+, url: (https?://.+)",
                 "uriFormat": "%s",
                 "action": "debugWithChrome"
             }
+        },
+        {
+            "name": "Web: attach",
+            "port": 9229,
+            "request": "attach",
+            "cwd": "${workspaceFolder}",
+            "skipFiles": ["<node_internals>/**"],
+            "type": "node"
         }
     ]
 }

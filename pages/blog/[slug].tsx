@@ -57,6 +57,7 @@ interface Props {
 // TODO Add Carbon Ads
 // TODO Add embed support for YouTube, Instagram, etc.
 // TODO Make sure like button works
+// TODO Add local storage for likes
 
 /**
  * PostPage will render the post content using MDX.

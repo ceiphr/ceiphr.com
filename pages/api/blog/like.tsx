@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { kv } from '@vercel/kv';
+import Joi from 'joi';
 import { getClientIp } from 'request-ip';
 
 import rateLimit from '@utils/rate-limit';
 
-const limiter = rateLimit({
-    interval: 60 * 1000, // 60 seconds
-    uniqueTokenPerInterval: 500 // Max 500 users per second
+const schema = Joi.object({
+    slug: Joi.string().required()
 });
 
 /**
@@ -18,6 +18,11 @@ const limiter = rateLimit({
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.query;
+    const { error } = schema.validate({ slug });
+    if (error) {
+        return res.status(400).json({ message: 'Missing or invalid slug' });
+    }
+
     const likes =
         ((await kv.hget(`blog:${slug}`, 'likes')) as number | null) || 0;
 
@@ -31,7 +36,23 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
  * @param res   The response object is how we send the status code and likes.
  */
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
+    // Rate limit by IP address
+    const ip = getClientIp(req);
+    if (!ip) {
+        return res.status(500).json({ message: 'Unable to get IP address' });
+    }
+
+    // Rate limit to 10 requests per 60 seconds
+    if (!(await rateLimit(res, ip, 10))) {
+        return res.status(429).json({ message: 'Too many requests' });
+    }
+
     const { slug } = req.body;
+    const { error } = schema.validate({ slug });
+    if (error) {
+        return res.status(400).json({ message: 'Missing or invalid slug' });
+    }
+
     const likes =
         ((await kv.hget(`blog:${slug}`, 'likes')) as number | null) || 0;
 
@@ -51,13 +72,6 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const ip = getClientIp(req);
-    if (!ip) {
-        return res.status(500).json({ message: 'Unable to get IP address' });
-    }
-
-    await limiter.check(res, 10, ip); // 10 requests per minute
-
     switch (req.method) {
         case 'GET':
             return handleGet(req, res);
