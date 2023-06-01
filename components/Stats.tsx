@@ -46,7 +46,13 @@ const Stats: FunctionComponent<Props> = ({ slug }) => {
     const [stats, setStats] = useState<SimpleAnalyticsStats>();
 
     useEffect(() => {
-        fetch(`/api/sa/${slug}`)
+        fetch(`/api/sa/${slug}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone
+            }
+        })
             .then((res) => res.json())
             .then((data) => setStats(data))
             .catch((err) => console.error(err));

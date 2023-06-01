@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 import classNames from 'classnames';
 
+import History from '@components/History';
 import Layout from '@components/Layout';
-import History from '@components/blog/History';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,7 +14,6 @@ const inter = Inter({ subsets: ['latin'] });
 // TODO Add Apple touch icons
 // TODO Add schema.org tags
 // TODO Add Facebook tags
-// TODO Add /.well-known/webfinger
 // TODO Add OpenGraph tags
 // TODO Add Twitter tags
 // TODO Add support for preferred color scheme

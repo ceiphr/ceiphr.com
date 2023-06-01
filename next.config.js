@@ -8,7 +8,8 @@ const nextConfig = {
     reactStrictMode: true,
     webpack: (config, _options) => {
         config.module.rules.push({
-            test: /\.wasm$/,
+            // Load Rive's WASM binary
+            test: /rive\.wasm/,
             use: ['url-loader']
         });
 

@@ -16,8 +16,8 @@ import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
 import theme from 'shiki/themes/github-dark.json';
 
+import History from '@components/History';
 import Layout from '@components/Layout';
-import History from '@components/blog/History';
 import LikeButton from '@components/blog/LikeButton';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
@@ -77,7 +77,7 @@ export default function PostPage({ source, frontmatter }: Props) {
                 <meta name="description" content={frontmatter.description} />
                 <meta
                     property="twitter:image"
-                    content="Twitter link preview image URL"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og?title=${frontmatter.title}`}
                 />
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:title" content={frontmatter.title} />
@@ -85,7 +85,10 @@ export default function PostPage({ source, frontmatter }: Props) {
                     property="twitter:description"
                     content={frontmatter.description}
                 />
-                <meta property="og:image" content="Link preview image URL" />
+                <meta
+                    property="og:image"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og?title=${frontmatter.title}`}
+                />
                 <meta property="og:title" content={frontmatter.title} />
                 <meta
                     property="og:description"
