@@ -22,11 +22,15 @@ import History from '@components/History';
 import Layout from '@components/Layout';
 import LikeButton from '@components/blog/LikeButton';
 import ToC from '@components/blog/ToC';
+import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 import rehypeExtractHeadings from '@utils/rehype-extract-headings';
 
+const Ad = dynamic(() => import('@components/blog/Ad'), {
+    ssr: false
+});
 const Stats = dynamic(() => import('@components/Stats'), {
     ssr: false
 });
@@ -44,6 +48,7 @@ const components = {
     Head,
     Link,
     CH,
+    Container,
     Spline: dynamic(() => import('@components/blog/mdx/Spline')),
     Rive: dynamic(() => import('@components/blog/mdx/Rive'))
 };
@@ -59,11 +64,6 @@ interface Props {
     };
     headings: Heading[];
 }
-
-// TODO Add Carbon Ads
-// TODO Add embed support for YouTube, Instagram, etc.
-// TODO Add language tags to code blocks
-// TODO Add component preview wrapper
 
 /**
  * PostPage will render the post content using MDX.
@@ -158,7 +158,10 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                         />
                     </div>
                     <div className="basis-1/4">
-                        <ToC headings={headings} />
+                        <div className="sticky top-0">
+                            <ToC headings={headings} />
+                            {frontmatter.ads && <Ad />}
+                        </div>
                     </div>
                 </main>
             </Layout>

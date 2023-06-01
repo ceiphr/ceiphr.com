@@ -9,6 +9,13 @@ article {
         @apply text-3xl mt-4 mb-2;
     }
 
+    [data-ch-lang] {
+        &:before {
+            @apply text-sm text-gray-500;
+            content: attr(data-ch-lang);
+        }
+    }
+
     .ch-frame-buttons {
         @apply hidden;
     }

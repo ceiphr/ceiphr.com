@@ -27,7 +27,7 @@ const ToC: FunctionComponent<Props> = ({ headings }) => {
     });
 
     return (
-        <div className="sticky top-0">
+        <>
             <h2 className="text-xl mt-4 mb-2">Table of Contents</h2>
             {headings.map((heading) => {
                 return (
@@ -41,7 +41,7 @@ const ToC: FunctionComponent<Props> = ({ headings }) => {
                     </div>
                 );
             })}
-        </div>
+        </>
     );
 };
 

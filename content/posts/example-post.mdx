@@ -1,7 +1,9 @@
 ---
 title: Very Cool
 description: This frontmatter description will appear below the title
-date: '2023-05-29T15:43:58-04:00'
+date: '2023-06-01T19:35:51-04:00'
+license: CC BY-NC-SA 4.0
+ads: false
 published: false
 ---
 
@@ -30,30 +32,44 @@ This is a local image.
 
 ![Framework Laptop](/blog/example-post/framework.jpg)
 
+## Embed
+
+<iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/imSefM4GPpE"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+/>
+
 ## Tailwind
 
 This is a Tailwind CSS component using grids.
 
-<div className="grid grid-cols-2 gap-6 py-6">
-    <div className="shadow-sm border border-neutral-800 p-2 rounded-lg">
-        shadow-sm
+<Container>
+    <div className="grid grid-cols-2 gap-6 py-6">
+        <div className="shadow-sm border border-neutral-800 p-2 rounded-lg">
+            shadow-sm
+        </div>
+        <div className="shadow border border-neutral-800 p-2 rounded-lg">
+            shadow
+        </div>
+        <div className="shadow-md border border-neutral-800 p-2 rounded-lg">
+            shadow-md
+        </div>
+        <div className="shadow-lg border border-neutral-800 p-2 rounded-lg">
+            shadow-lg
+        </div>
+        <div className="shadow-xl border border-neutral-800 p-2 rounded-lg">
+            shadow-xl
+        </div>
+        <div className="shadow-2xl border border-neutral-800 p-2 rounded-lg">
+            shadow-2xl
+        </div>
     </div>
-    <div className="shadow border border-neutral-800 p-2 rounded-lg">
-        shadow
-    </div>
-    <div className="shadow-md border border-neutral-800 p-2 rounded-lg">
-        shadow-md
-    </div>
-    <div className="shadow-lg border border-neutral-800 p-2 rounded-lg">
-        shadow-lg
-    </div>
-    <div className="shadow-xl border border-neutral-800 p-2 rounded-lg">
-        shadow-xl
-    </div>
-    <div className="shadow-2xl border border-neutral-800 p-2 rounded-lg">
-        shadow-2xl
-    </div>
-</div>
+</Container>
 
 ## Normal Snippet
 
