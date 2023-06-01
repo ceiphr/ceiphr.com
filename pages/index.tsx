@@ -34,7 +34,7 @@ export default function Home() {
                 <meta name="description" content={METADATA.description} />
                 <meta
                     property="twitter:image"
-                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og?title=${METADATA.title}`}
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og`}
                 />
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:title" content={METADATA.title} />

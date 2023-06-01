@@ -105,52 +105,61 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                 />
             </Head>
             <Layout>
-                <main className="mx-auto max-w-3xl px-6 mb-4">
-                    <header>
-                        <nav>
-                            <Link href="/" legacyBehavior>
-                                <a>👈 Go back home</a>
-                            </Link>
-                        </nav>
-                    </header>
-                    <div className="post-header">
-                        <h1 className="text-5xl mt-4 mb-2">
-                            {frontmatter.title}
-                        </h1>
-                        {frontmatter.description && (
-                            <p className="description">
-                                {frontmatter.description}
-                            </p>
-                        )}
-                        <LikeButton slug={slug} />
+                <main className="mx-auto max-w-3xl px-6 mb-4 flex">
+                    <div className="basis-3/4">
+                        <header>
+                            <nav>
+                                <Link href="/" legacyBehavior>
+                                    <a>👈 Go back home</a>
+                                </Link>
+                            </nav>
+                        </header>
+                        <div className="post-header">
+                            <h1 className="text-5xl mt-4 mb-2">
+                                {frontmatter.title}
+                            </h1>
+                            {frontmatter.description && (
+                                <p className="description">
+                                    {frontmatter.description}
+                                </p>
+                            )}
+                            <LikeButton slug={slug} />
+                            <hr className="my-4" />
+                        </div>
+                        <article className="mb-4">
+                            <MDXRemote
+                                {...source}
+                                frontmatter={frontmatter}
+                                components={components}
+                                lazy
+                            />
+                        </article>
+
                         <hr className="my-4" />
-                    </div>
-                    <article className="mb-4">
-                        <MDXRemote
-                            {...source}
-                            frontmatter={frontmatter}
-                            components={components}
-                            lazy
+                        <History path={`content/posts/${slug}.mdx`} />
+                        <hr className="my-4" />
+                        <Stats slug={slug} />
+                        <Giscus
+                            repo="ceiphr/ceiphr.com"
+                            repoId={
+                                process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''
+                            }
+                            category={
+                                process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? ''
+                            }
+                            categoryId={
+                                process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
+                            }
+                            term={frontmatter.title}
+                            mapping="specific"
+                            reactionsEnabled="0"
+                            theme="dark_dimmed"
+                            loading="lazy"
                         />
-                    </article>
-                    <ToC headings={headings} />
-                    <hr className="my-4" />
-                    <History path={`content/posts/${slug}.mdx`} />
-                    <hr className="my-4" />
-                    <Stats slug={slug} />
-                    <Giscus
-                        repo="ceiphr/ceiphr.com"
-                        repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
-                        category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? ''}
-                        categoryId={
-                            process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
-                        }
-                        term={frontmatter.title}
-                        mapping="specific"
-                        reactionsEnabled="0"
-                        theme="dark_dimmed"
-                        loading="lazy"
-                    />
+                    </div>
+                    <div className="basis-1/4">
+                        <ToC headings={headings} />
+                    </div>
                 </main>
             </Layout>
         </>
