@@ -15,9 +15,10 @@
         "jsx": "preserve",
         "incremental": true,
         "paths": {
-            "@/*": ["./*"],
             "@assets/*": ["./assets/*"],
             "@components/*": ["./components/*"],
+            "@types/*": ["./types/*"],
+            "@constants/*": ["./constants/*"],
             "@utils/*": ["./utils/*"],
             "@styles/*": ["./styles/*"],
             "@generated/*": ["./.generated/*"]

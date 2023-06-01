@@ -55,7 +55,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // Format the commits data
-    const commitsJson = commits.data.map((commit) => {
+    const commitsJson: GitHubCommit[] = commits.data.map((commit) => {
         return {
             sha: commit.sha,
             message: commit.commit.message,

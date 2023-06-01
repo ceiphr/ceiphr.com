@@ -31,19 +31,22 @@ async function handleGet(_req: NextApiRequest, res: NextApiResponse) {
         });
 
     // Format the profile data
-    const profileJson = {
-        name: profile.data.name,
-        username: profile.data.login,
-        url: profile.data.html_url,
-        avatar_url: profile.data.avatar_url,
-        bio: profile.data.bio,
-        company: profile.data.company,
-        location: profile.data.location,
-        website: profile.data.blog,
-        followers: profile.data.followers,
-        following: profile.data.following,
-        public_repos: profile.data.public_repos,
-        public_gists: profile.data.public_gists,
+    const profileJson: GitHubProfile = {
+        name:
+            profile.data.name ??
+            process.env.NEXT_PUBLIC_AUTHOR ??
+            'Ari Birnbaum',
+        username: profile.data.login ?? process.env.GITHUB_USERNAME ?? 'ceiphr',
+        url: profile.data.html_url ?? '',
+        avatar_url: profile.data.avatar_url ?? '',
+        bio: profile.data.bio ?? '',
+        company: profile.data.company ?? '',
+        location: profile.data.location ?? '',
+        website: profile.data.blog ?? '',
+        followers: profile.data.followers ?? 0,
+        following: profile.data.following ?? 0,
+        public_repos: profile.data.public_repos ?? 0,
+        public_gists: profile.data.public_gists ?? 0,
         socials: socials
     };
 

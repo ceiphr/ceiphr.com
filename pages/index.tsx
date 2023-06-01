@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -10,10 +9,6 @@ import Layout from '@components/Layout';
 import History from '@components/blog/History';
 
 const inter = Inter({ subsets: ['latin'] });
-
-interface Props {
-    history: HistoryEntry[];
-}
 
 // TODO Add favicon
 // TODO Add Apple touch icons
@@ -50,15 +45,10 @@ export default function Home() {
                             priority
                         />
                     </div>
+                    <History />
                     <Link href="/blog">Blog</Link>
                 </main>
             </Layout>
         </>
     );
 }
-
-export const getStaticProps = async () => {
-    return {
-        props: {}
-    };
-};

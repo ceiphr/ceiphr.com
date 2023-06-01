@@ -95,7 +95,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Format the response
     const saStatsJson = await saStats.json();
-    const formattedStats = {
+    const formattedStats: SimpleAnalyticsStats = {
         path: saStatsJson.path,
         start: saStatsJson.start,
         end: saStatsJson.end,

@@ -49,7 +49,6 @@ interface Props {
     frontmatter: {
         [key: string]: string;
     };
-    // history: HistoryEntry[];
 }
 
 // TODO Add anchor links to headers
@@ -122,7 +121,7 @@ export default function PostPage({ source, frontmatter }: Props) {
                             lazy
                         />
                     </article>
-                    {/* <History history={history} /> */}
+                    <History path={`content/posts/${slug}.mdx`} />
                     <Giscus
                         repo="ceiphr/ceiphr.com"
                         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
@@ -186,22 +185,10 @@ export const getStaticProps = async ({ params }: StaticProps) => {
         scope: data
     });
 
-    // Git history
-    // TODO Fix this, history length is off
-    // const history = JSON.parse(fs.readFileSync(POSTS_HISTORY_PATH).toString());
-    // const historyDict = history.reduce(
-    //     (acc: Record<string, HistoryEntry[]>, curr: HistoryItem) => {
-    //         acc[curr.slug] = curr.history;
-    //         return acc;
-    //     },
-    //     {}
-    // );
-
     return {
         props: {
             source: mdxSource,
             frontmatter: data
-            // history: historyDict[params.slug].slice(0, 10) ?? []
         }
     };
 };

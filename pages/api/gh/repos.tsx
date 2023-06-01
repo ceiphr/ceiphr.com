@@ -78,17 +78,17 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     );
 
     // Format the repos data
-    const reposJson = repos.data.map((repo) => ({
+    const reposJson: GitHubRepo[] = repos.data.map((repo) => ({
         name: repo.name,
         url: repo.html_url,
-        description: repo.description,
-        language: repo.language,
-        stars: repo.stargazers_count,
-        forks: repo.forks_count,
-        watchers: repo.watchers_count,
-        archived: repo.archived,
-        created_at: repo.created_at,
-        updated_at: repo.updated_at
+        description: repo.description ?? '',
+        language: repo.language ?? '',
+        stars: repo.stargazers_count ?? 0,
+        forks: repo.forks_count ?? 0,
+        watchers: repo.watchers_count ?? 0,
+        archived: repo.archived ?? false,
+        created_at: repo.created_at ?? '',
+        updated_at: repo.updated_at ?? ''
     }));
 
     // Trim the repos to the requested length
