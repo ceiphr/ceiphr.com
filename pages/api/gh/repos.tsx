@@ -54,6 +54,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         type: 'all'
     });
 
+    if (!repos || !repos.data || repos.data.length === 0) {
+        return res.status(404).json({ message: 'No repos found.' });
+    }
+
     if (archived) {
         // Filter for archived repos if requested
         repos.data = repos.data.filter((repo) => repo.archived);

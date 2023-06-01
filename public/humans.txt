@@ -12,7 +12,7 @@ Contribute here: https://github.com/ceiphr/ceiphr.com
 
 /* SITE */
 
-Last updated: 2023-06-01T12:56:15-04:00
+Last updated: 2023-06-01T13:05:50-04:00
 Standards: HTML5, CSS3
 Components: Next.js, React, Tailwind CSS, Vercel, etc.
 Software: Software used for the development

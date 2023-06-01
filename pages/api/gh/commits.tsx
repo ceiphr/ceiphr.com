@@ -71,6 +71,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         };
     });
 
+    if (commitsJson.length === 0) {
+        return res.status(404).json({ message: 'No commits found' });
+    }
+
     // Cache the commits
     await kv.set(
         `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`,

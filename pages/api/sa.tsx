@@ -89,6 +89,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         }
     );
 
+    if (!saStats.ok) {
+        return res.status(saStats.status).json({ message: saStats.statusText });
+    }
+
     // Format the response
     const saStatsJson = await saStats.json();
     const formattedStats = {
