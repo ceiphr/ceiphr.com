@@ -16,7 +16,7 @@ interface Props {
  * @param param0    The props object contains the post `slug`.
  * @returns         The like button.
  */
-const LikeButton: FunctionComponent<Props> = ({ slug }) => {
+const Like: FunctionComponent<Props> = ({ slug }) => {
     const [likes, setLikes] = useState(0);
     const [userLiked, setUserLiked] = useState(false);
 
@@ -116,4 +116,4 @@ const LikeButton: FunctionComponent<Props> = ({ slug }) => {
     );
 };
 
-export default LikeButton;
+export default Like;

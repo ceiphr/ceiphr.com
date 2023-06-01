@@ -20,7 +20,7 @@ import theme from 'shiki/themes/github-dark.json';
 
 import History from '@components/History';
 import Layout from '@components/Layout';
-import LikeButton from '@components/blog/LikeButton';
+import Like from '@components/blog/Like';
 import ToC from '@components/blog/ToC';
 import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
@@ -123,7 +123,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                     {frontmatter.description}
                                 </p>
                             )}
-                            <LikeButton slug={slug} />
+                            <Like slug={slug} />
                             <hr className="my-4" />
                         </div>
                         <article className="mb-4">
@@ -134,7 +134,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                 lazy
                             />
                         </article>
-
+                        {frontmatter.license}
                         <hr className="my-4" />
                         <History path={`content/posts/${slug}.mdx`} />
                         <hr className="my-4" />
