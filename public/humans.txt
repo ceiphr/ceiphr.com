@@ -1,0 +1,19 @@
+/* TEAM */
+
+Author: Ari Birnbaum
+Contact: ari [at] ceiphr.com
+GitHub: @ceiphr
+Mastodon: @ceiphr@fosstodon.org
+Location: Hoboken, NJ
+
+/* THANKS */
+
+Ari <ari [at] ceiphr.com>
+snyk-bot <snyk-bot [at] snyk.io>
+
+/* SITE */
+
+Last updated: 2023-05-31T22:30:46-04:00
+Standards: HTML5, CSS3
+Components: Next.js, React, Tailwind CSS, Vercel, etc.
+Software: Software used for the development

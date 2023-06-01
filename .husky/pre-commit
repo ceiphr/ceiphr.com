@@ -2,5 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx lint-staged
-npm run update-dates # update the date of each modified post
+npm run update-dates  # update the frontmatter date of each modified post
+npm run update-humans # update the contributors list and date in humans.txt
 git add .

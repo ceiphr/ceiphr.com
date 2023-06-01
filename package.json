@@ -3,9 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "npm run update-history && NODE_ENV=development next-remote-watch content/posts .generated",
+        "dev": "NODE_ENV=development next-remote-watch content/posts .generated",
         "debug": "NODE_OPTIONS='--inspect' next dev",
-        "build": "npm run update-history && next build",
+        "build": "next build",
         "analyze": "ANALYZE=true npm run build",
         "start": "next start",
         "lint": "next lint",
@@ -15,7 +15,7 @@
         "prepare": "husky install",
         "new-post": "bash scripts/new-post.sh",
         "update-dates": "bash scripts/update-dates.sh",
-        "update-history": "bash scripts/update-history.sh"
+        "update-humans": "bash scripts/update-humans.sh"
     },
     "lint-staged": {
         "**/*": "prettier --write . --ignore-unknown --ignore-path .gitignore"

@@ -2,6 +2,8 @@
 
 # Update the date of each modified post.
 
+# TODO Add a way to ignore certain posts (e.g. grandfathered posts). Maybe a .gitignore for posts?
+
 # For echo -e color support.
 TXT_DEFAULT='\033[0m'
 TXT_GREEN='\033[0;32m'

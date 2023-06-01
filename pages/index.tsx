@@ -16,6 +16,26 @@ interface Props {
     history: HistoryEntry[];
 }
 
+// TODO Add sitemap
+// TODO Add robots.txt
+// TODO Add humans.txt
+// TODO Add browserconfig.xml
+// TODO Add ads.txt
+// TODO Add favicon
+// TODO Add Apple touch icons
+// TODO Add manifest.json
+// TODO Add schema.org tags
+// TODO Add Facebook tags
+// TODO Add /.well-known/webfinger
+// TODO Add security.txt
+// TODO Add /.well-known/security.txt
+// TODO Add OpenGraph tags
+// TODO Add Twitter tags
+// TODO Add support for preferred color scheme
+// TODO Add support for preferred reduced motion
+// TODO Add support for preferred reduced data
+// TODO Add CSP
+
 export default function Home({ history }: Props) {
     return (
         <>

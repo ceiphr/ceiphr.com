@@ -13,6 +13,45 @@ const nextConfig = {
         });
 
         return config;
+    },
+    redirects: async () => {
+        return [
+            {
+                source: '/sitemap',
+                destination: '/sitemap.xml',
+                permanent: true
+            },
+            {
+                source: '/robots',
+                destination: '/robots.txt',
+                permanent: true
+            },
+            {
+                source: '/rss',
+                destination: '/rss.xml',
+                permanent: true
+            },
+            {
+                source: '/feed',
+                destination: '/rss.xml',
+                permanent: true
+            },
+            {
+                source: '/feed.xml',
+                destination: '/rss.xml',
+                permanent: true
+            },
+            {
+                source: '/atom',
+                destination: '/atom.xml',
+                permanent: true
+            },
+            {
+                source: '/security.txt',
+                destination: '/.well-known/security.txt',
+                permanent: true
+            }
+        ];
     }
 };
 
