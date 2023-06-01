@@ -2,6 +2,7 @@ import fs from 'fs';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import path from 'path';
 import { useEffect, useState } from 'react';
 
@@ -20,7 +21,6 @@ import Layout from '@components/Layout';
 import History from '@components/blog/History';
 import CustomImage from '@components/blog/Image';
 import CustomLink from '@components/blog/Link';
-import { POSTS_HISTORY_PATH } from '@utils/git';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 
 // Custom components/renderers to pass to MDX.
@@ -49,15 +49,13 @@ interface Props {
     frontmatter: {
         [key: string]: string;
     };
-    history: HistoryEntry[];
+    // history: HistoryEntry[];
 }
 
 // TODO Add anchor links to headers
 // TODO Add table of contents
 // TODO Add Carbon Ads
 // TODO Add embed support for YouTube, Instagram, etc.
-// TODO Make sure like button works
-// TODO Add local storage for likes
 
 /**
  * PostPage will render the post content using MDX.
@@ -65,20 +63,69 @@ interface Props {
  * @param props The props object contains the post `source` and `frontMatter`.
  * @returns     The post page.
  */
-export default function PostPage({ source, frontmatter, history }: Props) {
+export default function PostPage({ source, frontmatter }: Props) {
+    const router = useRouter();
+    const slug = router.query.slug as string;
     const [likes, setLikes] = useState(0);
+    const [userLiked, setUserLiked] = useState(false);
 
+    // Fetch initial likes
     useEffect(() => {
-        fetch(`/api/blog/like?slug=${frontmatter.slug}`)
+        fetch(`/api/blog/like?slug=${slug}`)
             .then((response) => response.json())
-            .then((data) => setLikes(data.likes));
-    }, [frontmatter.slug]);
+            .then(({ likes }) => setLikes(likes));
+
+        // Check local storage to see if user has liked this post
+        const userLikes = localStorage.getItem('likes');
+        if (userLikes) {
+            const parsedLikes = JSON.parse(userLikes);
+            if (parsedLikes.includes(slug)) {
+                setUserLiked(true);
+            }
+        }
+    }, [slug]);
+
+    // Update local storage when user likes a post
+    useEffect(() => {
+        if (userLiked) {
+            const userLikes = localStorage.getItem('likes');
+            if (userLikes) {
+                const parsedLikes = JSON.parse(userLikes);
+                if (!parsedLikes.includes(slug)) {
+                    parsedLikes.push(slug);
+                    localStorage.setItem('likes', JSON.stringify(parsedLikes));
+                }
+            } else {
+                localStorage.setItem('likes', JSON.stringify([slug]));
+            }
+        }
+    }, [userLiked, slug]);
 
     return (
         <>
             <Head>
                 <title>{frontmatter.title}</title>
                 <meta name="description" content={frontmatter.description} />
+                <meta
+                    property="twitter:image"
+                    content="Twitter link preview image URL"
+                />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content={frontmatter.title} />
+                <meta
+                    property="twitter:description"
+                    content={frontmatter.description}
+                />
+                <meta property="og:image" content="Link preview image URL" />
+                <meta property="og:title" content={frontmatter.title} />
+                <meta
+                    property="og:description"
+                    content={frontmatter.description}
+                />
+                <meta
+                    property="og:url"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/blog/${slug}`}
+                />
             </Head>
             <Layout>
                 <main className="mx-auto max-w-3xl px-6 mb-4">
@@ -101,16 +148,21 @@ export default function PostPage({ source, frontmatter, history }: Props) {
                         <p>{likes} Likes</p>
                         <button
                             onClick={() => {
-                                fetch('/api/like', {
+                                fetch('/api/blog/like', {
                                     method: 'POST',
-                                    body: JSON.stringify({
-                                        slug: frontmatter.slug
-                                    })
-                                }).then(() => setLikes(likes + 1));
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ slug })
+                                }).then(() => {
+                                    setUserLiked(true);
+                                    setLikes(likes + 1);
+                                });
                             }}
                         >
                             Like this post?
                         </button>
+                        {userLiked && <p>You liked this post!</p>}
                         <hr className="my-4" />
                     </div>
                     <article className="mb-4">
@@ -121,7 +173,7 @@ export default function PostPage({ source, frontmatter, history }: Props) {
                             lazy
                         />
                     </article>
-                    <History history={history} />
+                    {/* <History history={history} /> */}
                     <Giscus
                         repo="ceiphr/ceiphr.com"
                         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
@@ -187,20 +239,20 @@ export const getStaticProps = async ({ params }: StaticProps) => {
 
     // Git history
     // TODO Fix this, history length is off
-    const history = JSON.parse(fs.readFileSync(POSTS_HISTORY_PATH).toString());
-    const historyDict = history.reduce(
-        (acc: Record<string, HistoryEntry[]>, curr: HistoryItem) => {
-            acc[curr.slug] = curr.history;
-            return acc;
-        },
-        {}
-    );
+    // const history = JSON.parse(fs.readFileSync(POSTS_HISTORY_PATH).toString());
+    // const historyDict = history.reduce(
+    //     (acc: Record<string, HistoryEntry[]>, curr: HistoryItem) => {
+    //         acc[curr.slug] = curr.history;
+    //         return acc;
+    //     },
+    //     {}
+    // );
 
     return {
         props: {
             source: mdxSource,
-            frontmatter: data,
-            history: historyDict[params.slug].slice(0, 10) ?? []
+            frontmatter: data
+            // history: historyDict[params.slug].slice(0, 10) ?? []
         }
     };
 };

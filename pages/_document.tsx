@@ -4,10 +4,15 @@ export default function Document() {
     return (
         <Html lang="en">
             <Head>
+                <link type="text/plain" rel="author" href="/humans.txt" />
                 <link
-                    type="text/plain"
-                    rel="author"
-                    href={`https://${process.env.DOMAIN}/humans.txt`}
+                    type="application/json"
+                    rel="manifest"
+                    href="/manifest.json"
+                />
+                <meta
+                    name="msapplication-config"
+                    content="/browserconfig.xml"
                 />
             </Head>
             <body>

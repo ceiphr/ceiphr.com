@@ -8,7 +8,6 @@ import classNames from 'classnames';
 
 import Layout from '@components/Layout';
 import History from '@components/blog/History';
-import { HISTORY_PATH } from '@utils/git';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,15 +15,11 @@ interface Props {
     history: HistoryEntry[];
 }
 
-// TODO Add sitemap
-// TODO Add browserconfig.xml
 // TODO Add favicon
 // TODO Add Apple touch icons
-// TODO Add manifest.json
 // TODO Add schema.org tags
 // TODO Add Facebook tags
 // TODO Add /.well-known/webfinger
-// TODO Add security.txt
 // TODO Add OpenGraph tags
 // TODO Add Twitter tags
 // TODO Add support for preferred color scheme
@@ -32,7 +27,7 @@ interface Props {
 // TODO Add support for preferred reduced data
 // TODO Add CSP
 
-export default function Home({ history }: Props) {
+export default function Home() {
     return (
         <>
             <Head>
@@ -55,7 +50,6 @@ export default function Home({ history }: Props) {
                             priority
                         />
                     </div>
-                    <History history={history} />
                     <Link href="/blog">Blog</Link>
                 </main>
             </Layout>
@@ -64,12 +58,7 @@ export default function Home({ history }: Props) {
 }
 
 export const getStaticProps = async () => {
-    // Git history
-    const history = JSON.parse(fs.readFileSync(HISTORY_PATH).toString());
-
     return {
-        props: {
-            history: history.slice(0, 5)
-        }
+        props: {}
     };
 };

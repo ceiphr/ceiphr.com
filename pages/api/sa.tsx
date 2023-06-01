@@ -67,7 +67,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     // Fetch views for the provided page from Simple Analytics
     const saStats = await fetch(
         `https://simpleanalytics.com/${
-            process.env.DOMAIN
+            process.env.NEXT_PUBLIC_DOMAIN
         }/${page}.json?version=5&info=false&fields=histogram,pageviews,visitors,referrers${
             range
                 ? `&start=${
