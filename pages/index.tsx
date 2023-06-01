@@ -17,10 +17,7 @@ interface Props {
 }
 
 // TODO Add sitemap
-// TODO Add robots.txt
-// TODO Add humans.txt
 // TODO Add browserconfig.xml
-// TODO Add ads.txt
 // TODO Add favicon
 // TODO Add Apple touch icons
 // TODO Add manifest.json
@@ -28,7 +25,6 @@ interface Props {
 // TODO Add Facebook tags
 // TODO Add /.well-known/webfinger
 // TODO Add security.txt
-// TODO Add /.well-known/security.txt
 // TODO Add OpenGraph tags
 // TODO Add Twitter tags
 // TODO Add support for preferred color scheme

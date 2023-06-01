@@ -5,6 +5,7 @@
 # List of contributors to ignore for the "THANKS" section.
 IGNORED_CONTRIBUTORS=(
     "Ari Birnbaum"
+    "snyk-bot"
 )
 
 # For echo -e color support.
