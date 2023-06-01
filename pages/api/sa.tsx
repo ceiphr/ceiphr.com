@@ -28,7 +28,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     if (error) {
         return res
             .status(400)
-            .json({ message: 'Missing or invalid page/range' });
+            .json({ message: error.message.replace(/"/g, '') });
     }
 
     const { page, range } = req.query;
@@ -39,7 +39,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         timezone = 'America/New_York';
     }
 
-    // Date/Timestamp range in UTC
+    // Date/Timestamp range
     let startDate = new Date();
 
     switch (range) {
@@ -54,6 +54,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
             break;
         case 'year':
             startDate.setDate(startDate.getDate() - Range.YEAR);
+            break;
+        case undefined: // No range provided
             break;
         default:
             return res.status(400).json({ message: 'Invalid range' });
@@ -86,8 +88,10 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
             } as HeadersInit
         }
     );
+
+    // Format the response
     const saStatsJson = await saStats.json();
-    const tailoredStats = {
+    const formattedStats = {
         path: saStatsJson.path,
         start: saStatsJson.start,
         end: saStatsJson.end,
@@ -101,11 +105,13 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     // Cache the response for 1 hour
     await kv.set(
         `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`,
-        JSON.stringify(tailoredStats),
-        { ex: 60 * 60 } // 1 hour in seconds
+        JSON.stringify(formattedStats),
+        {
+            ex: 60 * 60 // 1 hour in seconds
+        }
     );
 
-    return res.status(200).json(tailoredStats);
+    return res.status(200).json(formattedStats);
 }
 
 /**

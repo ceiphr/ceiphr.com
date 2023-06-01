@@ -9,8 +9,8 @@ import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 /**
  * Generates the RSS item for a post.
  *
- * @param post  The post to generate the RSS item for
- * @returns     The RSS item as a string
+ * @param post  The post to generate the RSS item for.
+ * @returns     The RSS item as a string.
  */
 function generateItem(post: Post) {
     return `<item>
@@ -29,8 +29,8 @@ function generateItem(post: Post) {
 /**
  * Generates the RSS feed for the posts.
  *
- * @param posts The posts to generate the RSS feed for
- * @returns     The RSS feed as a string
+ * @param posts The posts to generate the RSS feed for.
+ * @returns     The RSS feed as a string.
  */
 function generateRSS(posts: Post[]) {
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -64,7 +64,7 @@ function RSS() {
 /**
  * Pulls the posts from the file system and generates the RSS feed.
  *
- * @param param0  Object containing the response object
+ * @param param0  Object containing the response object.
  */
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     const posts = postFilePaths.map((filePath) => {

@@ -9,16 +9,25 @@ const DEFAULT_PATH = 'main';
 
 const schema = Joi.object({
     path: Joi.string().optional(),
-    page: Joi.number().optional(),
-    len: Joi.number().optional()
+    page: Joi.number().min(1).optional(),
+    len: Joi.number().min(1).max(100).optional()
 });
 
 const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
 
+/**
+ * Gets commits from GitHub and caches them for 1 hour.
+ *
+ * @param req   The request object is how we get the query parameters.
+ * @param res   The response object is how we send the status code and data.
+ * @returns     Gets the commits for the provided path from GitHub.
+ */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const { error } = schema.validate(req.query);
     if (error) {
-        return res.status(400).json({ message: 'Invalid page/range' });
+        return res
+            .status(400)
+            .json({ message: error.message.replace(/"/g, '') });
     }
 
     const { path, page, len: givenLength } = req.query;
@@ -28,6 +37,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         length = parseInt(givenLength as string);
     }
 
+    // Check if we have a cached version of the commits
     const cached = (await kv.get(
         `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`
     )) as string | null;
@@ -35,6 +45,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).json(cached);
     }
 
+    // Fetch the commits from GitHub
     const commits = await octokit.rest.repos.listCommits({
         owner: process.env.GITHUB_USERNAME || 'ceiphr',
         repo: process.env.GITHUB_REPO || 'ceiphr.com',
@@ -42,27 +53,25 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         page: parseInt(page as string),
         per_page: length
     });
+
+    // Format the commits data
     const commitsJson = commits.data.map((commit) => {
         return {
             sha: commit.sha,
             message: commit.commit.message,
-            date: commit.commit.author?.date ?? new Date().toISOString(),
+            date: commit.commit.author?.date ?? '',
             verified: commit.commit.verification?.verified ?? false,
             url: commit.html_url,
             author: {
-                name:
-                    commit.commit.author?.name ??
-                    process.env.NEXT_PUBLIC_AUTHOR,
-                username: commit.author?.login ?? process.env.GITHUB_USERNAME,
-                url:
-                    commit.author?.html_url ??
-                    `https://github.com/${process.env.GITHUB_USERNAME}`,
-                avatar_url:
-                    commit.author?.avatar_url ?? 'https://ceiphr.com/avatar.png'
+                name: commit.commit.author?.name ?? '',
+                username: commit.author?.login ?? '',
+                url: commit.author?.html_url ?? '',
+                avatar_url: commit.author?.avatar_url ?? ''
             }
         };
     });
 
+    // Cache the commits
     await kv.set(
         `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`,
         commitsJson,
@@ -72,6 +81,12 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json(commitsJson);
 }
 
+/**
+ * handler will handle the request based on the HTTP method.
+ *
+ * @param req   The request object is how we get the query parameters.
+ * @param res   The response object is how we send the status code and data.
+ */
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

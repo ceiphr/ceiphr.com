@@ -19,7 +19,9 @@ const schema = Joi.object({
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const { error } = schema.validate(req.query);
     if (error) {
-        return res.status(400).json({ message: 'Missing or invalid slug' });
+        return res
+            .status(400)
+            .json({ message: error.message.replace(/"/g, '') });
     }
 
     const { slug } = req.query;
@@ -50,7 +52,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
     const { slug } = req.body;
     const { error } = schema.validate({ slug });
     if (error) {
-        return res.status(400).json({ message: 'Missing or invalid slug' });
+        return res
+            .status(400)
+            .json({ message: error.message.replace(/"/g, '') });
     }
 
     const likes =

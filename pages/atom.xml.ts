@@ -11,8 +11,8 @@ const URL = `https://${process.env.NEXT_PUBLIC_DOMAIN}`;
 /**
  * Generates the Atom entry for a post.
  *
- * @param post  The post to generate the Atom item for
- * @returns     The Atom item as a string
+ * @param post  The post to generate the Atom item for.
+ * @returns     The Atom item as a string.
  */
 function generateEntry(post: Post) {
     return `<entry>
@@ -30,8 +30,8 @@ function generateEntry(post: Post) {
 /**
  * Generates the Atom feed for the posts.
  *
- * @param posts The posts to generate the Atom feed for
- * @returns     The Atom feed as a string
+ * @param posts The posts to generate the Atom feed for.
+ * @returns     The Atom feed as a string.
  */
 function generateAtom(posts: Post[]) {
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -56,7 +56,7 @@ function Atom() {
 /**
  * Pulls the posts from the file system and generates the Atom feed.
  *
- * @param param0  Object containing the response object
+ * @param param0  Object containing the response object.
  */
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     const posts = postFilePaths.map((filePath) => {
