@@ -11,7 +11,9 @@ import Giscus from '@giscus/react';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeKatex from 'rehype-katex';
+import rehypeSlug from 'rehype-slug';
 import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
 import theme from 'shiki/themes/github-dark.json';
@@ -19,9 +21,11 @@ import theme from 'shiki/themes/github-dark.json';
 import History from '@components/History';
 import Layout from '@components/Layout';
 import LikeButton from '@components/blog/LikeButton';
+import ToC from '@components/blog/ToC';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
+import rehypeExtractHeadings from '@utils/rehype-extract-headings';
 
 const Stats = dynamic(() => import('@components/Stats'), {
     ssr: false
@@ -53,12 +57,13 @@ interface Props {
     frontmatter: {
         [key: string]: string;
     };
+    headings: Heading[];
 }
 
-// TODO Add anchor links to headers
-// TODO Add table of contents
 // TODO Add Carbon Ads
 // TODO Add embed support for YouTube, Instagram, etc.
+// TODO Add language tags to code blocks
+// TODO Add component preview wrapper
 
 /**
  * PostPage will render the post content using MDX.
@@ -66,7 +71,7 @@ interface Props {
  * @param props The props object contains the post `source` and `frontMatter`.
  * @returns     The post page.
  */
-export default function PostPage({ source, frontmatter }: Props) {
+export default function PostPage({ source, frontmatter, headings }: Props) {
     const router = useRouter();
     const slug = router.query.slug as string;
 
@@ -128,6 +133,8 @@ export default function PostPage({ source, frontmatter }: Props) {
                             lazy
                         />
                     </article>
+                    <ToC headings={headings} />
+                    <hr className="my-4" />
                     <History path={`content/posts/${slug}.mdx`} />
                     <hr className="my-4" />
                     <Stats slug={slug} />
@@ -167,9 +174,9 @@ export const getStaticProps = async ({ params }: StaticProps) => {
     const source = fs.readFileSync(postFilePath);
 
     const { content, data } = matter(source);
+    const headings: Heading[] = [];
 
     const mdxSource = await serialize(content, {
-        // Optionally pass remark/rehype plugins
         mdxOptions: {
             remarkPlugins: [
                 remarkMath,
@@ -185,7 +192,12 @@ export const getStaticProps = async ({ params }: StaticProps) => {
                 ]
             ],
             rehypePlugins: [
-                [rehypeKatex, { throwOnError: true, output: 'mathml' }]
+                [rehypeKatex, { throwOnError: true, output: 'mathml' }],
+                rehypeSlug,
+                // Custom rehype plugin to extract headings from MDX
+                // and add them to the `headings` array.
+                [rehypeExtractHeadings, { rank: 2, headings }],
+                [rehypeAutolinkHeadings, { behavior: 'before' }]
             ],
             useDynamicImport: true,
             // https://github.com/hashicorp/next-mdx-remote/issues/350#issuecomment-1461558918
@@ -197,7 +209,8 @@ export const getStaticProps = async ({ params }: StaticProps) => {
     return {
         props: {
             source: mdxSource,
-            frontmatter: data
+            frontmatter: data,
+            headings
         }
     };
 };

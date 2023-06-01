@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { kv } from '@vercel/kv';
 import Joi from 'joi';
 
-enum Range {
+enum RANGE {
     DAY = 1,
     WEEK = 7,
     MONTH = 30,
@@ -47,16 +47,16 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     switch (range) {
         case 'day':
-            startDate.setDate(startDate.getDate() - Range.DAY);
+            startDate.setDate(startDate.getDate() - RANGE.DAY);
             break;
         case 'week':
-            startDate.setDate(startDate.getDate() - Range.WEEK);
+            startDate.setDate(startDate.getDate() - RANGE.WEEK);
             break;
         case 'month':
-            startDate.setDate(startDate.getDate() - Range.MONTH);
+            startDate.setDate(startDate.getDate() - RANGE.MONTH);
             break;
         case 'year':
-            startDate.setDate(startDate.getDate() - Range.YEAR);
+            startDate.setDate(startDate.getDate() - RANGE.YEAR);
             break;
         case undefined: // No range provided
             break;
@@ -75,7 +75,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     // Fetch views for the provided page from Simple Analytics
     const saStats = await fetch(
         `https://simpleanalytics.com/${
-            process.env.NEXT_PUBLIC_DOMAIN
+            process.env.NODE_ENV === 'development'
+                ? 'ceiphr.com'
+                : process.env.NEXT_PUBLIC_DOMAIN
         }/${page}.json?version=5&info=false&fields=histogram,pageviews,visitors,referrers${
             range
                 ? `&start=${

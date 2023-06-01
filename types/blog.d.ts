@@ -5,3 +5,8 @@ interface Post {
     };
     filePath: string;
 }
+
+interface Heading {
+    title: string;
+    id: string;
+}

@@ -8,6 +8,11 @@ import matter from 'gray-matter';
 import Layout from '@components/Layout';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 
+const METADATA = {
+    title: 'Blog',
+    description: 'A list of blog posts'
+};
+
 interface Props {
     posts: Post[];
 }
@@ -16,7 +21,31 @@ export default function Index({ posts }: Props) {
     return (
         <>
             <Head>
-                <title>Blog</title>
+                <title>{METADATA.title}</title>
+                <meta name="description" content={METADATA.description} />
+                <meta
+                    property="twitter:image"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og?title=${METADATA.title}`}
+                />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content={METADATA.title} />
+                <meta
+                    property="twitter:description"
+                    content={METADATA.description}
+                />
+                <meta
+                    property="og:image"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og?title=${METADATA.title}`}
+                />
+                <meta property="og:title" content={METADATA.title} />
+                <meta
+                    property="og:description"
+                    content={METADATA.description}
+                />
+                <meta
+                    property="og:url"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/blog`}
+                />
             </Head>
             <Layout>
                 <main>

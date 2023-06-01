@@ -21,11 +21,40 @@ const inter = Inter({ subsets: ['latin'] });
 // TODO Add support for preferred reduced data
 // TODO Add CSP
 
+const METADATA = {
+    title: 'Ceiphr',
+    description: 'A personal website'
+};
+
 export default function Home() {
     return (
         <>
             <Head>
-                <title>Ceiphr</title>
+                <title>{METADATA.title}</title>
+                <meta name="description" content={METADATA.description} />
+                <meta
+                    property="twitter:image"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og?title=${METADATA.title}`}
+                />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content={METADATA.title} />
+                <meta
+                    property="twitter:description"
+                    content={METADATA.description}
+                />
+                <meta
+                    property="og:image"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/api/og`}
+                />
+                <meta property="og:title" content={METADATA.title} />
+                <meta
+                    property="og:description"
+                    content={METADATA.description}
+                />
+                <meta
+                    property="og:url"
+                    content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/blog`}
+                />
             </Head>
             <Layout>
                 <main
