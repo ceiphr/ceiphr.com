@@ -23,6 +23,10 @@ import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 
+const Stats = dynamic(() => import('@components/Stats'), {
+    ssr: false
+});
+
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
 // to handle import statements. Instead, you must include components in scope
@@ -122,6 +126,8 @@ export default function PostPage({ source, frontmatter }: Props) {
                         />
                     </article>
                     <History path={`content/posts/${slug}.mdx`} />
+                    <hr className="my-4" />
+                    <Stats slug={slug} />
                     <Giscus
                         repo="ceiphr/ceiphr.com"
                         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}

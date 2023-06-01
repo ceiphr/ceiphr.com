@@ -8,7 +8,7 @@ const DEFAULT_LENGTH = 5;
 const DEFAULT_PATH = 'main';
 
 const schema = Joi.object({
-    path: Joi.string().optional(),
+    path: Joi.array().items(Joi.string()).required(),
     page: Joi.number().min(1).optional(),
     len: Joi.number().min(1).max(100).optional()
 });
@@ -30,7 +30,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
             .json({ message: error.message.replace(/"/g, '') });
     }
 
-    const { path, page, len: givenLength } = req.query;
+    const { path: pathArray, page, len: givenLength } = req.query;
+    const path = (pathArray as string[])?.join('/');
 
     let length = DEFAULT_LENGTH;
     if (givenLength) {
@@ -49,7 +50,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const commits = await octokit.rest.repos.listCommits({
         owner: process.env.GITHUB_USERNAME || 'ceiphr',
         repo: process.env.GITHUB_REPO || 'ceiphr.com',
-        path: path as string,
+        // main is the default branch, we'll return the full list of commits
+        // if the user is requesting the main branch instead of an actual file path
+        path: (path as string) === 'main' ? undefined : path,
         page: parseInt(page as string),
         per_page: length
     });

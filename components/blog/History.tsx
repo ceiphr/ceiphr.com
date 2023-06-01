@@ -16,9 +16,7 @@ const History: FunctionComponent<Props> = ({ path }) => {
 
     // Fetch initial git commit history
     useEffect(() => {
-        const requestPath = path ? `?path=${path}` : '';
-
-        fetch(`/api/gh/commits${requestPath}`)
+        fetch(`/api/gh/commits/${path ? path : 'main'}`)
             .then((response) => {
                 if (response.status !== 200) {
                     return;

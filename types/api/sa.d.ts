@@ -16,5 +16,5 @@ interface SimpleAnalyticsStats {
         date: string;
         pageviews: number;
         visitors: number;
-    };
+    }[];
 }

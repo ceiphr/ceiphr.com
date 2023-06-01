@@ -10,12 +10,14 @@ enum Range {
     YEAR = 365
 }
 
-const schema = Joi.object({
-    page: Joi.string().required(),
+const querySchema = Joi.object({
+    page: Joi.array().items(Joi.string()).optional(),
     range: Joi.string().optional()
 });
 
-const timezoneSchema = Joi.string().optional();
+const headerSchema = Joi.object({
+    'x-timezone': Joi.string().optional()
+});
 
 /**
  * Logs a view for the blog post on the current day.
@@ -24,18 +26,19 @@ const timezoneSchema = Joi.string().optional();
  * @param res   The response object is how we send the status code.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { error } = schema.validate(req.query);
+    const { error } = querySchema.validate(req.query);
     if (error) {
         return res
             .status(400)
             .json({ message: error.message.replace(/"/g, '') });
     }
 
-    const { page, range } = req.query;
+    const { page: pageArray, range } = req.query;
+    const page = (pageArray as string[])?.join('/');
 
+    const { error: headersError } = headerSchema.validate(req.headers);
     let timezone = req.headers['x-timezone'];
-    const { error: timezoneError } = timezoneSchema.validate(timezone);
-    if (timezoneError || !timezone) {
+    if (headersError || !timezone) {
         timezone = 'America/New_York';
     }
 
