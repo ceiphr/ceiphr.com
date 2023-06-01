@@ -102,9 +102,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     await kv.set(
         `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`,
         JSON.stringify(tailoredStats),
-        {
-            ex: 3600 // 1 hour in seconds
-        }
+        { ex: 60 * 60 } // 1 hour in seconds
     );
 
     return res.status(200).json(tailoredStats);

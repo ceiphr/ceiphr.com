@@ -29,7 +29,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const cached = (await kv.get(
-        `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page}`
+        `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`
     )) as string | null;
     if (cached) {
         return res.status(200).json(cached);
@@ -64,9 +64,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     });
 
     await kv.set(
-        `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page}`,
+        `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`,
         commitsJson,
-        { ex: 3600 } // 1 hour in seconds
+        { ex: 60 * 60 } // 1 hour in seconds
     );
 
     return res.status(200).json(commitsJson);
