@@ -38,3 +38,7 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# next-sitemap
+/public/sitemap.xml
+/public/robots.txt
