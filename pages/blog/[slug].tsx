@@ -4,7 +4,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import path from 'path';
-import { useEffect, useState } from 'react';
 
 import { remarkCodeHike } from '@code-hike/mdx';
 import { CH } from '@code-hike/mdx/components';
@@ -19,8 +18,9 @@ import theme from 'shiki/themes/github-dark.json';
 
 import Layout from '@components/Layout';
 import History from '@components/blog/History';
-import CustomImage from '@components/blog/Image';
-import CustomLink from '@components/blog/Link';
+import LikeButton from '@components/blog/LikeButton';
+import CustomImage from '@components/blog/mdx/Image';
+import CustomLink from '@components/blog/mdx/Link';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 
 // Custom components/renderers to pass to MDX.
@@ -36,8 +36,8 @@ const components = {
     Head,
     Link,
     CH,
-    Spline: dynamic(() => import('@components/blog/Spline')),
-    Rive: dynamic(() => import('@components/blog/Rive'))
+    Spline: dynamic(() => import('@components/blog/mdx/Spline')),
+    Rive: dynamic(() => import('@components/blog/mdx/Rive'))
 };
 
 interface Props {
@@ -66,40 +66,6 @@ interface Props {
 export default function PostPage({ source, frontmatter }: Props) {
     const router = useRouter();
     const slug = router.query.slug as string;
-    const [likes, setLikes] = useState(0);
-    const [userLiked, setUserLiked] = useState(false);
-
-    // Fetch initial likes
-    useEffect(() => {
-        fetch(`/api/blog/like?slug=${slug}`)
-            .then((response) => response.json())
-            .then(({ likes }) => setLikes(likes));
-
-        // Check local storage to see if user has liked this post
-        const userLikes = localStorage.getItem('likes');
-        if (userLikes) {
-            const parsedLikes = JSON.parse(userLikes);
-            if (parsedLikes.includes(slug)) {
-                setUserLiked(true);
-            }
-        }
-    }, [slug]);
-
-    // Update local storage when user likes a post
-    useEffect(() => {
-        if (userLiked) {
-            const userLikes = localStorage.getItem('likes');
-            if (userLikes) {
-                const parsedLikes = JSON.parse(userLikes);
-                if (!parsedLikes.includes(slug)) {
-                    parsedLikes.push(slug);
-                    localStorage.setItem('likes', JSON.stringify(parsedLikes));
-                }
-            } else {
-                localStorage.setItem('likes', JSON.stringify([slug]));
-            }
-        }
-    }, [userLiked, slug]);
 
     return (
         <>
@@ -145,24 +111,7 @@ export default function PostPage({ source, frontmatter }: Props) {
                                 {frontmatter.description}
                             </p>
                         )}
-                        <p>{likes} Likes</p>
-                        <button
-                            onClick={() => {
-                                fetch('/api/blog/like', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ slug })
-                                }).then(() => {
-                                    setUserLiked(true);
-                                    setLikes(likes + 1);
-                                });
-                            }}
-                        >
-                            Like this post?
-                        </button>
-                        {userLiked && <p>You liked this post!</p>}
+                        <LikeButton slug={slug} />
                         <hr className="my-4" />
                     </div>
                     <article className="mb-4">
