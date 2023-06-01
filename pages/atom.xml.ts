@@ -40,7 +40,7 @@ function generateAtom(posts: Post[]) {
     <link href="${URL}/atom.xml" rel="self" />
     <link href="${URL}" />
     <updated>${new Date(posts[0].data.date).toISOString()}</updated>
-    <id>${URL}</id>
+    <id>${URL}/</id>
     ${posts.map((post) => generateEntry(post)).join('')}
 </feed>
     `;

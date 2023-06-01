@@ -24,13 +24,14 @@ const timezoneSchema = Joi.string().optional();
  * @param res   The response object is how we send the status code.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { page, range } = req.query;
-    const { error } = schema.validate({ page, range });
+    const { error } = schema.validate(req.query);
     if (error) {
         return res
             .status(400)
             .json({ message: 'Missing or invalid page/range' });
     }
+
+    const { page, range } = req.query;
 
     let timezone = req.headers['x-timezone'];
     const { error: timezoneError } = timezoneSchema.validate(timezone);
@@ -59,7 +60,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Check if the page is cached
-    const cached = (await kv.get(`sa-${page}-${range}`)) as string | null;
+    const cached = (await kv.get(
+        `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`
+    )) as string | null;
     if (cached) {
         return res.status(200).json(cached);
     }
@@ -96,9 +99,13 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     };
 
     // Cache the response for 1 hour
-    await kv.set(`sa-${page}-${range}`, JSON.stringify(tailoredStats), {
-        ex: 3600 // 1 hour in seconds
-    });
+    await kv.set(
+        `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`,
+        JSON.stringify(tailoredStats),
+        {
+            ex: 3600 // 1 hour in seconds
+        }
+    );
 
     return res.status(200).json(tailoredStats);
 }

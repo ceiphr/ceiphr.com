@@ -17,12 +17,12 @@ const schema = Joi.object({
  * @param res   The response object is how we send the status code and likes.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { slug } = req.query;
-    const { error } = schema.validate({ slug });
+    const { error } = schema.validate(req.query);
     if (error) {
         return res.status(400).json({ message: 'Missing or invalid slug' });
     }
 
+    const { slug } = req.query;
     const likes =
         ((await kv.hget(`blog:${slug}`, 'likes')) as number | null) || 0;
 
