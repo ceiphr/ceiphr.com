@@ -11,7 +11,7 @@ interface SimpleAnalyticsStats {
         value: string;
         pageviews: number;
         visitors: number;
-    };
+    }[];
     histogram: {
         date: string;
         pageviews: number;

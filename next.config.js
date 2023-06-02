@@ -6,6 +6,16 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
     reactStrictMode: true,
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'avatars.githubusercontent.com',
+                port: '',
+                pathname: '/u/**'
+            }
+        ]
+    },
     webpack: (config, _options) => {
         config.module.rules.push({
             // Load Rive's WASM binary
