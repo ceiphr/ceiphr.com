@@ -75,9 +75,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     // Fetch views for the provided page from Simple Analytics
     const saStats = await fetch(
         `https://simpleanalytics.com/${
-            process.env.NODE_ENV === 'development'
-                ? 'ceiphr.com'
-                : process.env.NEXT_PUBLIC_DOMAIN
+            process.env.NEXT_PUBLIC_DOMAIN
         }/${page}.json?version=5&info=false&fields=histogram,pageviews,visitors,referrers${
             range
                 ? `&start=${
@@ -111,7 +109,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         histogram: saStatsJson.histogram
     };
 
-    // Cache the response for 1 hour
+    // Cache the response
     await kv.set(
         `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`,
         JSON.stringify(formattedStats),

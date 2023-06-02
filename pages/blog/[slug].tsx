@@ -134,7 +134,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                         <hr className="my-4" />
                         <History path={`content/posts/${slug}.mdx`} />
                         <hr className="my-4" />
-                        <Stats slug={slug} />
+                        <Stats slug={`blog/${slug}`} />
                         <Giscus
                             repo="ceiphr/ceiphr.com"
                             repoId={
