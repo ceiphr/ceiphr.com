@@ -19,14 +19,4 @@ article {
     .ch-frame-buttons {
         @apply hidden;
     }
-
-    .ch-codeblock {
-        .ch-code-button {
-            @apply hidden transition duration-200 ease-in-out;
-        }
-
-        &:hover .ch-code-button {
-            @apply block;
-        }
-    }
 }

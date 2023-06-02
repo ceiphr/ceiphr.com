@@ -1,18 +1,19 @@
 /* TEAM */
 
 Author: Ari Birnbaum
-Contact: ari [at] ceiphr.com
 GitHub: @ceiphr
 Mastodon: @ceiphr@fosstodon.org
 Location: Hoboken, NJ
 
 /* THANKS */
 
-Contribute here: https://github.com/ceiphr/ceiphr.com
+Vercel https://vercel.com - for hosting
+Simple Analytics https://www.simpleanalytics.com/?referral=ari - for analytics
 
 /* SITE */
 
-Last updated: 2023-06-01T19:39:03-04:00
+Last updated: June 01, 2023
+Language: English
 Standards: HTML5, CSS3
-Components: Next.js, React, Tailwind CSS, Vercel, etc.
-Software: Software used for the development
+Components: Next.js, React, Tailwind CSS, etc.
+IDE: VS Code

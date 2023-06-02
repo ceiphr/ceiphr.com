@@ -1,7 +1,5 @@
 import type { AppProps } from 'next/app';
 
-import '@code-hike/mdx/dist/index.css';
-
 import '@styles/globals.css';
 
 // TODO Add header for preview mode

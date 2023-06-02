@@ -32,3 +32,8 @@ for post in ${modified_posts}; do
     # Log the updated post.
     echo -e "${TXT_GREEN}>${TXT_DEFAULT} Updated the date of ${TXT_BOLD}${post}${TXT_DEFAULT}."
 done
+
+# Update the "Last Updated" section of the humans.txt file.
+sed -i "s/Last updated: .*/Last updated: $(date +"%B %d, %Y")/" "public/humans.txt"
+
+echo -e "${TXT_GREEN}>${TXT_DEFAULT} Updated the ${TXT_BOLD}Last updated${TXT_DEFAULT} section of the ${TXT_BOLD}humans.txt${TXT_DEFAULT} file."

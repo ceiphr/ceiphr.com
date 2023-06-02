@@ -1,2 +1,2 @@
-Contact: mailto:ari+security [at] ceiphr.com
+Contact: https://ceiphr.com/humans.txt
 Encryption: https://ceiphr.com/publickey.txt

@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import path from 'path';
 
-import { remarkCodeHike } from '@code-hike/mdx';
-import { CH } from '@code-hike/mdx/components';
 import Giscus from '@giscus/react';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
@@ -16,7 +14,6 @@ import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
-import theme from 'shiki/themes/github-dark.json';
 
 import History from '@components/History';
 import Layout from '@components/Layout';
@@ -47,7 +44,6 @@ const components = {
     a: (props: any) => <CustomLink {...props} />,
     Head,
     Link,
-    CH,
     Container,
     Spline: dynamic(() => import('@components/blog/mdx/Spline')),
     Rive: dynamic(() => import('@components/blog/mdx/Rive'))
@@ -190,19 +186,7 @@ export const getStaticProps = async ({ params }: StaticProps) => {
 
     const mdxSource = await serialize(content, {
         mdxOptions: {
-            remarkPlugins: [
-                remarkMath,
-                remarkCapitalize,
-                [
-                    remarkCodeHike,
-                    {
-                        theme,
-                        autoImport: false,
-                        showCopyButton: true,
-                        lineNumbers: false
-                    }
-                ]
-            ],
+            remarkPlugins: [remarkMath, remarkCapitalize],
             rehypePlugins: [
                 [rehypeKatex, { throwOnError: true, output: 'mathml' }],
                 rehypeSlug,

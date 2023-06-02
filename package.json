@@ -15,14 +15,12 @@
         "check-types": "tsc --noemit",
         "analyze": "ANALYZE=true npm run build",
         "new-post": "bash scripts/new-post.sh",
-        "update-dates": "bash scripts/update-dates.sh",
-        "update-humans": "bash scripts/update-humans.sh"
+        "update-dates": "bash scripts/update-dates.sh"
     },
     "lint-staged": {
         "**/*": "prettier --write . --ignore-unknown --ignore-path .gitignore"
     },
     "dependencies": {
-        "@code-hike/mdx": "^0.8.3",
         "@giscus/react": "^2.2.8",
         "@rive-app/canvas": "^1.1.9",
         "@rive-app/react-canvas": "^3.0.50",
