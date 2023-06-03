@@ -1,15 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { kv } from '@vercel/kv';
-import Joi from 'joi';
 import { Octokit } from 'octokit';
 
-const DEFAULT_LENGTH = 5;
+import { reposSchema } from '@utils/schemas';
 
-const schema = Joi.object({
-    len: Joi.number().min(1).max(100).optional(),
-    archived: Joi.boolean().optional()
-});
+const DEFAULT_LENGTH = 5;
 
 const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
 
@@ -21,14 +17,14 @@ const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
  * @returns     Gets the repos for the provided user from GitHub.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { error } = schema.validate(req.query);
+    const { error } = reposSchema.validate(req.query);
     if (error) {
         return res
             .status(400)
             .json({ message: error.message.replace(/"/g, '') });
     }
 
-    const { len: givenLength, archived: givenArchived } = req.query;
+    const { length: givenLength, archived: givenArchived } = req.query;
 
     let length = DEFAULT_LENGTH;
     if (givenLength) {
@@ -42,7 +38,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Check if we have a cached version of the repos
     const cached = (await kv.get(
-        `gh:repos:len-${length}:archived-${archived}`
+        `gh:repos:length-${length}:archived-${archived}`
     )) as string | null;
     if (cached) {
         return res.status(200).json(cached);
@@ -96,7 +92,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Cache the repos
     await kv.set(
-        `gh:repos:len-${length}:archived-${archived}`,
+        `gh:repos:length-${length}:archived-${archived}`,
         JSON.stringify(trimmedRepos),
         {
             ex: 60 * 60 * 24 // 24 hours

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import path from 'path';
 
 import Giscus from '@giscus/react';
+import { Tab } from '@headlessui/react';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -15,20 +16,21 @@ import rehypeSlug from 'rehype-slug';
 import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
 
-import History from '@components/History';
 import Layout from '@components/Layout';
 import Like from '@components/blog/Like';
 import ToC from '@components/blog/ToC';
 import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
+import Changelog from '@components/gh/Changelog';
+import Referrals from '@components/sa/Referrals';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 import rehypeExtractHeadings from '@utils/rehype-extract-headings';
 
 const Ad = dynamic(() => import('@components/blog/Ad'), {
     ssr: false
 });
-const Stats = dynamic(() => import('@components/Stats'), {
+const Histogram = dynamic(() => import('@components/sa/Histogram'), {
     ssr: false
 });
 
@@ -140,13 +142,31 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                             </div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 my-6 divide-x px-6 border border-gray-800 divide-gray-800 rounded-xl">
-                        <Stats slug={`blog/${slug}`} />
-                        <History
-                            path={`content/posts/${slug}.mdx`}
-                            length={30}
-                        />
-                    </div>
+                    <Tab.Group>
+                        <Tab.List className="space-x-3">
+                            <Tab>Details</Tab>
+                            <Tab>Viewership</Tab>
+                            <Tab>Referrals</Tab>
+                        </Tab.List>
+                        <Tab.Panels>
+                            <Tab.Panel>
+                                <div className="flex">
+                                    <div className="basis-1/2"></div>
+                                    <Changelog
+                                        path={`content/posts/${slug}.mdx`}
+                                        length={30}
+                                        className="basis-1/2"
+                                    />
+                                </div>
+                            </Tab.Panel>
+                            <Tab.Panel>
+                                <Histogram route={`blog/${slug}`} />
+                            </Tab.Panel>
+                            <Tab.Panel>
+                                <Referrals className="basis-1/2" />
+                            </Tab.Panel>
+                        </Tab.Panels>
+                    </Tab.Group>
                     <Giscus
                         repo="ceiphr/ceiphr.com"
                         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}

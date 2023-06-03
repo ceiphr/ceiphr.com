@@ -1,5 +1,11 @@
 // Simple Analytics API types
 
+interface SimpleAnalyticsReferrer {
+    value: string;
+    pageviews: number;
+    visitors: number;
+}
+
 interface SimpleAnalyticsStats {
     path: string;
     start: string;
@@ -7,11 +13,7 @@ interface SimpleAnalyticsStats {
     timezone: string;
     pageviews: number;
     visitors: number;
-    referrers: {
-        value: string;
-        pageviews: number;
-        visitors: number;
-    }[];
+    referrers: SimpleAnalyticsReferrer[];
     histogram: {
         date: string;
         pageviews: number;

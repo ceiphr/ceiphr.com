@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { kv } from '@vercel/kv';
-import Joi from 'joi';
+
+import { statsHeaderSchema, statsSchema } from '@utils/schemas';
 
 enum RANGE {
     DAY = 1,
@@ -10,15 +11,6 @@ enum RANGE {
     YEAR = 365
 }
 
-const querySchema = Joi.object({
-    page: Joi.array().items(Joi.string()).optional(),
-    range: Joi.string().optional()
-});
-
-const headerSchema = Joi.object({
-    'x-timezone': Joi.string().optional()
-});
-
 /**
  * Logs a view for the blog post on the current day.
  *
@@ -26,17 +18,21 @@ const headerSchema = Joi.object({
  * @param res   The response object is how we send the status code.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { error } = querySchema.validate(req.query);
+    const { error } = statsSchema.validate(req.query);
     if (error) {
         return res
             .status(400)
             .json({ message: error.message.replace(/"/g, '') });
     }
 
-    const { page: pageArray, range } = req.query;
-    const page = (pageArray as string[])?.join('/');
+    const { route: routeArray, range } = req.query;
+    if (routeArray && typeof routeArray === 'string') {
+        return res.status(400).json({ message: 'Invalid page' });
+    }
 
-    const { error: headersError } = headerSchema.validate(req.headers);
+    const route = (routeArray as string[])?.join('/');
+
+    const { error: headersError } = statsHeaderSchema.validate(req.headers);
     let timezone = req.headers['x-timezone'];
     if (headersError || !timezone) {
         timezone = 'America/New_York';
@@ -66,7 +62,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Check if the page is cached
     const cached = (await kv.get(
-        `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`
+        `sa:${route}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`
     )) as string | null;
     if (cached) {
         return res.status(200).json(cached);
@@ -76,7 +72,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const saStats = await fetch(
         `https://simpleanalytics.com/${
             process.env.NEXT_PUBLIC_DOMAIN
-        }/${page}.json?version=5&info=false&fields=histogram,pageviews,visitors,referrers${
+        }/${route}.json?version=5&info=false&fields=histogram,pageviews,visitors,referrers${
             range
                 ? `&start=${
                       startDate.toISOString().split('T')[0]
@@ -111,7 +107,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Cache the response
     await kv.set(
-        `sa:${page}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`,
+        `sa:${route}:range-${range ?? 'na'}:timezone-${timezone ?? 'na'}`,
         JSON.stringify(formattedStats),
         {
             ex: 60 * 60 // 1 hour in seconds

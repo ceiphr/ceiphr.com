@@ -1,7 +1,24 @@
+export const groupByTimeSince = (commits: GitHubCommit[]) => {
+    const historyByTime: Record<string, GitHubCommit[]> = {};
+    commits.forEach((commit: GitHubCommit) => {
+        // Get the relative time since the commit and
+        // used it as the key for the commit history
+        const relTime: string = timeSince(new Date(commit.date));
+        if (!historyByTime[relTime]) {
+            historyByTime[relTime] = [];
+        }
+
+        historyByTime[relTime].push(commit);
+    });
+
+    return historyByTime;
+};
+
 export const timeSince = (timestamp: Date): string => {
     const now = new Date();
     const secondsPast = (now.getTime() - timestamp.getTime()) / 1000;
 
+    // TODO Make sure nouns are correct
     if (secondsPast < 60) {
         let noun = 'second';
         if (secondsPast !== 1) {
@@ -31,6 +48,6 @@ export const timeSince = (timestamp: Date): string => {
             timestamp.getFullYear() == now.getFullYear()
                 ? ''
                 : ' ' + timestamp.getFullYear();
-        return `${day} ${month}${year}`;
+        return `${month} ${day} ${year && ', ' + year}`;
     }
 };

@@ -1,17 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { kv } from '@vercel/kv';
-import Joi from 'joi';
 import { Octokit } from 'octokit';
+
+import { commitsSchema } from '@utils/schemas';
 
 const DEFAULT_LENGTH = 5;
 const DEFAULT_PATH = 'main';
-
-const schema = Joi.object({
-    path: Joi.array().items(Joi.string()).required(),
-    page: Joi.number().min(1).optional(),
-    len: Joi.number().min(1).max(100).optional()
-});
 
 const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
 
@@ -23,14 +18,18 @@ const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
  * @returns     Gets the commits for the provided path from GitHub.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { error } = schema.validate(req.query);
+    const { error } = commitsSchema.validate(req.query);
     if (error) {
         return res
             .status(400)
             .json({ message: error.message.replace(/"/g, '') });
     }
 
-    const { path: pathArray, page, len: givenLength } = req.query;
+    const { path: pathArray, page, length: givenLength } = req.query;
+    if (pathArray && typeof pathArray === 'string') {
+        return res.status(400).json({ message: 'Invalid path' });
+    }
+
     const path = (pathArray as string[])?.join('/');
 
     let length = DEFAULT_LENGTH;
@@ -40,7 +39,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Check if we have a cached version of the commits
     const cached = (await kv.get(
-        `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`
+        `gh:commits:${path ?? DEFAULT_PATH}:length-${length}:page-${page ?? 0}`
     )) as string | null;
     if (cached) {
         return res.status(200).json(cached);
@@ -80,7 +79,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     // Cache the commits
     await kv.set(
-        `gh:commits:${path ?? DEFAULT_PATH}:len-${length}:page-${page ?? 0}`,
+        `gh:commits:${path ?? DEFAULT_PATH}:length-${length}:page-${page ?? 0}`,
         commitsJson,
         { ex: 60 * 60 } // 1 hour in seconds
     );

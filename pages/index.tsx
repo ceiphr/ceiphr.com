@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 import classNames from 'classnames';
 
-import History from '@components/History';
 import Layout from '@components/Layout';
+import Changelog from '@components/gh/Changelog';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -73,7 +73,7 @@ export default function Home() {
                             priority
                         />
                     </div>
-                    <History />
+                    <Changelog length={100} />
                     <Link href="/blog">Blog</Link>
                 </main>
             </Layout>

@@ -3,8 +3,15 @@ import { Fragment, FunctionComponent, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 
-import { timeSince } from '@utils/time';
+import { fetchCommits } from '@utils/fetch';
+import { groupByTimeSince } from '@utils/time';
 
+/**
+ * JSX for a single GitHub commit.
+ *
+ * @param commit    The commit object contains the `author`, `sha`, `message`, and `url`.
+ * @returns         A commit message with the author and sha.
+ */
 const Commit: FunctionComponent<GitHubCommit> = (commit) => {
     const author = commit.author;
 
@@ -41,58 +48,65 @@ const Commit: FunctionComponent<GitHubCommit> = (commit) => {
 };
 
 interface Props {
+    commits?: GitHubCommit[];
     path?: string;
+    page?: number;
     length?: number;
     className?: string;
 }
 
 /**
- * History will render the commit history for a given file. If no file is
+ * Changelog will render the commit history for a given file. If no file is
  * specified, the history for the entire repository will be rendered.
  *
  * @param param0    The props object contains the `path` to the file.
  * @returns         The commit history for the file.
  */
-const History: FunctionComponent<Props> = ({ path, length, className }) => {
-    const [history, setHistory] = useState<Record<string, GitHubCommit[]>>();
+const Changelog: FunctionComponent<Props> = ({
+    commits,
+    path,
+    page,
+    length,
+    className
+}) => {
+    const [groupedCommits, setGroupedCommits] =
+        useState<Record<string, GitHubCommit[]>>();
+
+    // Validate attributes
+    if (commits && path) {
+        throw new Error(
+            'You cannot specify both `commits` and `path` at the same time.'
+        );
+    }
 
     // Fetch initial git commit history
     useEffect(() => {
-        fetch(
-            `/api/gh/commits/${path ? path : 'main'}${
-                length ? `?len=${length}` : ''
-            }`
-        )
-            .then((response) => {
-                if (response.status !== 200) {
-                    return;
-                }
+        // If commits are provided, use them instead of fetching
+        if (commits) {
+            const historyByTime: Record<string, GitHubCommit[]> =
+                groupByTimeSince(commits);
+            setGroupedCommits(historyByTime);
+            return;
+        }
 
-                return response.json();
-            })
+        fetchCommits(path ?? 'main', length ?? 10, page ?? 1)
             .then((history) => {
                 // Group commits by time since commit
-                const historyByTime: Record<string, GitHubCommit[]> = {};
-                history.forEach((commit: GitHubCommit) => {
-                    const relTime: string = timeSince(new Date(commit.date));
-                    if (!historyByTime[relTime]) {
-                        historyByTime[relTime] = [];
-                    }
-
-                    historyByTime[relTime].push(commit);
-                });
-
-                setHistory(historyByTime);
+                const historyByTime: Record<string, GitHubCommit[]> =
+                    groupByTimeSince(history);
+                setGroupedCommits(historyByTime);
             })
-            .catch((error) => {});
-    }, [path, length]);
+            .catch((error) => {
+                // TODO: Handle error
+                console.error(error);
+            });
+    }, [path, length, commits]);
 
     return (
-        <div className={classNames('my-4 pl-8', className)}>
-            <h2 className="text-3xl mt-4 mb-2">History</h2>
+        <div className={classNames('my-4', className)}>
             <ul className="relative max-h-[276px] overflow-y-auto">
-                {history &&
-                    Object.entries(history).map(([time, commits]) => {
+                {groupedCommits &&
+                    Object.entries(groupedCommits).map(([time, commits]) => {
                         return (
                             <Fragment key={time}>
                                 <div className="sticky top-0 bg-black text-gray-500 py-1 text-sm">
@@ -110,4 +124,4 @@ const History: FunctionComponent<Props> = ({ path, length, className }) => {
     );
 };
 
-export default History;
+export default Changelog;
