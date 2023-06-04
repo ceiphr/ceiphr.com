@@ -40,7 +40,7 @@ const Commit: FunctionComponent<GitHubCommit> = (commit) => {
             >
                 <code>{commit.sha.slice(0, 7)}</code>
             </a>
-            <span className="text-sm text-gray-400 w-52 truncate">
+            <span className="text-sm text-gray-400 w-64 truncate">
                 {commit.message.split('\n')[0]}
             </span>
         </div>
@@ -100,26 +100,29 @@ const Changelog: FunctionComponent<Props> = ({
                 // TODO: Handle error
                 console.error(error);
             });
-    }, [path, length, commits]);
+    }, [path, page, length, commits]);
 
     return (
-        <div className={classNames('my-4', className)}>
-            <ul className="relative max-h-[276px] overflow-y-auto">
-                {groupedCommits &&
-                    Object.entries(groupedCommits).map(([time, commits]) => {
-                        return (
-                            <Fragment key={time}>
-                                <div className="sticky top-0 bg-black text-gray-500 py-1 text-sm">
-                                    {time}
-                                </div>
-                                {commits.map((commit) => (
-                                    <Commit key={commit.sha} {...commit} />
-                                ))}
-                            </Fragment>
-                        );
-                    })}
-                <div className="sticky bottom-0 w-full h-8 bg-gradient-to-t from-5% from-black" />
-            </ul>
+        <div
+            className={classNames(
+                'relative max-h-full overflow-y-auto',
+                className
+            )}
+        >
+            {groupedCommits &&
+                Object.entries(groupedCommits).map(([time, commits]) => {
+                    return (
+                        <Fragment key={time}>
+                            <div className="sticky top-0 bg-black text-gray-500 py-1 text-sm">
+                                {time}
+                            </div>
+                            {commits.map((commit) => (
+                                <Commit key={commit.sha} {...commit} />
+                            ))}
+                        </Fragment>
+                    );
+                })}
+            <div className="sticky bottom-0 w-full h-8 bg-gradient-to-t from-5% from-black" />
         </div>
     );
 };

@@ -6,6 +6,7 @@ import {
     BarChart,
     Cell,
     LabelList,
+    LabelProps,
     ResponsiveContainer,
     XAxis,
     YAxis
@@ -13,7 +14,15 @@ import {
 
 import { DEMO_STATS } from '@utils/constants';
 import { fetchStats } from '@utils/fetch';
-import { numberWithCommas } from '@utils/numbers';
+import { formatThousands, numberWithCommas } from '@utils/numbers';
+
+interface CustomLabelProps {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    value: SimpleAnalyticsReferrer;
+}
 
 const Chart = ({ data }: { data: SimpleAnalyticsReferrer[] }) => {
     return (
@@ -25,7 +34,7 @@ const Chart = ({ data }: { data: SimpleAnalyticsReferrer[] }) => {
                 layout="vertical"
                 margin={{
                     top: 0,
-                    right: 0,
+                    right: -48,
                     left: 0,
                     bottom: 0
                 }}
@@ -34,11 +43,50 @@ const Chart = ({ data }: { data: SimpleAnalyticsReferrer[] }) => {
                 <XAxis dataKey="pageviews" type="number" hide={true} />
                 <Bar dataKey="pageviews" fill="#1d4e71" barSize={28}>
                     <LabelList
-                        dataKey="value"
+                        dataKey={(dataObject: SimpleAnalyticsReferrer) => ({
+                            value: dataObject.value,
+                            pageviews: dataObject.pageviews
+                        })}
                         position="insideLeft"
                         fill="#fff"
+                        content={(props) => {
+                            const {
+                                x,
+                                y,
+                                height,
+                                value: providedValue
+                            } = props as unknown as CustomLabelProps;
+                            const pageviews = formatThousands(
+                                providedValue?.pageviews
+                            );
+                            const value = providedValue?.value;
+                            return (
+                                <g>
+                                    <text
+                                        x={x + 10}
+                                        y={y + 2 + height / 2}
+                                        fill="#fff"
+                                        textAnchor="start-left"
+                                        dominantBaseline="middle"
+                                        fontWeight="bold"
+                                    >
+                                        {pageviews}
+                                    </text>
+                                    <text
+                                        // This is a hacky way to left align the text
+                                        x={x + 48 + String(pageviews).length}
+                                        y={y + 2 + height / 2}
+                                        fill="#fff"
+                                        textAnchor="start"
+                                        dominantBaseline="middle"
+                                    >
+                                        {value}
+                                    </text>
+                                </g>
+                            );
+                        }}
                     />
-                    {data.map((entry, index) => (
+                    {data.map((_entry, index) => (
                         <Cell key={`cell-${index}`} radius={8} />
                     ))}
                 </Bar>
@@ -88,7 +136,7 @@ const Referrals: FunctionComponent<ReferrerProps> = ({
     }, [route, providedStats]);
 
     return (
-        <div className={classNames('my-4', className)}>
+        <div className={className}>
             <div className="flex space-x-4 mb-4 py-1">
                 <div>
                     <p className="text-gray-500 text-sm">Referred Views</p>

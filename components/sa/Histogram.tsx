@@ -13,7 +13,7 @@ import {
 
 import { DEMO_STATS } from '@utils/constants';
 import { fetchStats } from '@utils/fetch';
-import { numberWithCommas } from '@utils/numbers';
+import { formatThousands, numberWithCommas } from '@utils/numbers';
 
 export const CustomTooltip: FunctionComponent<TooltipProps<number, string>> = ({
     active,
@@ -73,10 +73,7 @@ const Chart: FunctionComponent<ChartProps> = ({ data }) => {
     }));
 
     const formatXAxis = (tickItem: number | string): string => {
-        if (typeof tickItem === 'number' && tickItem >= 1000) {
-            return `${tickItem / 1000}k`;
-        }
-        return tickItem.toString();
+        return formatThousands(tickItem as number).toString();
     };
 
     return (

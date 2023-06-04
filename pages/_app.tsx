@@ -1,5 +1,9 @@
 import type { AppProps } from 'next/app';
 
+import { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import 'react-tooltip/dist/react-tooltip.css';
+
 import '@styles/globals.css';
 
 // TODO Add header for preview mode
@@ -8,7 +12,9 @@ import '@styles/globals.css';
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <>
-            <Component {...pageProps} />
+            <SkeletonTheme baseColor="#111827" highlightColor="#1a2233">
+                <Component {...pageProps} />
+            </SkeletonTheme>
             {/* https://www.simpleanalytics.com/?referral=ari */}
             <script async defer src="https://sa.ceiphr.com/latest.js"></script>
             <noscript>

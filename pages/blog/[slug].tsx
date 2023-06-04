@@ -18,12 +18,12 @@ import remarkMath from 'remark-math';
 
 import Layout from '@components/Layout';
 import Like from '@components/blog/Like';
+import Metadata from '@components/blog/Metadata';
+import Prompt from '@components/blog/Prompt';
 import ToC from '@components/blog/ToC';
 import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
-import Changelog from '@components/gh/Changelog';
-import Referrals from '@components/sa/Referrals';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 import rehypeExtractHeadings from '@utils/rehype-extract-headings';
 
@@ -57,9 +57,7 @@ interface Props {
         renderedOutput: string;
         scope: Record<string, unknown>;
     };
-    frontmatter: {
-        [key: string]: string;
-    };
+    frontmatter: Frontmatter;
     headings: Heading[];
 }
 
@@ -133,7 +131,6 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                     lazy
                                 />
                             </article>
-                            {frontmatter.license}
                         </div>
                         <div className="basis-1/4">
                             <div className="sticky top-0">
@@ -142,31 +139,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                             </div>
                         </div>
                     </div>
-                    <Tab.Group>
-                        <Tab.List className="space-x-3">
-                            <Tab>Details</Tab>
-                            <Tab>Viewership</Tab>
-                            <Tab>Referrals</Tab>
-                        </Tab.List>
-                        <Tab.Panels>
-                            <Tab.Panel>
-                                <div className="flex">
-                                    <div className="basis-1/2"></div>
-                                    <Changelog
-                                        path={`content/posts/${slug}.mdx`}
-                                        length={30}
-                                        className="basis-1/2"
-                                    />
-                                </div>
-                            </Tab.Panel>
-                            <Tab.Panel>
-                                <Histogram route={`blog/${slug}`} />
-                            </Tab.Panel>
-                            <Tab.Panel>
-                                <Referrals className="basis-1/2" />
-                            </Tab.Panel>
-                        </Tab.Panels>
-                    </Tab.Group>
+                    <Metadata slug={slug} frontmatter={frontmatter} />
                     <Giscus
                         repo="ceiphr/ceiphr.com"
                         repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
@@ -182,6 +155,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                     />
                 </main>
             </Layout>
+            <Prompt />
         </>
     );
 }
