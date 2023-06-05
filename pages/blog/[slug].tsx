@@ -6,11 +6,11 @@ import { useRouter } from 'next/router';
 import path from 'path';
 
 import Giscus from '@giscus/react';
-import { Tab } from '@headlessui/react';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import remarkCapitalize from 'remark-capitalize';
@@ -19,8 +19,8 @@ import remarkMath from 'remark-math';
 import Layout from '@components/Layout';
 import Like from '@components/blog/Like';
 import Metadata from '@components/blog/Metadata';
-import Prompt from '@components/blog/Prompt';
 import ToC from '@components/blog/ToC';
+import Prompt from '@components/blog/llm/Prompt';
 import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
@@ -184,6 +184,7 @@ export const getStaticProps = async ({ params }: StaticProps) => {
             remarkPlugins: [remarkMath, remarkCapitalize],
             rehypePlugins: [
                 [rehypeKatex, { throwOnError: true, output: 'mathml' }],
+                rehypeHighlight,
                 rehypeSlug,
                 // Custom rehype plugin to extract headings from MDX
                 // and add them to the `headings` array.

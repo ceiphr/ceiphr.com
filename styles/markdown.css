@@ -1,6 +1,9 @@
 /* TODO Style markdown */
 
-article {
+article,
+.opanai-message {
+    @apply leading-normal space-y-4;
+
     h1 {
         @apply text-4xl mt-4 mb-2;
     }
@@ -13,6 +16,28 @@ article {
         &:before {
             @apply text-sm text-gray-500;
             content: attr(data-ch-lang);
+        }
+    }
+
+    pre {
+        @apply bg-gray-900 border border-gray-800 p-4 my-4 text-sm rounded-lg max-w-xl overflow-y-auto;
+
+        code {
+            @apply font-normal;
+
+            &:before,
+            &:after {
+                content: none;
+            }
+        }
+    }
+
+    code {
+        @apply text-sm font-bold;
+
+        &:before,
+        &:after {
+            content: '\`';
         }
     }
 

@@ -1,17 +1,32 @@
-import { Fragment, FunctionComponent, ReactNode, useEffect } from 'react';
+import {
+    Fragment,
+    FunctionComponent,
+    MutableRefObject,
+    ReactNode
+} from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
+import classNames from 'classnames';
 
 interface Props {
     children: ReactNode;
+    className?: string;
     isOpen: boolean;
+    initialFocus?: MutableRefObject<HTMLElement | null>;
     setIsOpen: (isOpen: boolean) => void;
 }
 
-const Modal: FunctionComponent<Props> = ({ children, isOpen, setIsOpen }) => {
+const Modal: FunctionComponent<Props> = ({
+    children,
+    className,
+    isOpen,
+    initialFocus,
+    setIsOpen
+}) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog
+                initialFocus={initialFocus}
                 as="div"
                 className="relative z-10"
                 onClose={() => setIsOpen(false)}
@@ -39,7 +54,12 @@ const Modal: FunctionComponent<Props> = ({ children, isOpen, setIsOpen }) => {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl border border-gray-800 bg-black p-6 text-left align-middle shadow-xl transition-all">
+                            <Dialog.Panel
+                                className={classNames(
+                                    className,
+                                    'w-full max-w-2xl transform overflow-hidden rounded-2xl border border-gray-800 bg-black text-left align-middle shadow-xl transition-all'
+                                )}
+                            >
                                 {children}
                             </Dialog.Panel>
                         </Transition.Child>
