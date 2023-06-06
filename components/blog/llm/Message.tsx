@@ -24,7 +24,11 @@ async function markdownToHtml(input: string): Promise<string> {
     return file.toString();
 }
 
-const Message: FunctionComponent<OpenAIMessage> = ({ role, content }) => {
+const Message: FunctionComponent<
+    OpenAIMessage & {
+        typing?: boolean;
+    }
+> = ({ role, content, typing }) => {
     const [formattedContent, setFormattedContent] = useState<string>('');
     const Icon = () =>
         role === 'user' ? (
@@ -33,7 +37,7 @@ const Message: FunctionComponent<OpenAIMessage> = ({ role, content }) => {
             </div>
         ) : (
             <div className="sticky top-[4px] rounded-md border border-blue-500 bg-gradient-to-br from-blue-600 to-blue-800 p-1">
-                <Logo className="w-4 h-4 p-px fill-blue-400" />
+                <Logo className="w-4 h-4 fill-blue-400" />
             </div>
         );
 
@@ -56,8 +60,13 @@ const Message: FunctionComponent<OpenAIMessage> = ({ role, content }) => {
                 <Icon />
             </span>
             <div
-                className="opanai-message"
-                dangerouslySetInnerHTML={{ __html: formattedContent }}
+                className={classNames(
+                    'opanai-message cursor',
+                    typing && 'cursor'
+                )}
+                dangerouslySetInnerHTML={{
+                    __html: formattedContent
+                }}
             />
         </div>
     );

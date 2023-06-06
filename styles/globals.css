@@ -6,24 +6,36 @@
 
 :root {
     --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+    --background-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
+        --background-rgb: 0, 0, 0;
     }
 }
 
 body {
     color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-            to bottom,
-            transparent,
-            rgb(var(--background-end-rgb))
-        )
-        rgb(var(--background-start-rgb));
+    background: rgb(var(--background-rgb));
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.blinking-cursor {
+    &::after {
+        @apply inline-block w-2 h-3.5 bg-current content-[''];
+        animation: blink 1.5s steps(1) infinite;
+    }
 }

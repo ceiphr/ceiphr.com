@@ -38,5 +38,6 @@
     // Bash
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
-    }
+    },
+    "svg.preview.background": "editor"
 }
