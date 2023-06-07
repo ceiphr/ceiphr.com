@@ -161,13 +161,13 @@ const Histogram: FunctionComponent<HistogramProps> = ({
             <div className="flex space-x-4 mb-4 py-1">
                 <div>
                     <p className="text-gray-500 text-sm">Page Views</p>
-                    <p className="text-3xl font-bold">
+                    <p className="text-3xl font-heading">
                         {numberWithCommas(stats?.pageviews ?? 0)}
                     </p>
                 </div>
                 <div>
                     <p className="text-gray-500 text-sm">Visitors</p>
-                    <p className="text-3xl font-bold">
+                    <p className="text-3xl font-heading">
                         {numberWithCommas(stats?.visitors ?? 0)}
                     </p>
                 </div>

@@ -140,7 +140,7 @@ const Referrals: FunctionComponent<ReferrerProps> = ({
             <div className="flex space-x-4 mb-4 py-1">
                 <div>
                     <p className="text-gray-500 text-sm">Referred Views</p>
-                    <p className="text-3xl font-bold">
+                    <p className="text-3xl font-heading">
                         {numberWithCommas(totalReferrers ?? 0)}
                     </p>
                 </div>

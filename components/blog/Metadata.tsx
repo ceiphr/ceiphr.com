@@ -87,7 +87,7 @@ const Metadata: FunctionComponent<Props> = ({ slug, frontmatter }) => {
                 <Tab.Panel>
                     <div className="flex flex-row  divide-x divide-gray-800">
                         <div className="basis-1/2 pr-4">
-                            <h2 className="text-xl font-bold">Author</h2>
+                            <h2 className="text-xl font-heading">Author</h2>
                             <Profile className="my-2" />
                             <div className="flex flex-row justify-between">
                                 <div>
@@ -114,7 +114,7 @@ const Metadata: FunctionComponent<Props> = ({ slug, frontmatter }) => {
                             </div>
                         </div>
                         <div className="basis-1/2 pl-4">
-                            <h2 className="text-xl font-bold">Changelog</h2>
+                            <h2 className="text-xl font-heading">Changelog</h2>
                             <Changelog
                                 className="my-2 h-[236px]"
                                 path={`content/posts/${slug}.mdx`}

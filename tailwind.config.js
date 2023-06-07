@@ -8,6 +8,15 @@ module.exports = {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: ['var(--font-inter)'],
+                body: ['var(--font-inter)'],
+                mono: ['var(--font-monocraft)'],
+                display: ['var(--font-unbounded)'],
+                heading: ['var(--font-unbounded)'],
+                accent: ['var(--font-monocraft)'],
+                alt: ['var(--font-alternate)']
+            },
             maxHeight: {
                 lg: '32rem',
                 xl: '36rem',

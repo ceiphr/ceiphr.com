@@ -112,7 +112,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                 </nav>
                             </header>
                             <div className="post-header">
-                                <h1 className="text-5xl mt-4 mb-2">
+                                <h1 className="text-6xl font-heading mt-4 mb-2">
                                     {frontmatter.title}
                                 </h1>
                                 {frontmatter.description && (

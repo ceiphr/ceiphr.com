@@ -4,6 +4,15 @@ article,
 .opanai-message {
     @apply leading-normal space-y-4;
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading;
+    }
+
     h1 {
         @apply text-4xl mt-4 mb-2;
     }

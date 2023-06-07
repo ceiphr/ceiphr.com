@@ -27,8 +27,10 @@ const ToC: FunctionComponent<Props> = ({ headings }) => {
     });
 
     return (
-        <>
-            <h2 className="text-xl mt-4 mb-2">Table of Contents</h2>
+        <div className="px-4 py-1">
+            <h2 className="text-lg font-heading leading-6 mt-4 mb-2">
+                Table of Contents
+            </h2>
             {headings.map((heading) => {
                 return (
                     <div
@@ -41,7 +43,7 @@ const ToC: FunctionComponent<Props> = ({ headings }) => {
                     </div>
                 );
             })}
-        </>
+        </div>
     );
 };
 

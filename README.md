@@ -5,6 +5,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with
 <!-- TODO Add shields -->
 <!-- TODO Add checkly checks -->
 
+## Inspiration
+
+https://www.nocodecommunity.nl/ https://www.da-festival.hr/
+
 ## Getting Started
 
 First, run the development server:
