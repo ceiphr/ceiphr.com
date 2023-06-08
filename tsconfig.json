@@ -20,6 +20,7 @@
             "@types/*": ["./types/*"],
             "@utils/*": ["./utils/*"],
             "@styles/*": ["./styles/*"],
+            "@contexts/*": ["./contexts/*"],
             "@icons/*": ["./node_modules/pixelarticons/svg/*"]
         }
     },

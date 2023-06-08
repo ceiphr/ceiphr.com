@@ -10,13 +10,17 @@ import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeInferDescriptionMeta from 'rehype-infer-description-meta';
+import rehypeInferReadingTimeMeta from 'rehype-infer-reading-time-meta';
 import rehypeKatex from 'rehype-katex';
+import rehypePresetMinify from 'rehype-preset-minify';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
 
 import Layout from '@components/Layout';
+import Actions from '@components/blog/Actions';
 import CodeStatusBar from '@components/blog/CodeStatusBar';
 import LikeButton from '@components/blog/LikeButton';
 import Metadata from '@components/blog/Metadata';
@@ -26,8 +30,8 @@ import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
-import rehypeCodeStatusBar from '@utils/rehype-code-statusbar';
-import rehypeExtractHeadings from '@utils/rehype-extract-headings';
+import rehypeCodeStatusBar from '@utils/rehype/code-statusbar';
+import rehypeExtractHeadings from '@utils/rehype/extract-headings';
 
 const Ad = dynamic(() => import('@components/blog/Ad'), {
     ssr: false
@@ -132,20 +136,20 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                 )}
                                 <LikeButton slug={slug} />
                                 <hr className="my-4" />
+                                {frontmatter.ads && <Ad />}
                             </div>
                             <article className="mb-4">
                                 <MDXRemote
                                     {...source}
                                     frontmatter={frontmatter}
                                     components={components}
-                                    lazy
                                 />
                             </article>
                         </div>
                         <div className="basis-1/4">
                             <div className="sticky top-0">
                                 <ToC headings={headings} />
-                                {frontmatter.ads && <Ad />}
+                                <Actions />
                             </div>
                         </div>
                     </div>
@@ -194,13 +198,22 @@ export const getStaticProps = async ({ params }: StaticProps) => {
             remarkPlugins: [remarkMath, remarkCapitalize],
             rehypePlugins: [
                 rehypeCodeStatusBar,
+                rehypeInferReadingTimeMeta,
+                rehypeInferDescriptionMeta,
                 [rehypeKatex, { throwOnError: true, output: 'mathml' }],
-                rehypePrettyCode,
+                [
+                    rehypePrettyCode,
+                    {
+                        filterMetaString: (string: string) =>
+                            string.replace(/path="[^"]*"/, '')
+                    }
+                ],
                 rehypeSlug,
                 // Custom rehype plugin to extract headings from MDX
                 // and add them to the `headings` array.
                 [rehypeExtractHeadings, { rank: 2, headings }],
-                [rehypeAutolinkHeadings, { behavior: 'before' }]
+                [rehypeAutolinkHeadings, { behavior: 'before' }],
+                rehypePresetMinify
             ],
             useDynamicImport: true,
             // https://github.com/hashicorp/next-mdx-remote/issues/350#issuecomment-1461558918
