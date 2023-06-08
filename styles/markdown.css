@@ -21,15 +21,20 @@ article,
         @apply text-3xl mt-4 mb-2;
     }
 
-    [data-ch-lang] {
-        &:before {
-            @apply text-sm text-gray-500;
-            content: attr(data-ch-lang);
-        }
+    h3 {
+        @apply text-2xl mt-4 mb-2;
     }
 
-    pre {
-        @apply bg-gray-900 border border-gray-800 p-4 my-4 text-sm rounded-lg max-w-xl overflow-y-auto;
+    .code-block {
+        @apply bg-black border border-gray-800 my-4 mx-auto text-sm rounded-xl max-w-xl overflow-y-auto;
+
+        pre {
+            @apply saturate-0 duration-1000 p-4 w-full;
+        }
+
+        &:hover pre {
+            @apply saturate-100;
+        }
 
         code {
             @apply font-normal;
@@ -48,9 +53,5 @@ article,
         &:after {
             content: '\`';
         }
-    }
-
-    .ch-frame-buttons {
-        @apply hidden;
     }
 }

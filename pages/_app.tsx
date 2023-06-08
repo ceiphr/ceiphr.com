@@ -33,7 +33,6 @@ export default function App({ Component, pageProps }: AppProps) {
                 inter.variable,
                 unbounded.variable,
                 monocraft.variable,
-                inter.className,
                 alternate.variable
             )}
         >

@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 import { TbUserCircle as UserIcon } from 'react-icons/tb';
-import highlight from 'rehype-highlight';
+import rehypePrettyCode from 'rehype-pretty-code';
 import html from 'rehype-stringify';
 import { remark } from 'remark';
 import markdown from 'remark-parse';
@@ -17,8 +17,8 @@ async function markdownToHtml(input: string): Promise<string> {
     const file = remark()
         .use(markdown)
         .use(rehype)
-        .use(highlight)
         .use(html)
+        .use(rehypePrettyCode)
         .processSync(input);
 
     return file.toString();

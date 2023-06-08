@@ -20,7 +20,7 @@
             "@types/*": ["./types/*"],
             "@utils/*": ["./utils/*"],
             "@styles/*": ["./styles/*"],
-            "@generated/*": ["./.generated/*"]
+            "@icons/*": ["./node_modules/pixelarticons/svg/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

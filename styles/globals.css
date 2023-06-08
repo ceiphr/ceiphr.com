@@ -2,7 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @import './markdown.css';
-@import './code.css';
 
 :root {
     --foreground-rgb: 0, 0, 0;
@@ -19,6 +18,8 @@
 body {
     color: rgb(var(--foreground-rgb));
     background: rgb(var(--background-rgb));
+    font-family: 'Inter', sans-serif;
+    @apply text-base leading-7;
 }
 
 @keyframes blink {
@@ -30,6 +31,33 @@ body {
     }
     100% {
         opacity: 1;
+    }
+}
+
+pre {
+    & > code {
+        @apply grid;
+        counter-reset: line;
+
+        & > .line::before {
+            counter-increment: line;
+            content: counter(line);
+
+            /* Other styling */
+            display: inline-block;
+            width: 1rem;
+            margin-right: 1.5rem;
+            text-align: right;
+            color: gray;
+        }
+
+        &[data-line-numbers-max-digits='2'] > .line::before {
+            width: 1.5rem;
+        }
+
+        &[data-line-numbers-max-digits='3'] > .line::before {
+            width: 2.5rem;
+        }
     }
 }
 

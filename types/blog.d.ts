@@ -9,6 +9,7 @@ interface Post {
 interface Heading {
     title: string;
     id: string;
+    subheadings?: Heading[];
 }
 
 interface Frontmatter {

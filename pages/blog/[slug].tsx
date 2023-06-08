@@ -10,14 +10,15 @@ import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
+import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkCapitalize from 'remark-capitalize';
 import remarkMath from 'remark-math';
 
 import Layout from '@components/Layout';
-import Like from '@components/blog/Like';
+import CodeStatusBar from '@components/blog/CodeStatusBar';
+import LikeButton from '@components/blog/LikeButton';
 import Metadata from '@components/blog/Metadata';
 import ToC from '@components/blog/ToC';
 import Prompt from '@components/blog/llm/Prompt';
@@ -25,6 +26,7 @@ import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
+import rehypeCodeStatusBar from '@utils/rehype-code-statusbar';
 import rehypeExtractHeadings from '@utils/rehype-extract-headings';
 
 const Ad = dynamic(() => import('@components/blog/Ad'), {
@@ -44,12 +46,17 @@ const components = {
     // See the notes in README.md for more details.
     img: (props: any) => <CustomImage {...props} />,
     a: (props: any) => <CustomLink {...props} />,
+    CodeStatusBar,
     Head,
     Link,
     Container,
     Spline: dynamic(() => import('@components/blog/mdx/Spline')),
     Rive: dynamic(() => import('@components/blog/mdx/Rive'))
 };
+
+// TODO shift+arrow keys to navigate between sections
+// TODO ctrl+arrow keys to navigate to the top/bottom of the article
+// TODO syntax highlighting on hover
 
 interface Props {
     source: {
@@ -101,8 +108,8 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                 />
             </Head>
             <Layout>
-                <main className="mx-auto max-w-4xl px-6 mb-4">
-                    <div className="flex">
+                <main className="mx-auto max-w-5xl px-6 mb-4">
+                    <div className="flex divide-x space-x-4 divide-gray-800">
                         <div className="basis-3/4">
                             <header>
                                 <nav>
@@ -112,7 +119,10 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                 </nav>
                             </header>
                             <div className="post-header">
-                                <h1 className="text-6xl font-heading mt-4 mb-2">
+                                <h1
+                                    id="title"
+                                    className="text-6xl font-heading mt-4 mb-2"
+                                >
                                     {frontmatter.title}
                                 </h1>
                                 {frontmatter.description && (
@@ -120,7 +130,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                         {frontmatter.description}
                                     </p>
                                 )}
-                                <Like slug={slug} />
+                                <LikeButton slug={slug} />
                                 <hr className="my-4" />
                             </div>
                             <article className="mb-4">
@@ -183,8 +193,9 @@ export const getStaticProps = async ({ params }: StaticProps) => {
         mdxOptions: {
             remarkPlugins: [remarkMath, remarkCapitalize],
             rehypePlugins: [
+                rehypeCodeStatusBar,
                 [rehypeKatex, { throwOnError: true, output: 'mathml' }],
-                rehypeHighlight,
+                rehypePrettyCode,
                 rehypeSlug,
                 // Custom rehype plugin to extract headings from MDX
                 // and add them to the `headings` array.

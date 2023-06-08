@@ -17,11 +17,17 @@ const nextConfig = {
         ]
     },
     webpack: (config, _options) => {
-        config.module.rules.push({
-            // Load Rive's WASM binary
-            test: /rive\.wasm/,
-            use: ['url-loader']
-        });
+        config.module.rules.push(
+            {
+                // Load Rive's WASM binary
+                test: /rive\.wasm/,
+                use: ['url-loader']
+            },
+            {
+                test: /\.svg$/,
+                use: ['@svgr/webpack']
+            }
+        );
 
         return config;
     },

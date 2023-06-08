@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import Skeleton from 'react-loading-skeleton';
 
+import Icon from '@components/Icon';
 import { fetchProfile } from '@utils/fetch';
 
 const Socials: FunctionComponent<{ socials: GitHubProfile['socials'] }> = ({
@@ -123,7 +124,7 @@ const Profile: FunctionComponent<Props> = ({ className }) => {
             <div className="my-2 space-y-1 text-gray-400">
                 {profile?.company ? (
                     <p>
-                        <OrganizationIcon className="inline-block mr-2" />
+                        <Icon name="work" className="inline-block mr-2" />
 
                         {profile?.company}
                     </p>
@@ -132,7 +133,7 @@ const Profile: FunctionComponent<Props> = ({ className }) => {
                 )}
                 {profile?.location ? (
                     <p>
-                        <LocationIcon className="inline-block mr-2" />
+                        <Icon name="location" className="inline-block mr-2" />
                         {profile?.location}
                     </p>
                 ) : (
