@@ -1,10 +1,19 @@
-import { Dispatch, ReactNode, createContext, useReducer } from 'react';
+import { stat } from 'fs';
+import {
+    Dispatch,
+    ReactNode,
+    createContext,
+    useEffect,
+    useReducer
+} from 'react';
 
 export enum ActionTypes {
-    TOGGLE_PROMPT,
-    TOGGLE_SHARE,
-    TOGGLE_SHORTCUT,
-    LIKE
+    SET_SLUG,
+    SET_PROMPT,
+    SET_SHARE,
+    SET_SHORTCUT,
+    SET_LIKE,
+    SET_LIKE_COUNT
 }
 
 interface Action {
@@ -13,56 +22,78 @@ interface Action {
 }
 
 interface ActionStates {
+    slug: string;
     promptIsOpen: boolean;
     shareIsOpen: boolean;
     shortcutIsOpen: boolean;
     liked: boolean;
-    likes: number;
+    likeCount: number;
 }
 
 const initialActionStates: ActionStates = {
+    slug: '',
     promptIsOpen: false,
     shareIsOpen: false,
     shortcutIsOpen: false,
     liked: false,
-    likes: 0
+    likeCount: 0
 };
 
-// TODO Toggles should be refactored to set state based on payload
 function reducer(state: ActionStates, action: Action) {
     switch (action.type) {
-        case ActionTypes.TOGGLE_PROMPT:
+        case ActionTypes.SET_SLUG:
             return {
-                shareIsOpen: false,
-                shortcutIsOpen: false,
-                promptIsOpen: !state.promptIsOpen,
-                liked: state.liked,
-                likes: state.likes
-            };
-        case ActionTypes.TOGGLE_SHARE:
-            return {
-                promptIsOpen: false,
-                shortcutIsOpen: false,
-                shareIsOpen: !state.shareIsOpen,
-                liked: state.liked,
-                likes: state.likes
-            };
-        case ActionTypes.TOGGLE_SHORTCUT:
-            return {
-                promptIsOpen: false,
-                shareIsOpen: false,
-                shortcutIsOpen: !state.shortcutIsOpen,
-                liked: state.liked,
-                likes: state.likes
-            };
-        case ActionTypes.LIKE:
-            console.log('like');
-            return {
+                slug: action.payload,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
-                liked: true,
-                likes: state.likes + 1
+                liked: false,
+                likeCount: 0
+            };
+        case ActionTypes.SET_PROMPT:
+            return {
+                slug: state.slug,
+                shareIsOpen: false,
+                shortcutIsOpen: false,
+                promptIsOpen: action.payload,
+                liked: state.liked,
+                likeCount: state.likeCount
+            };
+        case ActionTypes.SET_SHARE:
+            return {
+                slug: state.slug,
+                promptIsOpen: false,
+                shortcutIsOpen: false,
+                shareIsOpen: action.payload,
+                liked: state.liked,
+                likeCount: state.likeCount
+            };
+        case ActionTypes.SET_SHORTCUT:
+            return {
+                slug: state.slug,
+                promptIsOpen: false,
+                shareIsOpen: false,
+                shortcutIsOpen: action.payload,
+                liked: state.liked,
+                likeCount: state.likeCount
+            };
+        case ActionTypes.SET_LIKE:
+            return {
+                slug: state.slug,
+                promptIsOpen: false,
+                shareIsOpen: false,
+                shortcutIsOpen: false,
+                liked: action.payload,
+                likeCount: state.likeCount + 1
+            };
+        case ActionTypes.SET_LIKE_COUNT:
+            return {
+                slug: state.slug,
+                promptIsOpen: false,
+                shareIsOpen: false,
+                shortcutIsOpen: false,
+                liked: state.liked,
+                likeCount: action.payload
             };
         default:
             return state;
@@ -77,8 +108,18 @@ export const ActionStatesContext = createContext<{
     dispatch: () => {}
 });
 
-export function ActionsProvider({ children }: { children: ReactNode }) {
+export function ActionsProvider({
+    children,
+    slug
+}: {
+    children: ReactNode;
+    slug: string;
+}) {
     const [actionStates, dispatch] = useReducer(reducer, initialActionStates);
+
+    useEffect(() => {
+        dispatch({ type: ActionTypes.SET_SLUG, payload: slug });
+    }, [slug]);
 
     return (
         <ActionStatesContext.Provider value={{ actionStates, dispatch }}>

@@ -1,8 +1,11 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 
-interface Props {
-    slug: string;
-}
+import classNames from 'classnames';
+import Skeleton from 'react-loading-skeleton';
+
+import Icon from '@components/Icon';
+import Tag from '@components/Tag';
+import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 
 // TODO Error context
 
@@ -13,12 +16,11 @@ interface Props {
  *
  * Like counts are cached in Vercel KV, but user likes are cached in local storage.
  *
- * @param param0    The props object contains the post `slug`.
- * @returns         The like button.
+ * @returns     The like button.
  */
-const LikeButton: FunctionComponent<Props> = ({ slug }) => {
-    const [likes, setLikes] = useState(0);
-    const [userLiked, setUserLiked] = useState(false);
+const LikeButton: FunctionComponent = () => {
+    const { actionStates, dispatch } = useContext(ActionStatesContext);
+    const [loading, setLoading] = useState(true);
 
     // Fetch initial likes
     useEffect(() => {
@@ -26,53 +28,54 @@ const LikeButton: FunctionComponent<Props> = ({ slug }) => {
         const userLikes = localStorage.getItem('likes');
         if (userLikes) {
             const parsedLikes = JSON.parse(userLikes);
-            if (parsedLikes.includes(slug)) {
-                setUserLiked(true);
-            }
+            if (parsedLikes.includes(actionStates.slug))
+                dispatch({ type: ActionTypes.SET_LIKE, payload: true });
         }
 
-        fetch(`/api/blog/like?slug=${slug}`)
+        fetch(`/api/blog/like?slug=${actionStates.slug}`)
             .then((response) => {
-                if (response.status !== 200) {
-                    return;
-                }
+                if (response.status !== 200) return;
 
                 return response.json();
             })
             .then(({ likes }) => {
-                setLikes(likes);
+                dispatch({ type: ActionTypes.SET_LIKE_COUNT, payload: likes });
                 if (likes === 0) {
                     // Cache was likely cleared, so user hasn't liked this post
                     // even if they have in the past
-                    setUserLiked(false);
+                    dispatch({ type: ActionTypes.SET_LIKE, payload: false });
                 }
+                setLoading(false);
             })
             .catch((error) => {});
-    }, [slug]);
+    }, [actionStates.slug, dispatch]);
 
     // Update local storage when the user likes a post
     useEffect(() => {
         const userLikes = localStorage.getItem('likes');
 
-        if (userLiked) {
+        if (actionStates.liked) {
             // Add slug to likes list in local storage
             if (userLikes) {
                 const parsedLikes = JSON.parse(userLikes);
-                if (!parsedLikes.includes(slug)) {
-                    parsedLikes.push(slug);
+                if (!parsedLikes.includes(actionStates.slug)) {
+                    parsedLikes.push(actionStates.slug);
                     localStorage.setItem('likes', JSON.stringify(parsedLikes));
                 }
             } else {
                 // Create likes list in local storage
-                localStorage.setItem('likes', JSON.stringify([slug]));
+                localStorage.setItem(
+                    'likes',
+                    JSON.stringify([actionStates.slug])
+                );
             }
         } else {
             // Remove slug from likes list in local storage
             if (userLikes) {
                 const parsedLikes = JSON.parse(userLikes);
-                if (parsedLikes.includes(slug)) {
+                if (parsedLikes.includes(actionStates.slug)) {
                     const filteredLikes = parsedLikes.filter(
-                        (like: string) => like !== slug
+                        (like: string) => like !== actionStates.slug
                     );
                     localStorage.setItem(
                         'likes',
@@ -81,7 +84,7 @@ const LikeButton: FunctionComponent<Props> = ({ slug }) => {
                 }
             }
         }
-    }, [userLiked, slug]);
+    }, [actionStates.liked, actionStates.slug]);
 
     /**
      * likePost will send a POST request to the API to like the post.
@@ -94,25 +97,46 @@ const LikeButton: FunctionComponent<Props> = ({ slug }) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ slug })
+            body: JSON.stringify({ slug: actionStates.slug })
         })
             .then(({ status, statusText }) => {
                 if (status !== 200) {
                     return;
                 }
 
-                setUserLiked(true);
-                setLikes(likes + 1);
+                dispatch({ type: ActionTypes.SET_LIKE, payload: true });
+                dispatch({
+                    type: ActionTypes.SET_LIKE_COUNT,
+                    payload: actionStates.likeCount + 1
+                });
             })
             .catch((error) => {});
     };
 
     return (
-        <div>
-            <p>{likes} Likes</p>
-            <button onClick={likePost}>Like this post?</button>
-            {userLiked && <p>You liked this post!</p>}
-        </div>
+        <button
+            onClick={likePost}
+            className={classNames(actionStates.liked && 'pointer-events-none')}
+        >
+            <Tag
+                className={classNames(
+                    'duration-300',
+                    actionStates.liked &&
+                        'bg-gradient-to-br from-red-800 to-red-900 text-red-400 !border-red-700'
+                )}
+            >
+                <Icon name="heart" className="inline-block" />
+                <span>
+                    {actionStates.liked
+                        ? (() => {
+                              return actionStates.likeCount > 1
+                                  ? `${actionStates.likeCount} Likes`
+                                  : 'Liked';
+                          }).call(this)
+                        : 'Like'}
+                </span>
+            </Tag>
+        </button>
     );
 };
 

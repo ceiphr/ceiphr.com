@@ -22,7 +22,6 @@ import remarkMath from 'remark-math';
 import Layout from '@components/Layout';
 import Actions from '@components/blog/Actions';
 import CodeStatusBar from '@components/blog/CodeStatusBar';
-import LikeButton from '@components/blog/LikeButton';
 import Metadata from '@components/blog/Metadata';
 import ToC from '@components/blog/ToC';
 import Prompt from '@components/blog/llm/Prompt';
@@ -117,7 +116,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                 />
             </Head>
             <Layout>
-                <ActionsProvider>
+                <ActionsProvider slug={slug}>
                     <main className="mx-auto max-w-5xl px-6 mb-4">
                         <div className="flex divide-x space-x-4 divide-gray-800">
                             <div className="basis-3/4">
@@ -140,7 +139,6 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                             {frontmatter.description}
                                         </p>
                                     )}
-                                    <LikeButton slug={slug} />
                                     <hr className="my-4" />
                                     {frontmatter.ads && <Ad />}
                                 </div>

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import Icon from '@components/Icon';
 import Tag from '@components/Tag';
+import LikeButton from '@components/blog/LikeButton';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 
 const Actions = () => {
@@ -11,17 +12,17 @@ const Actions = () => {
     const [scrollToTop, setScrollToTop] = useState(false);
     const Tools = {
         Share: {
-            onClick: () => dispatch({ type: ActionTypes.TOGGLE_SHARE }),
+            onClick: () => dispatch({ type: ActionTypes.SET_SHARE }),
             shortcut: 'Ctrl+Shift+R',
             Icon: () => <Icon name="share" className="inline-block" />
         },
         'A.R.I.': {
-            onClick: () => dispatch({ type: ActionTypes.TOGGLE_PROMPT }),
+            onClick: () => dispatch({ type: ActionTypes.SET_PROMPT }),
             shortcut: 'Ctrl+Shift+T',
             Icon: () => <Icon name="zap" className="inline-block" />
         },
         Shortcuts: {
-            onClick: () => dispatch({ type: ActionTypes.TOGGLE_SHORTCUT }),
+            onClick: () => dispatch({ type: ActionTypes.SET_SHORTCUT }),
             shortcut: 'Ctrl+Shift+S',
             Icon: () => <Icon name="keyboard" className="inline-block" />
         },
@@ -55,31 +56,7 @@ const Actions = () => {
                 Actions
             </h2>
             <div className="gap-y-2 gap-x-1.5 ml-2 mt-3 flex flex-wrap text-gray-500">
-                <button
-                    onClick={() => dispatch({ type: ActionTypes.LIKE })}
-                    className={classNames(
-                        actionStates.liked && 'pointer-events-none'
-                    )}
-                >
-                    <Tag
-                        className={classNames(
-                            'duration-300',
-                            actionStates.liked &&
-                                'bg-gradient-to-br from-red-800 to-red-900 text-red-400 !border-red-700'
-                        )}
-                    >
-                        <Icon name="heart" className="inline-block" />
-                        <span>
-                            {actionStates.liked
-                                ? (() => {
-                                      return actionStates.likes > 1
-                                          ? `${actionStates.likes} Likes`
-                                          : 'Liked';
-                                  }).call(this)
-                                : 'Like'}
-                        </span>
-                    </Tag>
-                </button>
+                <LikeButton />
                 {Object.entries(Tools).map(
                     ([name, { onClick, shortcut, Icon }]) => (
                         <button key={name} onClick={onClick}>
