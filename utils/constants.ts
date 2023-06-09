@@ -1,3 +1,17 @@
+// For ceiphr.link
+export const LINK_SHORTENER_REDIRECTS: Record<string, string> = {
+    github: 'https://github.com/ceiphr',
+    gh: 'https://github.com/ceiphr',
+    do: 'https://m.do.co/c/b95c2a8a5568',
+    linkedin: 'https://www.linkedin.com/in/ari/',
+    accid: 'https://ceiphr.com/a-crash-course-in-django/',
+    hthypdp:
+        'https://www.digitalocean.com/community/tutorials/how-to-harden-your-production-django-project',
+    '2PcYE4L':
+        'https://www.digitalocean.com/community/tutorials/how-to-display-data-from-the-digitalocean-api-with-django'
+};
+
+// For testing purposes
 export const DEMO_STATS: SimpleAnalyticsStats = {
     path: '/blog/example-post',
     start: '2023-05-26T04:00:00.000Z',
