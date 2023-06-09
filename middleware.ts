@@ -23,10 +23,9 @@ export const config = {
 export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
     const domain = (req.headers.get('host') as string).replace('www.', '');
     const path = req.nextUrl.pathname;
-    const linkShortenerDomains =
-        process.env.LINK_SHORTENER_DOMAINS?.split(',') ?? [];
-
-    console.log(linkShortenerDomains, path);
+    const linkShortenerDomains = new Set(
+        process.env.LINK_SHORTENER_DOMAINS?.split(',') ?? []
+    );
 
     if (
         req.nextUrl.pathname.startsWith('/link/') &&
@@ -36,7 +35,7 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
             LINK_SHORTENER_REDIRECTS[path.replace('/link/', '')]
         );
 
-    if (linkShortenerDomains.includes(domain)) {
+    if (linkShortenerDomains.has(domain)) {
         if (LINK_SHORTENER_REDIRECTS[path])
             return NextResponse.redirect(LINK_SHORTENER_REDIRECTS[path]);
         else
