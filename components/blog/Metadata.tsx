@@ -4,10 +4,10 @@ import { Tab } from '@headlessui/react';
 import classNames from 'classnames';
 
 import License from '@components/blog/License';
-import Changelog from '@components/gh/Changelog';
-import Profile from '@components/gh/Profile';
-import Histogram from '@components/sa/Histogram';
-import Referrals from '@components/sa/Referrals';
+import Changelog from '@components/github/Changelog';
+import Profile from '@components/github/Profile';
+import Histogram from '@components/simple-analytics/Histogram';
+import Referrals from '@components/simple-analytics/Referrals';
 
 interface Props {
     slug: string;

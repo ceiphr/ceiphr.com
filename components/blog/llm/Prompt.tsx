@@ -1,6 +1,7 @@
 import {
     FunctionComponent,
     useCallback,
+    useContext,
     useEffect,
     useRef,
     useState
@@ -20,6 +21,7 @@ import useLLM, { OpenAIMessage } from 'usellm';
 import Logo from '@assets/icons/Logo';
 import Modal from '@components/Modal';
 import Message from '@components/blog/llm/Message';
+import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 
 const createPrompt = (paragraphs: string[], question: string) => `
 Read the following technical article and answer the question below.
@@ -40,7 +42,7 @@ Question: ${question}
 // TODO Fix extra newline in textarea
 
 const Prompt: FunctionComponent = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const { actionStates, dispatch } = useContext(ActionStatesContext);
     const [input, setInput] = useState('');
     const [history, setHistory] = useState<OpenAIMessage[]>([]);
     const [typing, setTyping] = useState(false);
@@ -91,7 +93,9 @@ const Prompt: FunctionComponent = () => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
 
-                setIsOpen((isOpen) => !isOpen);
+                dispatch({
+                    type: ActionTypes.TOGGLE_PROMPT
+                });
             }
         }
         window.addEventListener('keydown', handleKeyDown);
@@ -99,7 +103,7 @@ const Prompt: FunctionComponent = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [handleSend, isOpen]);
+    }, [handleSend, dispatch]);
 
     useEffect(() => {
         if (!messageFeedRef.current) return;
@@ -117,7 +121,7 @@ const Prompt: FunctionComponent = () => {
         messageFeedRef.current.scrollTop = scrollPosition;
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen, messageFeedRef]);
+    }, [actionStates.promptIsOpen, messageFeedRef]);
 
     useEffect(() => {
         const INIT_MESSAGE = 'Ask A.R.I. about this article.';
@@ -147,13 +151,13 @@ const Prompt: FunctionComponent = () => {
                 typed.destroy();
             };
         }, 300);
-    }, [initialMessageRef, isOpen]);
+    }, [initialMessageRef, actionStates.promptIsOpen]);
 
     return (
         <Modal
             initialFocus={inputRef}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            isOpen={actionStates.promptIsOpen}
+            setIsOpen={() => dispatch({ type: ActionTypes.TOGGLE_PROMPT })}
             className="h-2xl flex flex-col"
         >
             <div
@@ -173,7 +177,9 @@ const Prompt: FunctionComponent = () => {
                 </h3>
                 <button
                     className="duration-300 text-gray-500 hover:text-gray-300"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() =>
+                        dispatch({ type: ActionTypes.TOGGLE_PROMPT })
+                    }
                 >
                     <XIcon className="w-5 h-5" />
                 </button>

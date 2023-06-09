@@ -1,46 +1,68 @@
 import { Dispatch, ReactNode, createContext, useReducer } from 'react';
 
-enum ActionTypes {
+export enum ActionTypes {
     TOGGLE_PROMPT,
     TOGGLE_SHARE,
-    TOGGLE_SHORTCUT
+    TOGGLE_SHORTCUT,
+    LIKE
 }
 
 interface Action {
     type: ActionTypes;
+    payload?: any;
 }
 
 interface ActionStates {
     promptIsOpen: boolean;
     shareIsOpen: boolean;
     shortcutIsOpen: boolean;
+    liked: boolean;
+    likes: number;
 }
 
 const initialActionStates: ActionStates = {
     promptIsOpen: false,
     shareIsOpen: false,
-    shortcutIsOpen: false
+    shortcutIsOpen: false,
+    liked: false,
+    likes: 0
 };
 
+// TODO Toggles should be refactored to set state based on payload
 function reducer(state: ActionStates, action: Action) {
     switch (action.type) {
         case ActionTypes.TOGGLE_PROMPT:
             return {
                 shareIsOpen: false,
                 shortcutIsOpen: false,
-                promptIsOpen: !state.promptIsOpen
+                promptIsOpen: !state.promptIsOpen,
+                liked: state.liked,
+                likes: state.likes
             };
         case ActionTypes.TOGGLE_SHARE:
             return {
                 promptIsOpen: false,
                 shortcutIsOpen: false,
-                shareIsOpen: !state.shareIsOpen
+                shareIsOpen: !state.shareIsOpen,
+                liked: state.liked,
+                likes: state.likes
             };
         case ActionTypes.TOGGLE_SHORTCUT:
             return {
                 promptIsOpen: false,
                 shareIsOpen: false,
-                shortcutIsOpen: !state.shortcutIsOpen
+                shortcutIsOpen: !state.shortcutIsOpen,
+                liked: state.liked,
+                likes: state.likes
+            };
+        case ActionTypes.LIKE:
+            console.log('like');
+            return {
+                promptIsOpen: false,
+                shareIsOpen: false,
+                shortcutIsOpen: false,
+                liked: true,
+                likes: state.likes + 1
             };
         default:
             return state;

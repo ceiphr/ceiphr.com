@@ -26,7 +26,10 @@ interface GitHubProfile {
     url: string;
     avatar_url: string;
     bio: string;
-    company: string;
+    company: {
+        name: string;
+        url: string;
+    };
     location: string;
     website: string;
     followers: number;

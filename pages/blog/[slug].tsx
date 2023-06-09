@@ -29,6 +29,7 @@ import Prompt from '@components/blog/llm/Prompt';
 import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
+import { ActionsProvider } from '@contexts/blog/useActions';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
 import rehypeCodeStatusBar from '@utils/rehype/code-statusbar';
 import rehypeExtractHeadings from '@utils/rehype/extract-headings';
@@ -36,9 +37,12 @@ import rehypeExtractHeadings from '@utils/rehype/extract-headings';
 const Ad = dynamic(() => import('@components/blog/Ad'), {
     ssr: false
 });
-const Histogram = dynamic(() => import('@components/sa/Histogram'), {
-    ssr: false
-});
+const Histogram = dynamic(
+    () => import('@components/simple-analytics/Histogram'),
+    {
+        ssr: false
+    }
+);
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
@@ -113,64 +117,71 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                 />
             </Head>
             <Layout>
-                <main className="mx-auto max-w-5xl px-6 mb-4">
-                    <div className="flex divide-x space-x-4 divide-gray-800">
-                        <div className="basis-3/4">
-                            <header>
-                                <nav>
-                                    <Link href="/" legacyBehavior>
-                                        <a>👈 Go back home</a>
-                                    </Link>
-                                </nav>
-                            </header>
-                            <div className="post-header">
-                                <h1
-                                    id="title"
-                                    className="text-6xl font-heading mt-4 mb-2"
-                                >
-                                    {frontmatter.title}
-                                </h1>
-                                {frontmatter.description && (
-                                    <p className="description">
-                                        {frontmatter.description}
-                                    </p>
-                                )}
-                                <LikeButton slug={slug} />
-                                <hr className="my-4" />
-                                {frontmatter.ads && <Ad />}
+                <ActionsProvider>
+                    <main className="mx-auto max-w-5xl px-6 mb-4">
+                        <div className="flex divide-x space-x-4 divide-gray-800">
+                            <div className="basis-3/4">
+                                <header>
+                                    <nav>
+                                        <Link href="/" legacyBehavior>
+                                            <a>👈 Go back home</a>
+                                        </Link>
+                                    </nav>
+                                </header>
+                                <div className="post-header">
+                                    <h1
+                                        id="title"
+                                        className="text-6xl font-heading mt-4 mb-2"
+                                    >
+                                        {frontmatter.title}
+                                    </h1>
+                                    {frontmatter.description && (
+                                        <p className="description">
+                                            {frontmatter.description}
+                                        </p>
+                                    )}
+                                    <LikeButton slug={slug} />
+                                    <hr className="my-4" />
+                                    {frontmatter.ads && <Ad />}
+                                </div>
+                                <article className="mb-4">
+                                    <MDXRemote
+                                        {...source}
+                                        frontmatter={frontmatter}
+                                        components={components}
+                                    />
+                                </article>
                             </div>
-                            <article className="mb-4">
-                                <MDXRemote
-                                    {...source}
-                                    frontmatter={frontmatter}
-                                    components={components}
-                                />
-                            </article>
-                        </div>
-                        <div className="basis-1/4">
-                            <div className="sticky top-0">
-                                <ToC headings={headings} />
-                                <Actions />
+                            <div className="basis-1/4">
+                                <div className="sticky top-0">
+                                    <ToC headings={headings} />
+                                    <Actions />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <Metadata slug={slug} frontmatter={frontmatter} />
-                    <Giscus
-                        repo="ceiphr/ceiphr.com"
-                        repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''}
-                        category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? ''}
-                        categoryId={
-                            process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
-                        }
-                        term={frontmatter.title}
-                        mapping="specific"
-                        reactionsEnabled="0"
-                        theme="dark_dimmed"
-                        loading="lazy"
-                    />
-                </main>
+                        <Metadata slug={slug} frontmatter={frontmatter} />
+                        <Giscus
+                            id="comments"
+                            repo="ceiphr/ceiphr.com"
+                            repoId={
+                                process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''
+                            }
+                            category={
+                                process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? ''
+                            }
+                            categoryId={
+                                process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
+                            }
+                            term={frontmatter.title}
+                            mapping="specific"
+                            reactionsEnabled="0"
+                            theme="dark_dimmed"
+                            loading="lazy"
+                        />
+                    </main>
+                    <Prompt />
+                </ActionsProvider>
             </Layout>
-            <Prompt />
         </>
     );
 }

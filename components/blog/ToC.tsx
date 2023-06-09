@@ -125,7 +125,7 @@ const ToC: FunctionComponent<Props> = ({ headings }) => {
             <h2 className="text-lg font-heading leading-6 mt-4 mb-2">
                 Table of Contents
             </h2>
-            <div className="text-gray-600">
+            <div className="text-gray-500">
                 {headings.map((heading) => {
                     return (
                         <div

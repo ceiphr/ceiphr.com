@@ -40,7 +40,14 @@ async function handleGet(_req: NextApiRequest, res: NextApiResponse) {
         url: profile.data.html_url ?? '',
         avatar_url: profile.data.avatar_url ?? '',
         bio: profile.data.bio ?? '',
-        company: profile.data.company ?? '',
+        company: {
+            name: profile.data.company ?? '',
+            url:
+                `https://github.com/${profile.data.company?.replace(
+                    '@',
+                    ''
+                )}` ?? ''
+        },
         location: profile.data.location ?? '',
         website: profile.data.blog ?? '',
         followers: profile.data.followers ?? 0,

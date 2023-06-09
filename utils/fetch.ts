@@ -13,7 +13,7 @@ export const fetchCommits = async (
     if (page) params.append('page', page.toString());
 
     const response = await fetch(
-        `/api/gh/commits/${path}${params && '?' + params.toString()}`
+        `/api/github/commits/${path}${params && '?' + params.toString()}`
     );
 
     if (response.status !== 200) {
@@ -27,7 +27,7 @@ export const fetchCommits = async (
 };
 
 export const fetchProfile = async () => {
-    const response = await fetch('/api/gh/profile');
+    const response = await fetch('/api/github/profile');
 
     if (response.status !== 200) {
         console.error(
@@ -48,7 +48,7 @@ export const fetchRepos = async (archived?: boolean, length?: number) => {
     if (length) params.append('length', length.toString());
 
     const response = await fetch(
-        `/api/gh/repos${params && '?' + params.toString()}`
+        `/api/github/repos${params && '?' + params.toString()}`
     );
 
     if (response.status !== 200) {
@@ -71,7 +71,7 @@ export const fetchStats = async (route: string, range?: Range) => {
     if (range) params.append('range', range);
 
     const response = await fetch(
-        `/api/sa/${route}${params && '?' + params.toString()}`,
+        `/api/simple-analytics/${route}${params && '?' + params.toString()}`,
         {
             headers: {
                 'Content-Type': 'application/json',
