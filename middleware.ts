@@ -36,7 +36,7 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
         );
 
     if (linkShortenerDomains.has(domain)) {
-        if (LINK_SHORTENER_REDIRECTS[path])
+        if (LINK_SHORTENER_REDIRECTS[path.replace('/', '')])
             return NextResponse.redirect(LINK_SHORTENER_REDIRECTS[path]);
         else
             return NextResponse.redirect(
