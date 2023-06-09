@@ -27,16 +27,17 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
         process.env.LINK_SHORTENER_DOMAINS?.split(',') ?? [];
 
     console.log(linkShortenerDomains, path);
-    const isDev =
-        process.env.NODE_ENV === 'development' &&
-        req.nextUrl.pathname.startsWith('/link/');
 
-    if (linkShortenerDomains.includes(domain) || isDev) {
-        if (isDev)
-            return NextResponse.redirect(
-                LINK_SHORTENER_REDIRECTS[path.replace('/link/', '')]
-            );
-        else if (LINK_SHORTENER_REDIRECTS[path])
+    if (
+        req.nextUrl.pathname.startsWith('/link/') &&
+        LINK_SHORTENER_REDIRECTS[path.replace('/link/', '')]
+    )
+        return NextResponse.redirect(
+            LINK_SHORTENER_REDIRECTS[path.replace('/link/', '')]
+        );
+
+    if (linkShortenerDomains.includes(domain)) {
+        if (LINK_SHORTENER_REDIRECTS[path])
             return NextResponse.redirect(LINK_SHORTENER_REDIRECTS[path]);
         else
             return NextResponse.redirect(
