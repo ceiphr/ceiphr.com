@@ -61,6 +61,7 @@ const components = {
 // TODO shift+arrow keys to navigate between sections
 // TODO ctrl+arrow keys to navigate to the top/bottom of the article
 // TODO syntax highlighting on hover
+// TODO make asset paths relative to the post w/ https://github.com/brechtcs/rehype-urls
 
 interface Props {
     source: {

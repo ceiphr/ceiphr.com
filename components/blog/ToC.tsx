@@ -1,10 +1,4 @@
-import {
-    FunctionComponent,
-    use,
-    useCallback,
-    useEffect,
-    useState
-} from 'react';
+import { FunctionComponent, useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -131,38 +125,41 @@ const ToC: FunctionComponent<Props> = ({ headings }) => {
             <h2 className="text-lg font-heading leading-6 mt-4 mb-2">
                 Table of Contents
             </h2>
-            {headings.map((heading) => {
-                return (
-                    <div
-                        key={heading.id}
-                        className={classNames('ml-4 duration-1000', {
-                            'text-blue-500': activeHeading?.id === heading.id
-                        })}
-                    >
-                        <a href={`#${heading.id}`}>{heading.title}</a>
-                        {heading.subheadings &&
-                            heading.subheadings.map((subheading) => {
-                                return (
-                                    <div
-                                        key={subheading.id}
-                                        className={classNames(
-                                            'ml-3 duration-1000',
-                                            {
-                                                'text-blue-500':
-                                                    activeHeading?.id ===
-                                                    subheading.id
-                                            }
-                                        )}
-                                    >
-                                        <a href={`#${subheading.id}`}>
-                                            {subheading.title}
-                                        </a>
-                                    </div>
-                                );
+            <div className="text-gray-600">
+                {headings.map((heading) => {
+                    return (
+                        <div
+                            key={heading.id}
+                            className={classNames('ml-4 duration-1000', {
+                                'text-gray-300':
+                                    activeHeading?.id === heading.id
                             })}
-                    </div>
-                );
-            })}
+                        >
+                            <a href={`#${heading.id}`}>{heading.title}</a>
+                            {heading.subheadings &&
+                                heading.subheadings.map((subheading) => {
+                                    return (
+                                        <div
+                                            key={subheading.id}
+                                            className={classNames(
+                                                'ml-3 duration-1000',
+                                                {
+                                                    'text-gray-300':
+                                                        activeHeading?.id ===
+                                                        subheading.id
+                                                }
+                                            )}
+                                        >
+                                            <a href={`#${subheading.id}`}>
+                                                {subheading.title}
+                                            </a>
+                                        </div>
+                                    );
+                                })}
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 };

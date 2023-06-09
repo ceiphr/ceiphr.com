@@ -16,6 +16,7 @@ const nextConfig = {
             }
         ]
     },
+    // TODO Add legacy post redirects
     webpack: (config, _options) => {
         config.module.rules.push(
             {

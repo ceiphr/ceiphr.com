@@ -57,7 +57,8 @@ const CodeStatusBar: FunctionComponent<Props> = ({
             Icon = TypescriptIcon;
             break;
         default:
-            throw new Error(`Icon ${language} not found`);
+            Icon = PlainTextIcon;
+            break;
     }
 
     return (
