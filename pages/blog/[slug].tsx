@@ -4,10 +4,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import path from 'path';
-import { useEffect } from 'react';
+import type { ComponentProps } from 'react';
 
-import Giscus from '@giscus/react';
-import { createHash } from 'crypto';
+import type { MDXProvider } from '@mdx-js/react';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -23,18 +22,15 @@ import remarkMath from 'remark-math';
 import Layout from '@components/Layout';
 import Actions from '@components/blog/Actions';
 import Metadata from '@components/blog/Metadata';
-import Share from '@components/blog/Share';
 import ToC from '@components/blog/ToC';
-import Prompt from '@components/blog/llm/Prompt';
-import CodeStatusBar from '@components/blog/mdx/CodeStatusBar';
-import Container from '@components/blog/mdx/Container';
-import CustomImage from '@components/blog/mdx/Image';
-import CustomLink from '@components/blog/mdx/Link';
 import { ActionsProvider } from '@contexts/blog/useActions';
-import { LINK_SHORTENER_REDIRECTS } from '@lib/redirects';
 import rehypeCodeStatusBar from '@lib/rehype/code-statusbar';
 import rehypeExtractHeadings from '@lib/rehype/extract-headings';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
+
+const Prompt = dynamic(() => import('@components/blog/llm/Prompt'));
+const Giscus = dynamic(() => import('@giscus/react'));
+const Share = dynamic(() => import('@components/blog/Share'));
 
 const Ad = dynamic(() => import('@components/blog/Ad'), {
     ssr: false
@@ -44,16 +40,13 @@ const Ad = dynamic(() => import('@components/blog/Ad'), {
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how
 // to handle import statements. Instead, you must include components in scope
 // here.
-const components = {
-    // It also works with dynamically-imported components, which is especially
-    // useful for conditionally loading components for certain routes.
-    // See the notes in README.md for more details.
-    img: (props: any) => <CustomImage {...props} />,
-    a: (props: any) => <CustomLink {...props} />,
-    CodeStatusBar,
-    Head,
-    Link,
-    Container,
+const components: ComponentProps<typeof MDXProvider>['components'] = {
+    // @ts-expect-error: Replaces the img tag with the custom component.
+    img: dynamic(() => import('@components/blog/mdx/Image')),
+    // @ts-expect-error: Replaces the a tag with the custom component.
+    a: dynamic(() => import('@components/blog/mdx/Link')),
+    CodeStatusBar: dynamic(() => import('@components/blog/mdx/CodeStatusBar')),
+    Container: dynamic(() => import('@components/blog/mdx/Container')),
     Spline: dynamic(() => import('@components/blog/mdx/Spline')),
     Rive: dynamic(() => import('@components/blog/mdx/Rive'))
 };
@@ -80,10 +73,6 @@ interface Props {
 export default function PostPage({ source, frontmatter, headings }: Props) {
     const router = useRouter();
     const slug = router.query.slug as string;
-
-    useEffect(() => {
-        console.log(frontmatter);
-    }, [frontmatter]);
 
     return (
         <>
@@ -115,7 +104,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                 />
             </Head>
             <Layout>
-                <ActionsProvider slug={slug} hash={frontmatter.hash}>
+                <ActionsProvider slug={slug}>
                     <main className="mx-auto max-w-5xl px-6 mb-4">
                         <div className="flex divide-x space-x-4 divide-gray-800">
                             <div className="basis-3/4">
@@ -232,13 +221,6 @@ export const getStaticProps = async ({ params }: StaticProps) => {
         },
         scope: data
     });
-
-    // Check if the post has a short link
-    const hash = createHash('sha256');
-    hash.update(params.slug);
-    const shortHash = hash.digest('hex').substring(0, 7);
-
-    if (LINK_SHORTENER_REDIRECTS[shortHash]) data.hash = shortHash;
 
     return {
         props: {

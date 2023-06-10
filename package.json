@@ -55,7 +55,6 @@
         "rehype-stringify": "^9.0.3",
         "remark-parse": "^10.0.2",
         "remark-rehype": "^10.1.0",
-        "request-ip": "^3.3.0",
         "shiki": "^0.14.2",
         "tailwindcss": "3.3.2",
         "typed.js": "^2.0.16",

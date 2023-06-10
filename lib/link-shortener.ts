@@ -2,7 +2,7 @@
 
 // Note: new-post.sh expects this object to be at the end of the file to
 //       add new posts to the list.
-export const LINK_SHORTENER_REDIRECTS: Record<string, string> = {
+export const REDIRECTS: Record<string, string> = {
     // Socials
     github: 'https://github.com/ceiphr',
     gh: 'https://github.com/ceiphr',

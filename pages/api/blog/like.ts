@@ -1,14 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { kv } from '@vercel/kv';
-import Joi from 'joi';
-import { getClientIp } from 'request-ip';
 
-import rateLimit from '@lib/rate-limit';
-
-const schema = Joi.object({
-    slug: Joi.string().required()
-});
+import { slugsSchema } from '@utils/schemas';
 
 /**
  * handleGet will handle fetching likes from the KV store for the respective post.
@@ -17,7 +11,7 @@ const schema = Joi.object({
  * @param res   The response object is how we send the status code and likes.
  */
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-    const { error } = schema.validate(req.query);
+    const { error } = slugsSchema.validate(req.query);
     if (error) {
         return res
             .status(400)
@@ -38,19 +32,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
  * @param res   The response object is how we send the status code and likes.
  */
 async function handlePost(req: NextApiRequest, res: NextApiResponse) {
-    // Rate limit by IP address
-    const ip = getClientIp(req);
-    if (!ip) {
-        return res.status(500).json({ message: 'Unable to get IP address' });
-    }
-
-    // Rate limit to 10 requests per 60 seconds
-    if (!(await rateLimit(res, ip, 10))) {
-        return res.status(429).json({ message: 'Too many requests' });
-    }
-
     const { slug } = req.body;
-    const { error } = schema.validate({ slug });
+    const { error } = slugsSchema.validate({ slug });
     if (error) {
         return res
             .status(400)

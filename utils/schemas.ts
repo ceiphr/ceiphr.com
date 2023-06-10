@@ -1,5 +1,9 @@
 import Joi from 'joi';
 
+export const slugsSchema = Joi.object({
+    slug: Joi.string().required()
+});
+
 export const commitsSchema = Joi.object({
     path: Joi.alternatives()
         .try(Joi.array().items(Joi.string()), Joi.string())

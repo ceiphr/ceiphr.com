@@ -53,7 +53,7 @@ const Prompt: FunctionComponent = () => {
     const initialMessageRef = useRef<HTMLDivElement>(null);
     const messageFeedRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const llm = useLLM({ serviceUrl: '/api/llm' });
+    const llm = useLLM({ serviceUrl: '/api/blog/llm' });
 
     const handleSend = useCallback(() => {
         if (input.length === 0) return;

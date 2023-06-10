@@ -24,7 +24,6 @@ interface Action {
 
 interface ActionStates {
     slug: string;
-    hash?: string;
     promptIsOpen: boolean;
     shareIsOpen: boolean;
     shortcutIsOpen: boolean;
@@ -42,11 +41,11 @@ const initialActionStates: ActionStates = {
 };
 
 function reducer(state: ActionStates, action: Action) {
+    // TODO Clean this up
     switch (action.type) {
         case ActionTypes.SET_SLUG:
             return {
                 slug: action.payload,
-                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
@@ -66,7 +65,6 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_PROMPT:
             return {
                 slug: state.slug,
-                hash: state.hash,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
                 promptIsOpen: action.payload,
@@ -76,7 +74,6 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_SHARE:
             return {
                 slug: state.slug,
-                hash: state.hash,
                 promptIsOpen: false,
                 shortcutIsOpen: false,
                 shareIsOpen: action.payload,
@@ -86,7 +83,6 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_SHORTCUT:
             return {
                 slug: state.slug,
-                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: action.payload,
@@ -96,7 +92,6 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_LIKE:
             return {
                 slug: state.slug,
-                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
@@ -106,7 +101,6 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_LIKE_COUNT:
             return {
                 slug: state.slug,
-                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
