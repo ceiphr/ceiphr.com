@@ -22,29 +22,23 @@ import remarkMath from 'remark-math';
 
 import Layout from '@components/Layout';
 import Actions from '@components/blog/Actions';
-import CodeStatusBar from '@components/blog/CodeStatusBar';
 import Metadata from '@components/blog/Metadata';
 import Share from '@components/blog/Share';
 import ToC from '@components/blog/ToC';
 import Prompt from '@components/blog/llm/Prompt';
+import CodeStatusBar from '@components/blog/mdx/CodeStatusBar';
 import Container from '@components/blog/mdx/Container';
 import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { ActionsProvider } from '@contexts/blog/useActions';
+import { LINK_SHORTENER_REDIRECTS } from '@lib/redirects';
+import rehypeCodeStatusBar from '@lib/rehype/code-statusbar';
+import rehypeExtractHeadings from '@lib/rehype/extract-headings';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
-import { LINK_SHORTENER_REDIRECTS } from '@utils/redirects';
-import rehypeCodeStatusBar from '@utils/rehype/code-statusbar';
-import rehypeExtractHeadings from '@utils/rehype/extract-headings';
 
 const Ad = dynamic(() => import('@components/blog/Ad'), {
     ssr: false
 });
-const Histogram = dynamic(
-    () => import('@components/simple-analytics/Histogram'),
-    {
-        ssr: false
-    }
-);
 
 // Custom components/renderers to pass to MDX.
 // Since the MDX files aren't loaded by webpack, they have no knowledge of how

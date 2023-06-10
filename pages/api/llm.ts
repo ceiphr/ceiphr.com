@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ipAddress } from '@vercel/edge';
 import { createLLMService } from 'usellm';
 
-import { rateLimitEdge } from '@utils/rate-limit';
+import { rateLimitEdge } from '@lib/rate-limit';
 
 const llmService = createLLMService({
     openaiApiKey: process.env.OPENAI_API_KEY,

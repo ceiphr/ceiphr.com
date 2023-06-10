@@ -4,7 +4,7 @@ import { kv } from '@vercel/kv';
 import Joi from 'joi';
 import { getClientIp } from 'request-ip';
 
-import rateLimit from '@utils/rate-limit';
+import rateLimit from '@lib/rate-limit';
 
 const schema = Joi.object({
     slug: Joi.string().required()

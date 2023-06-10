@@ -115,16 +115,16 @@ sed -i "s/date:/date: '$(date --iso-8601=seconds)'/g" "content/posts/${slug}.mdx
 
 # Add link shortener entry.
 # Delete the last line of the file.
-sed -i '$d' utils/constants.ts
+sed -i '$d' lib/constants.ts
 
 # Generate the hash and the URL.
 hash=$(echo -n "${slug}" | openssl dgst -sha256 | awk '{print $2}' | head -c 7)
 url="https://ceiphr.com/blog/${slug}"
 
 # Add new entry and put the closing bracket back
-echo ",\"$hash\": \"$url\"" >>utils/constants.ts
-echo "};" >>utils/constants.ts
-prettier --write utils/constants.ts
+echo ",\"$hash\": \"$url\"" >>lib/constants.ts
+echo "};" >>lib/constants.ts
+prettier --write lib/constants.ts
 
 # Open the post in the editor.
 code "content/posts/${slug}.mdx"

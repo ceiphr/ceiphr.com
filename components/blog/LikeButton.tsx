@@ -6,8 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 import Icon from '@components/Icon';
 import Tag from '@components/Tag';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
-
-// TODO Error context
+import { ErrorContext, FetchError } from '@contexts/useError';
 
 /**
  * LikeButton will render a button that allows users to like a post. The button
@@ -20,6 +19,7 @@ import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
  */
 const LikeButton: FunctionComponent = () => {
     const { actionStates, dispatch } = useContext(ActionStatesContext);
+    const { handleError } = useContext(ErrorContext);
     const [loading, setLoading] = useState(true);
 
     // Fetch initial likes
@@ -47,8 +47,11 @@ const LikeButton: FunctionComponent = () => {
                 }
                 setLoading(false);
             })
-            .catch((error) => {});
-    }, [actionStates.slug, dispatch]);
+            .catch((error: FetchError) => {
+                console.error(error);
+                handleError(error.message);
+            });
+    }, [actionStates.slug, dispatch, handleError]);
 
     // Update local storage when the user likes a post
     useEffect(() => {
@@ -110,7 +113,10 @@ const LikeButton: FunctionComponent = () => {
                     payload: actionStates.likeCount + 1
                 });
             })
-            .catch((error) => {});
+            .catch((error: FetchError) => {
+                console.error(error);
+                handleError(error.message);
+            });
     };
 
     return (

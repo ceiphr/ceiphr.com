@@ -14,7 +14,7 @@ import {
     TbBrandReact as ReactIcon
 } from 'react-icons/tb';
 
-import CopyButton from './CopyButton';
+import CopyButton from '@components/blog/CopyButton';
 
 interface Props {
     value: string;

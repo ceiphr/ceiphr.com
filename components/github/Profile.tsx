@@ -14,7 +14,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import Icon from '@components/Icon';
 import Tag from '@components/Tag';
-import { fetchProfile } from '@utils/fetch';
+import { fetchProfile } from '@lib/fetch';
 
 const Socials: FunctionComponent<{ socials: GitHubProfile['socials'] }> = ({
     socials

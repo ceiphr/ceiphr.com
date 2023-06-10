@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 
 import {
     Bar,
@@ -10,7 +10,8 @@ import {
     YAxis
 } from 'recharts';
 
-import { fetchStats } from '@utils/fetch';
+import { ErrorContext, FetchError } from '@contexts/useError';
+import { fetchStats } from '@lib/fetch';
 import { formatThousands, numberWithCommas } from '@utils/numbers';
 
 interface CustomLabelProps {
@@ -103,6 +104,7 @@ const Referrals: FunctionComponent<ReferrerProps> = ({
     className,
     stats: providedStats
 }) => {
+    const { handleError } = useContext(ErrorContext);
     const [stats, setStats] = useState<SimpleAnalyticsStats | null>(null);
     const sortedReferrers = stats?.referrers.sort(
         (a, b) => b.pageviews - a.pageviews
@@ -126,8 +128,11 @@ const Referrals: FunctionComponent<ReferrerProps> = ({
 
         fetchStats(route ?? '')
             .then((data) => setStats(data))
-            .catch((err) => console.error(err));
-    }, [route, providedStats]);
+            .catch((error: FetchError) => {
+                console.error(error);
+                handleError(error);
+            });
+    }, [route, providedStats, handleError]);
 
     return (
         <div className={className}>

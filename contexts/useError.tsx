@@ -1,5 +1,11 @@
 import { createContext, useState } from 'react';
 
+export interface FetchError extends Error {
+    name: string;
+    message: string;
+    stack?: string;
+}
+
 export const ErrorContext = createContext({
     error: null,
     handleError: (error: any) => {}

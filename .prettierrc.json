@@ -8,7 +8,7 @@
     "importOrder": [
         "^(react/(.*)$)|^(react$)|^(next/(.*)$)|^(next$)|path|fs",
         "<THIRD_PARTY_MODULES>",
-        "^@components/(.*)$|^@utils/(.*)$|^@contexts/(.*)$|^@types/(.*)$|^@styles/(.*)$|^@assets/(.*)$",
+        "^@components/(.*)$|^@utils/(.*)$|^@contexts/(.*)$|^@types/(.*)$|^@lib/(.*)$|^@styles/(.*)$|^@assets/(.*)$",
         "^[./]"
     ],
     "importOrderSeparation": true,

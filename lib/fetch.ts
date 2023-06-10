@@ -16,12 +16,7 @@ export const fetchCommits = async (
         `/api/github/commits/${path}${params && '?' + params.toString()}`
     );
 
-    if (response.status !== 200) {
-        console.error(
-            `Error fetching commits: ${response.status} ${response.statusText}`
-        );
-        throw new Error('Error fetching comments');
-    }
+    if (response.status !== 200) throw new Error('Error fetching comments');
 
     return response.json();
 };
@@ -29,12 +24,7 @@ export const fetchCommits = async (
 export const fetchProfile = async () => {
     const response = await fetch('/api/github/profile');
 
-    if (response.status !== 200) {
-        console.error(
-            `Error fetching profile: ${response.status} ${response.statusText}`
-        );
-        throw new Error('Error fetching profile');
-    }
+    if (response.status !== 200) throw new Error('Error fetching profile');
 
     return response.json();
 };
@@ -51,12 +41,7 @@ export const fetchRepos = async (archived?: boolean, length?: number) => {
         `/api/github/repos${params && '?' + params.toString()}`
     );
 
-    if (response.status !== 200) {
-        console.error(
-            `Error fetching repos: ${response.status} ${response.statusText}`
-        );
-        throw new Error('Error fetching repos');
-    }
+    if (response.status !== 200) throw new Error('Error fetching repos');
 
     return response.json();
 };
@@ -80,12 +65,7 @@ export const fetchStats = async (route: string, range?: Range) => {
         }
     );
 
-    if (response.status !== 200) {
-        console.error(
-            `Error fetching analytics: ${response.status} ${response.statusText}`
-        );
-        throw new Error('Error fetching analytics');
-    }
+    if (response.status !== 200) throw new Error('Error fetching analytics');
 
     return response.json();
 };

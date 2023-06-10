@@ -1,9 +1,16 @@
 import Image from 'next/image';
-import { Fragment, FunctionComponent, useEffect, useState } from 'react';
+import {
+    Fragment,
+    FunctionComponent,
+    useContext,
+    useEffect,
+    useState
+} from 'react';
 
 import classNames from 'classnames';
 
-import { fetchCommits } from '@utils/fetch';
+import { ErrorContext, FetchError } from '@contexts/useError';
+import { fetchCommits } from '@lib/fetch';
 import { groupByTimeSince } from '@utils/time';
 
 /**
@@ -69,6 +76,7 @@ const Changelog: FunctionComponent<Props> = ({
     length,
     className
 }) => {
+    const { handleError } = useContext(ErrorContext);
     const [groupedCommits, setGroupedCommits] =
         useState<Record<string, GitHubCommit[]>>();
 
@@ -96,11 +104,11 @@ const Changelog: FunctionComponent<Props> = ({
                     groupByTimeSince(history);
                 setGroupedCommits(historyByTime);
             })
-            .catch((error) => {
-                // TODO: Handle error
+            .catch((error: FetchError) => {
                 console.error(error);
+                handleError(error.message);
             });
-    }, [path, page, length, commits]);
+    }, [path, page, length, commits, handleError]);
 
     return (
         <div

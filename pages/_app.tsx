@@ -26,7 +26,6 @@ const alternate = localFont({
 });
 
 // TODO Add header for preview mode
-// TODO Add context with local storage for theme
 
 export default function App({ Component, pageProps }: AppProps) {
     return (

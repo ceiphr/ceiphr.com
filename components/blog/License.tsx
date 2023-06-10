@@ -27,7 +27,6 @@ const License: FunctionComponent<Props> = ({
     const elements = new Set(license.toLowerCase().split('-'));
 
     // Get license name
-    // TODO Hover over icon to see license name
     let name = '';
     elements.forEach((element) => {
         switch (element) {

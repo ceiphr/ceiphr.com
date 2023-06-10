@@ -16,7 +16,6 @@ const nextConfig = {
             }
         ]
     },
-    // TODO Add legacy post redirects
     webpack: (config, _options) => {
         config.module.rules.push(
             {
@@ -34,6 +33,16 @@ const nextConfig = {
     },
     redirects: async () => {
         return [
+            {
+                source: '/a-crash-course-in-django',
+                destination: '/blog/a-crash-course-in-django',
+                permanent: true
+            },
+            {
+                source: '/beveled-corners-with-sass',
+                destination: '/blog/beveled-corners-with-sass',
+                permanent: true
+            },
             {
                 source: '/sitemap',
                 destination: '/sitemap.xml',
