@@ -1,18 +1,15 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import classNames from 'classnames';
 import {
     Bar,
     BarChart,
     Cell,
     LabelList,
-    LabelProps,
     ResponsiveContainer,
     XAxis,
     YAxis
 } from 'recharts';
 
-import { DEMO_STATS } from '@utils/constants';
 import { fetchStats } from '@utils/fetch';
 import { formatThousands, numberWithCommas } from '@utils/numbers';
 
@@ -124,9 +121,6 @@ const Referrals: FunctionComponent<ReferrerProps> = ({
     useEffect(() => {
         if (providedStats) {
             setStats(providedStats);
-            return;
-        } else if (process.env.NODE_ENV === 'development') {
-            setStats(DEMO_STATS);
             return;
         }
 

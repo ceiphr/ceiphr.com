@@ -1,6 +1,6 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 
-import { LINK_SHORTENER_REDIRECTS } from '@utils/constants';
+import { LINK_SHORTENER_REDIRECTS } from '@utils/redirects';
 
 /**
  * @see https://github.com/steven-tey/dub/blob/fa74a85dda3868d532910f6054e9d23f03a6713e/middleware.ts

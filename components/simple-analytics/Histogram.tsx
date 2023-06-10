@@ -11,7 +11,6 @@ import {
     YAxis
 } from 'recharts';
 
-import { DEMO_STATS } from '@utils/constants';
 import { fetchStats } from '@utils/fetch';
 import { formatThousands, numberWithCommas } from '@utils/numbers';
 
@@ -145,9 +144,6 @@ const Histogram: FunctionComponent<HistogramProps> = ({
     useEffect(() => {
         if (providedStats) {
             setStats(providedStats);
-            return;
-        } else if (process.env.NODE_ENV === 'development') {
-            setStats(DEMO_STATS);
             return;
         }
 

@@ -12,17 +12,20 @@ const Actions = () => {
     const [scrollToTop, setScrollToTop] = useState(false);
     const Tools = {
         Share: {
-            onClick: () => dispatch({ type: ActionTypes.SET_SHARE }),
+            onClick: () =>
+                dispatch({ type: ActionTypes.SET_SHARE, payload: true }),
             shortcut: 'Ctrl+Shift+R',
             Icon: () => <Icon name="share" className="inline-block" />
         },
         'A.R.I.': {
-            onClick: () => dispatch({ type: ActionTypes.SET_PROMPT }),
+            onClick: () =>
+                dispatch({ type: ActionTypes.SET_PROMPT, payload: true }),
             shortcut: 'Ctrl+Shift+T',
             Icon: () => <Icon name="zap" className="inline-block" />
         },
         Shortcuts: {
-            onClick: () => dispatch({ type: ActionTypes.SET_SHORTCUT }),
+            onClick: () =>
+                dispatch({ type: ActionTypes.SET_SHORTCUT, payload: true }),
             shortcut: 'Ctrl+Shift+S',
             Icon: () => <Icon name="keyboard" className="inline-block" />
         },

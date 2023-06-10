@@ -1,3 +1,5 @@
+import { Unbounded } from 'next/font/google';
+import localFont from 'next/font/local';
 import {
     Fragment,
     FunctionComponent,
@@ -8,12 +10,21 @@ import {
 import { Dialog, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 
+const unbounded = Unbounded({
+    subsets: ['latin'],
+    variable: '--font-unbounded'
+});
+const monocraft = localFont({
+    src: '../assets/fonts/Monocraft.ttf',
+    variable: '--font-monocraft'
+});
+
 interface Props {
     children: ReactNode;
     className?: string;
     isOpen: boolean;
     initialFocus?: MutableRefObject<HTMLElement | null>;
-    setIsOpen: (isOpen: boolean) => void;
+    setClosed: () => void;
 }
 
 const Modal: FunctionComponent<Props> = ({
@@ -21,15 +32,19 @@ const Modal: FunctionComponent<Props> = ({
     className,
     isOpen,
     initialFocus,
-    setIsOpen
+    setClosed
 }) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog
                 initialFocus={initialFocus}
                 as="div"
-                className="relative z-10"
-                onClose={() => setIsOpen(false)}
+                className={classNames(
+                    'relative z-10',
+                    unbounded.variable,
+                    monocraft.variable
+                )}
+                onClose={setClosed}
             >
                 <Transition.Child
                     as={Fragment}

@@ -18,4 +18,5 @@ interface Frontmatter {
     date: string;
     license?: string;
     ads?: boolean;
+    hash?: string;
 }

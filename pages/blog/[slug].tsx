@@ -4,13 +4,14 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import path from 'path';
+import { useEffect } from 'react';
 
 import Giscus from '@giscus/react';
+import { createHash } from 'crypto';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeInferDescriptionMeta from 'rehype-infer-description-meta';
 import rehypeInferReadingTimeMeta from 'rehype-infer-reading-time-meta';
 import rehypeKatex from 'rehype-katex';
 import rehypePresetMinify from 'rehype-preset-minify';
@@ -23,6 +24,7 @@ import Layout from '@components/Layout';
 import Actions from '@components/blog/Actions';
 import CodeStatusBar from '@components/blog/CodeStatusBar';
 import Metadata from '@components/blog/Metadata';
+import Share from '@components/blog/Share';
 import ToC from '@components/blog/ToC';
 import Prompt from '@components/blog/llm/Prompt';
 import Container from '@components/blog/mdx/Container';
@@ -30,6 +32,7 @@ import CustomImage from '@components/blog/mdx/Image';
 import CustomLink from '@components/blog/mdx/Link';
 import { ActionsProvider } from '@contexts/blog/useActions';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
+import { LINK_SHORTENER_REDIRECTS } from '@utils/redirects';
 import rehypeCodeStatusBar from '@utils/rehype/code-statusbar';
 import rehypeExtractHeadings from '@utils/rehype/extract-headings';
 
@@ -61,9 +64,7 @@ const components = {
     Rive: dynamic(() => import('@components/blog/mdx/Rive'))
 };
 
-// TODO shift+arrow keys to navigate between sections
 // TODO ctrl+arrow keys to navigate to the top/bottom of the article
-// TODO syntax highlighting on hover
 // TODO make asset paths relative to the post w/ https://github.com/brechtcs/rehype-urls
 
 interface Props {
@@ -85,6 +86,10 @@ interface Props {
 export default function PostPage({ source, frontmatter, headings }: Props) {
     const router = useRouter();
     const slug = router.query.slug as string;
+
+    useEffect(() => {
+        console.log(frontmatter);
+    }, [frontmatter]);
 
     return (
         <>
@@ -116,7 +121,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                 />
             </Head>
             <Layout>
-                <ActionsProvider slug={slug}>
+                <ActionsProvider slug={slug} hash={frontmatter.hash}>
                     <main className="mx-auto max-w-5xl px-6 mb-4">
                         <div className="flex divide-x space-x-4 divide-gray-800">
                             <div className="basis-3/4">
@@ -178,6 +183,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                         />
                     </main>
                     <Prompt />
+                    <Share />
                 </ActionsProvider>
             </Layout>
         </>
@@ -208,8 +214,9 @@ export const getStaticProps = async ({ params }: StaticProps) => {
             remarkPlugins: [remarkMath, remarkCapitalize],
             rehypePlugins: [
                 rehypeCodeStatusBar,
+                // TODO Get this working
+                // https://github.com/rehypejs/rehype-infer-reading-time-meta/blob/main/index.js
                 rehypeInferReadingTimeMeta,
-                rehypeInferDescriptionMeta,
                 [rehypeKatex, { throwOnError: true, output: 'mathml' }],
                 [
                     rehypePrettyCode,
@@ -231,6 +238,13 @@ export const getStaticProps = async ({ params }: StaticProps) => {
         },
         scope: data
     });
+
+    // Check if the post has a short link
+    const hash = createHash('sha256');
+    hash.update(params.slug);
+    const shortHash = hash.digest('hex').substring(0, 7);
+
+    if (LINK_SHORTENER_REDIRECTS[shortHash]) data.hash = shortHash;
 
     return {
         props: {

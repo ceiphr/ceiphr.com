@@ -9,6 +9,7 @@ import {
 
 export enum ActionTypes {
     SET_SLUG,
+    SET_HASH,
     SET_PROMPT,
     SET_SHARE,
     SET_SHORTCUT,
@@ -23,6 +24,7 @@ interface Action {
 
 interface ActionStates {
     slug: string;
+    hash?: string;
     promptIsOpen: boolean;
     shareIsOpen: boolean;
     shortcutIsOpen: boolean;
@@ -44,6 +46,17 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_SLUG:
             return {
                 slug: action.payload,
+                hash: state.hash,
+                promptIsOpen: false,
+                shareIsOpen: false,
+                shortcutIsOpen: false,
+                liked: false,
+                likeCount: 0
+            };
+        case ActionTypes.SET_HASH:
+            return {
+                slug: state.slug,
+                hash: action.payload,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
@@ -53,6 +66,7 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_PROMPT:
             return {
                 slug: state.slug,
+                hash: state.hash,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
                 promptIsOpen: action.payload,
@@ -62,6 +76,7 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_SHARE:
             return {
                 slug: state.slug,
+                hash: state.hash,
                 promptIsOpen: false,
                 shortcutIsOpen: false,
                 shareIsOpen: action.payload,
@@ -71,6 +86,7 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_SHORTCUT:
             return {
                 slug: state.slug,
+                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: action.payload,
@@ -80,6 +96,7 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_LIKE:
             return {
                 slug: state.slug,
+                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
@@ -89,6 +106,7 @@ function reducer(state: ActionStates, action: Action) {
         case ActionTypes.SET_LIKE_COUNT:
             return {
                 slug: state.slug,
+                hash: state.hash,
                 promptIsOpen: false,
                 shareIsOpen: false,
                 shortcutIsOpen: false,
@@ -110,16 +128,20 @@ export const ActionStatesContext = createContext<{
 
 export function ActionsProvider({
     children,
-    slug
+    slug,
+    hash = ''
 }: {
     children: ReactNode;
     slug: string;
+    hash?: string;
 }) {
     const [actionStates, dispatch] = useReducer(reducer, initialActionStates);
 
     useEffect(() => {
         dispatch({ type: ActionTypes.SET_SLUG, payload: slug });
-    }, [slug]);
+
+        if (hash) dispatch({ type: ActionTypes.SET_HASH, payload: hash });
+    }, [slug, hash]);
 
     return (
         <ActionStatesContext.Provider value={{ actionStates, dispatch }}>

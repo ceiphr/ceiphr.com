@@ -42,7 +42,10 @@ Question: ${question}
 // TODO Fix extra newline in textarea
 
 const Prompt: FunctionComponent = () => {
-    const { actionStates, dispatch } = useContext(ActionStatesContext);
+    const {
+        actionStates: { promptIsOpen = false },
+        dispatch
+    } = useContext(ActionStatesContext);
     const [input, setInput] = useState('');
     const [history, setHistory] = useState<OpenAIMessage[]>([]);
     const [typing, setTyping] = useState(false);
@@ -121,7 +124,7 @@ const Prompt: FunctionComponent = () => {
         messageFeedRef.current.scrollTop = scrollPosition;
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [actionStates.promptIsOpen, messageFeedRef]);
+    }, [promptIsOpen, messageFeedRef]);
 
     useEffect(() => {
         const INIT_MESSAGE = 'Ask A.R.I. about this article.';
@@ -151,13 +154,15 @@ const Prompt: FunctionComponent = () => {
                 typed.destroy();
             };
         }, 300);
-    }, [initialMessageRef, actionStates.promptIsOpen]);
+    }, [initialMessageRef, promptIsOpen]);
 
     return (
         <Modal
             initialFocus={inputRef}
-            isOpen={actionStates.promptIsOpen}
-            setIsOpen={() => dispatch({ type: ActionTypes.SET_PROMPT })}
+            isOpen={promptIsOpen}
+            setClosed={() =>
+                dispatch({ type: ActionTypes.SET_PROMPT, payload: false })
+            }
             className="h-2xl flex flex-col"
         >
             <div
