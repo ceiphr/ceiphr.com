@@ -7,6 +7,8 @@ const llmService = createLLMService({
     actions: ['chat']
 });
 
+// TODO Move to Vercel AI
+
 export const runtime = 'edge';
 
 export default async function POST(req: NextRequest, res: NextResponse) {

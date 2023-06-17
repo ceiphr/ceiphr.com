@@ -108,13 +108,6 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                     <main className="mx-auto max-w-5xl px-6 mb-4">
                         <div className="flex divide-x space-x-4 divide-gray-800">
                             <div className="basis-3/4">
-                                <header>
-                                    <nav>
-                                        <Link href="/" legacyBehavior>
-                                            <a>👈 Go back home</a>
-                                        </Link>
-                                    </nav>
-                                </header>
                                 <div className="post-header">
                                     <h1
                                         id="title"
@@ -139,7 +132,7 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                                 </article>
                             </div>
                             <div className="basis-1/4">
-                                <div className="sticky top-0">
+                                <div className="sticky top-14">
                                     <ToC headings={headings} />
                                     <Actions />
                                 </div>

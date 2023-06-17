@@ -1,5 +1,7 @@
 import Joi from 'joi';
 
+export const stringSchema = Joi.string().required();
+
 export const slugsSchema = Joi.object({
     slug: Joi.string().required()
 });

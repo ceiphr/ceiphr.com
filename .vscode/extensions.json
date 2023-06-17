@@ -20,7 +20,9 @@
         "unifiedjs.vscode-remark",
         // Bash
         "foxundermoon.shell-format",
-        "timonwong.shellcheck"
+        "timonwong.shellcheck",
+        // Go
+        "golang.go"
     ],
     // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
     "unwantedRecommendations": []

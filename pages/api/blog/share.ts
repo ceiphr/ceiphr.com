@@ -6,6 +6,8 @@ import { createHash } from 'crypto';
 import { REDIRECTS } from '@lib/link-shortener';
 import { slugsSchema } from '@utils/schemas';
 
+// TODO Provide all the links that are available for the post.
+
 /**
  * handleGet will hash the post `slug` and return if there's a short link.
  *

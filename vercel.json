@@ -3,6 +3,13 @@
     "framework": "nextjs",
     "trailingSlash": false,
     "cleanUrls": true,
+    "build": {
+        "use": "@vercel/go@latest",
+        "src": "api/search.go",
+        "config": {
+            "zeroConfig": true
+        }
+    },
     "headers": [
         {
             "source": "/(.*)",

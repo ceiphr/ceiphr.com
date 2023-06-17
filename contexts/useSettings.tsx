@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 
-interface Settings {
+export interface Settings {
     theme: 'light' | 'dark' | 'system';
     motion: boolean;
     ads: boolean;
@@ -14,10 +14,24 @@ const initialSettings: Settings = {
     shortcuts: true
 };
 
-export const SettingsContext = createContext<Settings>(initialSettings);
+export const SettingsContext = createContext<{
+    settings: Settings;
+    setSettings: (settings: Settings) => void;
+}>({
+    settings: initialSettings,
+    setSettings: () => {}
+});
+export const SettingsModalContext = createContext<{
+    open: boolean;
+    setOpen: (open: boolean) => void;
+}>({
+    open: false,
+    setOpen: () => {}
+});
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState(initialSettings);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem('settings');
@@ -45,7 +59,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                     'dark',
                     darkQuery.matches
                 );
-                break;
+
+                return () => darkQuery.removeEventListener('change', () => {});
             case 'dark':
                 document.documentElement.classList.add('dark');
                 break;
@@ -55,8 +70,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }, [settings.theme]);
 
     return (
-        <SettingsContext.Provider value={settings}>
-            {children}
+        <SettingsContext.Provider value={{ settings, setSettings }}>
+            <SettingsModalContext.Provider value={{ open, setOpen }}>
+                {children}
+            </SettingsModalContext.Provider>
         </SettingsContext.Provider>
     );
 }

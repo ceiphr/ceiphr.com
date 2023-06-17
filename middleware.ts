@@ -5,6 +5,8 @@ import { ipAddress } from '@vercel/edge';
 import { REDIRECTS } from '@lib/link-shortener';
 import { rateLimit } from '@lib/rate-limit';
 
+// TODO Rate limit should only apply to blog API routes that aren't GET requests.
+
 /**
  * @see https://github.com/steven-tey/dub/blob/fa74a85dda3868d532910f6054e9d23f03a6713e/middleware.ts
  */

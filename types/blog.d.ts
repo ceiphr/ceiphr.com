@@ -15,8 +15,8 @@ interface Heading {
 interface Frontmatter {
     title: string;
     description: string;
+    topics?: string[];
     date: string;
     license?: string;
     ads?: boolean;
-    hash?: string;
 }
