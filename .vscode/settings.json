@@ -15,6 +15,7 @@
         "typescript",
         "typescriptreact"
     ],
+    "svg.preview.background": "editor",
     // JavaScript/TypeScript
     "javascript.updateImportsOnFileMove.enabled": "always",
     "javascript.format.semicolons": "insert",
@@ -39,5 +40,10 @@
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
-    "svg.preview.background": "editor"
+    // GO
+    "go.toolsManagement.autoUpdate": true,
+    "go.useLanguageServer": true,
+    "[go]": {
+        "editor.defaultFormatter": "golang.go"
+    }
 }

@@ -10,6 +10,11 @@
             "zeroConfig": true
         }
     },
+    "functions": {
+        "api/search.go": {
+            "includeFiles": "content/posts/**"
+        }
+    },
     "headers": [
         {
             "source": "/(.*)",
