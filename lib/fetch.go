@@ -15,16 +15,26 @@ func FetchPosts() []types.Post {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Current working directory:", cwd)
 
 	dirname := "content/posts"
+	if os.Getenv("GO_ENV") == "development" {
+		// If we're in development, then we need to go up a few directories
+		// to get to the content directory
+		dirname = "../../../../content/posts"
+	}
+
 	postFiles, err := os.ReadDir(fmt.Sprintf("%s/%s", cwd, dirname))
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	type postRawContent struct {
+		Slug    string
+		Content string
+	}
+
 	// Read all MDX files from content/posts
-	var postRawContents []string
+	var rawPosts []postRawContent
 	for _, postFile := range postFiles {
 		if postFile.IsDir() || !strings.HasSuffix(postFile.Name(), ".mdx") {
 			continue
@@ -35,28 +45,33 @@ func FetchPosts() []types.Post {
 		if err != nil {
 			log.Fatal(err)
 		}
-		postRawContents = append(postRawContents, string(postContent))
+
+		rawPosts = append(rawPosts, postRawContent{
+			Slug:    strings.TrimSuffix(postFile.Name(), ".mdx"),
+			Content: string(postContent),
+		})
 	}
 
-	var postContents []types.Post
+	var posts []types.Post
 
 	// Parse the raw content
-	for _, postContent := range postRawContents {
+	for _, rawPost := range rawPosts {
 		var postMatter types.Frontmatter
 
 		// Parse the frontmatter
 		// e.g. --- title: "Hello, World!" description: "This is a test post" ---
-		rest, err := frontmatter.Parse(strings.NewReader(postContent), &postMatter)
+		rest, err := frontmatter.Parse(strings.NewReader(rawPost.Content), &postMatter)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// Store the parsed frontmatter along with the rest of the content
-		postContents = append(postContents, types.Post{
-			Content:     string(rest),
+		posts = append(posts, types.Post{
+			URL:         fmt.Sprintf("/blog/%s", rawPost.Slug),
 			Frontmatter: postMatter,
+			Content:     string(rest),
 		})
 	}
 
-	return postContents
+	return posts
 }

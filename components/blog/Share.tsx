@@ -18,7 +18,7 @@ const Share = () => {
     const [selectedDomain, setSelectedDomain] = useState(0);
     // https://stackoverflow.com/a/74831821/9264137
     const {
-        actionStates: { shareIsOpen = false, hash },
+        actionStates: { shareIsOpen = false },
         dispatch
     } = useContext(ActionStatesContext);
     const { Canvas } = useQRCode();
@@ -26,7 +26,8 @@ const Share = () => {
         process.env.NEXT_PUBLIC_LINK_SHORTENER_DOMAINS?.split(',') ?? [
             'ceiphr.link'
         ];
-    const shortenedLink = `${linkShortenerDomains[selectedDomain]}/${hash}`;
+    // TODO Use endpoint to get shortened link
+    const shortenedLink = `${linkShortenerDomains[selectedDomain]}`;
     const socialMediaLinks = [
         {
             icon: Mail,
@@ -88,17 +89,15 @@ const Share = () => {
                         />
                     </div>
                     <div className="flex flex-col flex-grow justify-center">
-                        {hash && (
-                            <div className="flex flex-row justify-between border border-gray-800 rounded-lg divide-x divide-gray-800">
-                                <span className="font-mono text-sm px-4 py-3">
-                                    {shortenedLink}
-                                </span>
-                                <CopyButton
-                                    className="px-3 py-2"
-                                    value={`https://${shortenedLink}`}
-                                />
-                            </div>
-                        )}
+                        <div className="flex flex-row justify-between border border-gray-800 rounded-lg divide-x divide-gray-800">
+                            <span className="font-mono text-sm px-4 py-3">
+                                {shortenedLink}
+                            </span>
+                            <CopyButton
+                                className="px-3 py-2"
+                                value={`https://${shortenedLink}`}
+                            />
+                        </div>
                         <div className="flex flex-wrap gap-2 mt-2">
                             {socialMediaLinks.map(({ icon: Icon, href }) => (
                                 <a

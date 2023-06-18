@@ -1,12 +1,13 @@
 package types
 
 type Frontmatter struct {
-	Title       string   `yaml:"title"`
-	Description string   `yaml:"description"`
-	Topics      []string `yaml:"topics"`
+	Title       string   `yaml:"title" json:"title"`
+	Description string   `yaml:"description" json:"description"`
+	Topics      []string `yaml:"topics" json:"topics"`
 }
 
 type Post struct {
-	Content     string
-	Frontmatter Frontmatter
+	URL         string      `json:"url"`
+	Frontmatter Frontmatter `json:"frontmatter"`
+	Content     string      `json:"content"`
 }

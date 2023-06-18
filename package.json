@@ -7,6 +7,7 @@
         "build": "next build",
         "postbuild": "next-sitemap",
         "dev": "NODE_ENV=development next-remote-watch content/posts",
+        "dev-go": "GO_ENV=development vercel dev",
         "debug": "NODE_OPTIONS='--inspect' next dev",
         "lint": "next lint",
         "format": "prettier --write . --ignore-unknown --ignore-path .gitignore",
