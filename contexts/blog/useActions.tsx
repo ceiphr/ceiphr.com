@@ -1,4 +1,3 @@
-import { stat } from 'fs';
 import {
     Dispatch,
     ReactNode,
@@ -8,13 +7,14 @@ import {
 } from 'react';
 
 export enum ActionTypes {
-    SET_SLUG,
-    SET_HASH,
     SET_PROMPT,
     SET_SHARE,
     SET_SHORTCUT,
     SET_LIKE,
-    SET_LIKE_COUNT
+    SET_LIKE_COUNT,
+    LIKE,
+    UNLIKE,
+    RESET
 }
 
 interface Action {
@@ -22,8 +22,9 @@ interface Action {
     payload?: any;
 }
 
+// Note: Not reducer actions, but states for "actions"
+//       that can be performed on a blog post
 interface ActionStates {
-    slug: string;
     promptIsOpen: boolean;
     shareIsOpen: boolean;
     shortcutIsOpen: boolean;
@@ -32,7 +33,6 @@ interface ActionStates {
 }
 
 const initialActionStates: ActionStates = {
-    slug: '',
     promptIsOpen: false,
     shareIsOpen: false,
     shortcutIsOpen: false,
@@ -40,73 +40,45 @@ const initialActionStates: ActionStates = {
     likeCount: 0
 };
 
+function resetIsOpen(actionStates: ActionStates) {
+    actionStates.promptIsOpen = false;
+    actionStates.shareIsOpen = false;
+    actionStates.shortcutIsOpen = false;
+    return actionStates;
+}
+
 function reducer(state: ActionStates, action: Action) {
-    // TODO Clean this up
+    const newActionStates = { ...state };
+
     switch (action.type) {
-        case ActionTypes.SET_SLUG:
-            return {
-                slug: action.payload,
-                promptIsOpen: false,
-                shareIsOpen: false,
-                shortcutIsOpen: false,
-                liked: false,
-                likeCount: 0
-            };
-        case ActionTypes.SET_HASH:
-            return {
-                slug: state.slug,
-                hash: action.payload,
-                promptIsOpen: false,
-                shareIsOpen: false,
-                shortcutIsOpen: false,
-                liked: false,
-                likeCount: 0
-            };
         case ActionTypes.SET_PROMPT:
-            return {
-                slug: state.slug,
-                shareIsOpen: false,
-                shortcutIsOpen: false,
-                promptIsOpen: action.payload,
-                liked: state.liked,
-                likeCount: state.likeCount
-            };
+            resetIsOpen(newActionStates);
+            newActionStates.promptIsOpen = action.payload;
+            return newActionStates;
         case ActionTypes.SET_SHARE:
-            return {
-                slug: state.slug,
-                promptIsOpen: false,
-                shortcutIsOpen: false,
-                shareIsOpen: action.payload,
-                liked: state.liked,
-                likeCount: state.likeCount
-            };
+            resetIsOpen(newActionStates);
+            newActionStates.shareIsOpen = action.payload;
+            return newActionStates;
         case ActionTypes.SET_SHORTCUT:
-            return {
-                slug: state.slug,
-                promptIsOpen: false,
-                shareIsOpen: false,
-                shortcutIsOpen: action.payload,
-                liked: state.liked,
-                likeCount: state.likeCount
-            };
+            resetIsOpen(newActionStates);
+            newActionStates.shortcutIsOpen = action.payload;
+            return newActionStates;
         case ActionTypes.SET_LIKE:
-            return {
-                slug: state.slug,
-                promptIsOpen: false,
-                shareIsOpen: false,
-                shortcutIsOpen: false,
-                liked: action.payload,
-                likeCount: state.likeCount + 1
-            };
+            newActionStates.liked = action.payload;
+            return newActionStates;
         case ActionTypes.SET_LIKE_COUNT:
-            return {
-                slug: state.slug,
-                promptIsOpen: false,
-                shareIsOpen: false,
-                shortcutIsOpen: false,
-                liked: state.liked,
-                likeCount: action.payload
-            };
+            newActionStates.likeCount = action.payload;
+            return newActionStates;
+        case ActionTypes.LIKE:
+            newActionStates.liked = true;
+            newActionStates.likeCount++;
+            return newActionStates;
+        case ActionTypes.UNLIKE:
+            newActionStates.liked = false;
+            newActionStates.likeCount--;
+            return newActionStates;
+        case ActionTypes.RESET:
+            return initialActionStates;
         default:
             return state;
     }
@@ -122,20 +94,16 @@ export const ActionStatesContext = createContext<{
 
 export function ActionsProvider({
     children,
-    slug,
-    hash = ''
+    slug
 }: {
     children: ReactNode;
     slug: string;
-    hash?: string;
 }) {
     const [actionStates, dispatch] = useReducer(reducer, initialActionStates);
 
     useEffect(() => {
-        dispatch({ type: ActionTypes.SET_SLUG, payload: slug });
-
-        if (hash) dispatch({ type: ActionTypes.SET_HASH, payload: hash });
-    }, [slug, hash]);
+        dispatch({ type: ActionTypes.RESET });
+    }, [slug]);
 
     return (
         <ActionStatesContext.Provider value={{ actionStates, dispatch }}>

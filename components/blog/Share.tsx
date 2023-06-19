@@ -1,6 +1,8 @@
-import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 
 import { useQRCode } from 'next-qrcode';
+import { FaHackerNews as HackerNews } from 'react-icons/fa';
 import {
     TbBrandFacebook as Facebook,
     TbBrandLinkedin as LinkedIn,
@@ -13,44 +15,63 @@ import {
 import Modal from '@components/Modal';
 import CopyButton from '@components/blog/CopyButton';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
+import { fetchShareLinks } from '@lib/fetch';
 
 const Share = () => {
-    const [selectedDomain, setSelectedDomain] = useState(0);
+    const router = useRouter();
+    const canonicalUrl = `https://${process.env.NEXT_PUBLIC_DOMAIN}${router.asPath}`;
+    const [selectedLink, setSelectedLink] = useState<string>(canonicalUrl);
+    const [shortenedLinks, setShortenedLinks] = useState<string[]>([
+        canonicalUrl
+    ]);
+    const { Canvas } = useQRCode();
+
     // https://stackoverflow.com/a/74831821/9264137
     const {
         actionStates: { shareIsOpen = false },
         dispatch
     } = useContext(ActionStatesContext);
-    const { Canvas } = useQRCode();
-    const linkShortenerDomains =
-        process.env.NEXT_PUBLIC_LINK_SHORTENER_DOMAINS?.split(',') ?? [
-            'ceiphr.link'
-        ];
-    // TODO Use endpoint to get shortened link
-    const shortenedLink = `${linkShortenerDomains[selectedDomain]}`;
+
     const socialMediaLinks = [
         {
             icon: Mail,
             // TODO Change subject
-            href: `mailto:?subject=Check out this article!&body=${shortenedLink}`
+            href: `mailto:?subject=Check out this article!&body=${selectedLink}`
         },
         {
             icon: Reddit,
-            href: `https://reddit.com/submit?url=${shortenedLink}`
+            href: `https://reddit.com/submit?url=${selectedLink}`
+        },
+        {
+            icon: HackerNews,
+            href: `https://news.ycombinator.com/submitlink?u=${selectedLink}`
         },
         {
             icon: LinkedIn,
-            href: `https://www.linkedin.com/shareArticle?url=${shortenedLink}`
+            href: `https://www.linkedin.com/shareArticle?url=${selectedLink}`
         },
         {
             icon: Facebook,
-            href: `https://www.facebook.com/sharer/sharer.php?u=${shortenedLink}`
+            href: `https://www.facebook.com/sharer/sharer.php?u=${selectedLink}`
         },
         {
             icon: Twitter,
-            href: `https://twitter.com/intent/tweet?url=${shortenedLink}`
+            href: `https://twitter.com/intent/tweet?url=${selectedLink}`
         }
     ];
+
+    useEffect(() => {
+        if (!shareIsOpen) return;
+
+        const slug = window.location.pathname.split('/').pop();
+        if (!slug) return;
+
+        fetchShareLinks(slug).then(({ links }) => {
+            console.log(links);
+            setShortenedLinks(links);
+            setSelectedLink(links[0]);
+        });
+    }, [shareIsOpen]);
 
     return (
         <Modal
@@ -75,7 +96,7 @@ const Share = () => {
                 <div className="flex flex-row space-x-6 px-4 my-4">
                     <div className="rounded-xl border border-gray-800 overflow-hidden">
                         <Canvas
-                            text={`https://${shortenedLink}`}
+                            text={`https://${selectedLink}`}
                             options={{
                                 level: 'M',
                                 margin: 2.5,
@@ -91,11 +112,11 @@ const Share = () => {
                     <div className="flex flex-col flex-grow justify-center">
                         <div className="flex flex-row justify-between border border-gray-800 rounded-lg divide-x divide-gray-800">
                             <span className="font-mono text-sm px-4 py-3">
-                                {shortenedLink}
+                                {selectedLink}
                             </span>
                             <CopyButton
                                 className="px-3 py-2"
-                                value={`https://${shortenedLink}`}
+                                value={`https://${selectedLink}`}
                             />
                         </div>
                         <div className="flex flex-wrap gap-2 mt-2">

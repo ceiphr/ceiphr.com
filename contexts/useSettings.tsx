@@ -39,6 +39,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
+        // TODO Only set if changed
         localStorage.setItem('settings', JSON.stringify(settings));
     }, [settings]);
 

@@ -38,6 +38,7 @@ func fuzzySearch(query string, posts []types.Post) []fuzzyResult {
 
 	var rawResults []fuzzyRankedResult
 
+	// TODO Multi-thread this
 	for _, post := range allPosts {
 		var rank int
 
@@ -133,5 +134,11 @@ func init() {
 			"errors": "route not found",
 		})
 	})
-	app.POST("/api/search", HandlePost)
+
+	var route = "/"
+	if os.Getenv("GO_ENV") == "development" {
+		route = "/api/search"
+	}
+
+	app.POST(route, HandlePost)
 }

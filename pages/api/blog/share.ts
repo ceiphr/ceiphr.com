@@ -24,8 +24,11 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     const { slug } = req.query;
 
-    const shortLink = await kv.get(`shortlink:${slug}`);
-    if (shortLink) return res.status(200).json({ link: shortLink });
+    const shortLinks = await kv.get(`shortlink:${slug}`);
+    if (shortLinks) return res.status(200).json({ links: shortLinks });
+
+    const linkShortenerDomains =
+        process.env.LINK_SHORTENER_DOMAINS?.split(',') ?? [];
 
     // Since hashing is deterministic and hashes are generated from the slug,
     // we can see if a short link exists for the slug by hashing it
@@ -35,11 +38,16 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const shortHash = hash.digest('hex').substring(0, 7);
 
     if (REDIRECTS[shortHash]) {
-        const shortLink = `https://ceiphr.link/${shortHash}`;
-        await kv.set(`shortlink:${slug}`, shortLink, {
+        const shortLinks = linkShortenerDomains
+            .map((domain) => `https://${domain}/${shortHash}`)
+            .reverse();
+
+        shortLinks.push(REDIRECTS[shortHash]);
+
+        await kv.set(`shortlink:${slug}`, shortLinks, {
             ex: 60 * 60 // 1 hour in seconds
         });
-        return res.status(200).json({ link: shortLink });
+        return res.status(200).json({ links: shortLinks });
     }
 }
 

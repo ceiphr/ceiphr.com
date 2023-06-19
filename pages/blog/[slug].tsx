@@ -1,7 +1,6 @@
 import fs from 'fs';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import path from 'path';
 import type { ComponentProps } from 'react';
@@ -24,6 +23,7 @@ import Actions from '@components/blog/Actions';
 import Metadata from '@components/blog/Metadata';
 import ToC from '@components/blog/ToC';
 import { ActionsProvider } from '@contexts/blog/useActions';
+import { ArticleProvider } from '@contexts/blog/useArticle';
 import rehypeCodeStatusBar from '@lib/rehype/code-statusbar';
 import rehypeExtractHeadings from '@lib/rehype/extract-headings';
 import { POSTS_PATH, postFilePaths } from '@utils/mdx';
@@ -103,65 +103,75 @@ export default function PostPage({ source, frontmatter, headings }: Props) {
                     content={`https://${process.env.NEXT_PUBLIC_DOMAIN}/blog/${slug}`}
                 />
             </Head>
-            <Layout>
+            <ArticleProvider
+                article={{
+                    slug,
+                    title: frontmatter.title,
+                    description: frontmatter.description
+                }}
+            >
                 <ActionsProvider slug={slug}>
-                    <main className="mx-auto max-w-5xl px-6 mb-4">
-                        <div className="flex divide-x space-x-4 divide-gray-800">
-                            <div className="basis-3/4">
-                                <div className="post-header">
-                                    <h1
-                                        id="title"
-                                        className="text-6xl font-heading mt-4 mb-2"
-                                    >
-                                        {frontmatter.title}
-                                    </h1>
-                                    {frontmatter.description && (
-                                        <p className="description">
-                                            {frontmatter.description}
-                                        </p>
-                                    )}
-                                    <hr className="my-4" />
-                                    {frontmatter.ads && <Ad />}
+                    <Layout>
+                        <main className="mx-auto max-w-5xl px-6 mb-4">
+                            <div className="flex divide-x space-x-4 divide-gray-800">
+                                <div className="basis-3/4">
+                                    <div className="post-header">
+                                        <h1
+                                            id="title"
+                                            className="text-6xl font-heading mt-4 mb-2"
+                                        >
+                                            {frontmatter.title}
+                                        </h1>
+                                        {frontmatter.description && (
+                                            <p className="description">
+                                                {frontmatter.description}
+                                            </p>
+                                        )}
+                                        <hr className="my-4" />
+                                        {frontmatter.ads && <Ad />}
+                                    </div>
+                                    <article className="mb-4">
+                                        <MDXRemote
+                                            {...source}
+                                            frontmatter={frontmatter}
+                                            components={components}
+                                        />
+                                    </article>
                                 </div>
-                                <article className="mb-4">
-                                    <MDXRemote
-                                        {...source}
-                                        frontmatter={frontmatter}
-                                        components={components}
-                                    />
-                                </article>
-                            </div>
-                            <div className="basis-1/4">
-                                <div className="sticky top-14">
-                                    <ToC headings={headings} />
-                                    <Actions />
+                                <div className="basis-1/4">
+                                    <div className="sticky top-14">
+                                        <ToC headings={headings} />
+                                        <Actions />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <Metadata slug={slug} frontmatter={frontmatter} />
-                        <Giscus
-                            id="comments"
-                            repo="ceiphr/ceiphr.com"
-                            repoId={
-                                process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''
-                            }
-                            category={
-                                process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? ''
-                            }
-                            categoryId={
-                                process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
-                            }
-                            term={frontmatter.title}
-                            mapping="specific"
-                            reactionsEnabled="0"
-                            theme="dark_dimmed"
-                            loading="lazy"
-                        />
-                    </main>
-                    <Prompt />
-                    <Share />
+                            <Metadata slug={slug} frontmatter={frontmatter} />
+                            <Giscus
+                                id="comments"
+                                repo="ceiphr/ceiphr.com"
+                                repoId={
+                                    process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''
+                                }
+                                category={
+                                    process.env.NEXT_PUBLIC_GISCUS_CATEGORY ??
+                                    ''
+                                }
+                                categoryId={
+                                    process.env
+                                        .NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''
+                                }
+                                term={frontmatter.title}
+                                mapping="specific"
+                                reactionsEnabled="0"
+                                theme="dark_dimmed"
+                                loading="lazy"
+                            />
+                        </main>
+                        <Prompt />
+                        <Share />
+                    </Layout>
                 </ActionsProvider>
-            </Layout>
+            </ArticleProvider>
         </>
     );
 }

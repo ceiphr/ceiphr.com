@@ -1,4 +1,9 @@
-import { commitsSchema, reposSchema, statsSchema } from '@utils/schemas';
+import {
+    commitsSchema,
+    reposSchema,
+    statsSchema,
+    stringSchema
+} from '@utils/schemas';
 
 export const fetchCommits = async (
     path: string,
@@ -66,6 +71,45 @@ export const fetchStats = async (route: string, range?: Range) => {
     );
 
     if (response.status !== 200) throw new Error('Error fetching analytics');
+
+    return response.json();
+};
+
+export const fetchLikeCount = async (slug: string) => {
+    const { error } = stringSchema.validate(slug);
+    if (error) throw error;
+
+    const response = await fetch(`/api/blog/like?slug=${slug}`);
+
+    if (response.status !== 200) throw new Error('Error fetching likes');
+
+    return response.json();
+};
+
+export const fetchSendLike = async (slug: string) => {
+    const { error } = stringSchema.validate(slug);
+    if (error) throw error;
+
+    const response = await fetch('/api/blog/like', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ slug })
+    });
+
+    if (response.status !== 200) throw new Error('Error sending like');
+
+    return response.json();
+};
+
+export const fetchShareLinks = async (slug: string) => {
+    const { error } = stringSchema.validate(slug);
+    if (error) throw error;
+
+    const response = await fetch(`/api/blog/share?slug=${slug}`);
+
+    if (response.status !== 200) throw new Error('Error fetching share links');
 
     return response.json();
 };

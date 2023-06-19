@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 import Skeleton from 'react-loading-skeleton';
@@ -6,42 +6,40 @@ import Skeleton from 'react-loading-skeleton';
 import Icon from '@components/Icon';
 import Tag from '@components/Tag';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
+import { ArticleContext } from '@contexts/blog/useArticle';
 import { ErrorContext, FetchError } from '@contexts/useError';
+import { fetchLikeCount, fetchSendLike } from '@lib/fetch';
 
 /**
  * LikeButton will render a button that allows users to like a post. The button
  * will display the number of likes for the post. The button will be disabled if
  * the user has already liked the post.
  *
- * Like counts are cached in Vercel KV, but user likes are cached in local storage.
+ * Like counts are cached in Vercel KV, but the user's likes are cached in local storage.
  *
  * @returns     The like button.
  */
-const LikeButton: FunctionComponent = () => {
+const LikeButton = () => {
     const { actionStates, dispatch } = useContext(ActionStatesContext);
+    const { article } = useContext(ArticleContext);
     const { handleError } = useContext(ErrorContext);
     const [loading, setLoading] = useState(true);
+    const slug = article.slug;
 
     // Fetch initial likes
     useEffect(() => {
         // Check local storage to see if the user has liked this post
-        const userLikes = localStorage.getItem('likes');
-        if (userLikes) {
-            const parsedLikes = JSON.parse(userLikes);
-            if (parsedLikes.includes(actionStates.slug))
-                dispatch({ type: ActionTypes.SET_LIKE, payload: true });
+        const userLikes = JSON.parse(localStorage.getItem('likes') || '[]');
+        if (userLikes.includes(slug)) {
+            dispatch({ type: ActionTypes.SET_LIKE, payload: true });
         }
 
-        fetch(`/api/blog/like?slug=${actionStates.slug}`)
-            .then((response) => {
-                if (response.status !== 200) return;
-
-                return response.json();
-            })
+        fetchLikeCount(slug)
             .then(({ likes }) => {
                 dispatch({ type: ActionTypes.SET_LIKE_COUNT, payload: likes });
+
                 if (likes === 0) {
-                    // Cache was likely cleared, so user hasn't liked this post
+                    // Redis was likely cleared, so user hasn't liked this post
                     // even if they have in the past
                     dispatch({ type: ActionTypes.SET_LIKE, payload: false });
                 }
@@ -51,72 +49,31 @@ const LikeButton: FunctionComponent = () => {
                 console.error(error);
                 handleError(error.message);
             });
-    }, [actionStates.slug, dispatch, handleError]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [slug]);
 
     // Update local storage when the user likes a post
     useEffect(() => {
-        const userLikes = localStorage.getItem('likes');
+        if (!actionStates.liked) return;
 
-        if (actionStates.liked) {
-            // Add slug to likes list in local storage
-            if (userLikes) {
-                const parsedLikes = JSON.parse(userLikes);
-                if (!parsedLikes.includes(actionStates.slug)) {
-                    parsedLikes.push(actionStates.slug);
-                    localStorage.setItem('likes', JSON.stringify(parsedLikes));
-                }
-            } else {
-                // Create likes list in local storage
-                localStorage.setItem(
-                    'likes',
-                    JSON.stringify([actionStates.slug])
-                );
-            }
-        } else {
-            // Remove slug from likes list in local storage
-            if (userLikes) {
-                const parsedLikes = JSON.parse(userLikes);
-                if (parsedLikes.includes(actionStates.slug)) {
-                    const filteredLikes = parsedLikes.filter(
-                        (like: string) => like !== actionStates.slug
-                    );
-                    localStorage.setItem(
-                        'likes',
-                        JSON.stringify(filteredLikes)
-                    );
-                }
-            }
-        }
-    }, [actionStates.liked, actionStates.slug]);
+        // Add slug to likes list in local storage
+        const userLikes = JSON.parse(localStorage.getItem('likes') || '[]');
+        userLikes.push(slug);
+        localStorage.setItem('likes', JSON.stringify(userLikes));
+    }, [actionStates.liked, slug]);
 
-    /**
-     * likePost will send a POST request to the API to like the post.
-     * If the request is successful, we will update the like count and
-     * set the userLiked state to true.
-     */
     const likePost = () => {
-        fetch('/api/blog/like', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ slug: actionStates.slug })
-        })
-            .then(({ status, statusText }) => {
-                if (status !== 200) {
-                    return;
-                }
+        // Optimistically update the like count and set the userLiked state
+        dispatch({ type: ActionTypes.LIKE });
 
-                dispatch({ type: ActionTypes.SET_LIKE, payload: true });
-                dispatch({
-                    type: ActionTypes.SET_LIKE_COUNT,
-                    payload: actionStates.likeCount + 1
-                });
-            })
-            .catch((error: FetchError) => {
-                console.error(error);
-                handleError(error.message);
-            });
+        fetchSendLike(slug).catch((error: FetchError) => {
+            // Revert the optimistic update
+            dispatch({ type: ActionTypes.UNLIKE });
+
+            console.error(error);
+            handleError(error.message);
+        });
     };
 
     return (
@@ -133,13 +90,7 @@ const LikeButton: FunctionComponent = () => {
             >
                 <Icon name="heart" className="inline-block" />
                 <span>
-                    {actionStates.liked
-                        ? (() => {
-                              return actionStates.likeCount > 1
-                                  ? `${actionStates.likeCount} Likes`
-                                  : 'Liked';
-                          }).call(this)
-                        : 'Like'}
+                    {loading ? <Skeleton width={10} /> : actionStates.likeCount}
                 </span>
             </Tag>
         </button>

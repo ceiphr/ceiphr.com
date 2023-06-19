@@ -10,6 +10,7 @@ import { SettingsModalContext } from '@contexts/useSettings';
 
 enum Pages {
     BLOG = 'Blog',
+    PROJECTS = 'Projects',
     SNIPPETS = 'Snippets',
     SANDBOX = 'Sandbox'
 }
