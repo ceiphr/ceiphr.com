@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 
 import { useQRCode } from 'next-qrcode';
 import { FaHackerNews as HackerNews } from 'react-icons/fa';
@@ -18,6 +18,59 @@ import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 import { ArticleContext } from '@contexts/blog/useArticle';
 import { fetchShareLinks } from '@lib/fetch';
 
+interface ShareButtonsProps {
+    title: string;
+    link: string;
+}
+
+const ShareButtons: FunctionComponent<ShareButtonsProps> = ({
+    title,
+    link
+}) => {
+    const shareLinks = [
+        {
+            icon: Mail,
+            href: `mailto:?subject=${title}&body=${link}`
+        },
+        {
+            icon: Reddit,
+            href: `https://reddit.com/submit?url=${link}`
+        },
+        {
+            icon: HackerNews,
+            href: `https://news.ycombinator.com/submitlink?u=${link}`
+        },
+        {
+            icon: LinkedIn,
+            href: `https://www.linkedin.com/shareArticle?url=${link}`
+        },
+        {
+            icon: Facebook,
+            href: `https://www.facebook.com/sharer/sharer.php?u=${link}`
+        },
+        {
+            icon: Twitter,
+            href: `https://twitter.com/intent/tweet?url=${link}`
+        }
+    ];
+
+    return (
+        <>
+            {shareLinks.map(({ icon: Icon, href }) => (
+                <a
+                    key={href}
+                    className="flex flex-row items-center justify-center w-12 h-12 rounded-lg border duration-300 border-gray-800 hover:bg-gray-900"
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Icon className="w-6 h-6" />
+                </a>
+            ))}
+        </>
+    );
+};
+
 const Share = () => {
     const { Canvas: QRCode } = useQRCode();
     const router = useRouter();
@@ -31,33 +84,6 @@ const Share = () => {
         actionStates: { shareIsOpen = false }, // https://stackoverflow.com/a/74831821/9264137
         dispatch
     } = useContext(ActionStatesContext);
-
-    const shareLinks = [
-        {
-            icon: Mail,
-            href: `mailto:?subject=${article.title}&body=${selectedLink}`
-        },
-        {
-            icon: Reddit,
-            href: `https://reddit.com/submit?url=${selectedLink}`
-        },
-        {
-            icon: HackerNews,
-            href: `https://news.ycombinator.com/submitlink?u=${selectedLink}`
-        },
-        {
-            icon: LinkedIn,
-            href: `https://www.linkedin.com/shareArticle?url=${selectedLink}`
-        },
-        {
-            icon: Facebook,
-            href: `https://www.facebook.com/sharer/sharer.php?u=${selectedLink}`
-        },
-        {
-            icon: Twitter,
-            href: `https://twitter.com/intent/tweet?url=${selectedLink}`
-        }
-    ];
 
     useEffect(() => {
         if (!shareIsOpen) return;
@@ -123,17 +149,10 @@ const Share = () => {
                             />
                         </div>
                         <div className="flex flex-wrap gap-2 mt-2">
-                            {shareLinks.map(({ icon: Icon, href }) => (
-                                <a
-                                    key={href}
-                                    className="flex flex-row items-center justify-center w-12 h-12 rounded-lg border duration-300 border-gray-800 hover:bg-gray-900"
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Icon className="w-6 h-6" />
-                                </a>
-                            ))}
+                            <ShareButtons
+                                title={article?.title || ''}
+                                link={selectedLink}
+                            />
                         </div>
                     </div>
                 </div>
