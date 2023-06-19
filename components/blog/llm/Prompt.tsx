@@ -158,12 +158,12 @@ const Prompt: FunctionComponent = () => {
 
     return (
         <Modal
-            initialFocus={inputRef}
-            isOpen={promptIsOpen}
-            setClosed={() =>
-                dispatch({ type: ActionTypes.SET_PROMPT, payload: false })
+            open={promptIsOpen}
+            setOpen={(open) =>
+                dispatch({ type: ActionTypes.SET_PROMPT, payload: open })
             }
             className="h-2xl flex flex-col"
+            initialFocus={inputRef}
         >
             <div
                 className={classNames(

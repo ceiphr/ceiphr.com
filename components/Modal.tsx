@@ -20,22 +20,22 @@ const monocraft = localFont({
 });
 
 interface Props {
-    children: ReactNode;
+    children?: ReactNode;
+    open: boolean;
+    setOpen: (open: boolean) => void;
     className?: string;
-    isOpen: boolean;
     initialFocus?: MutableRefObject<HTMLElement | null>;
-    setClosed: () => void;
 }
 
 const Modal: FunctionComponent<Props> = ({
     children,
+    open,
+    setOpen,
     className,
-    isOpen,
-    initialFocus,
-    setClosed
+    initialFocus
 }) => {
     return (
-        <Transition appear show={isOpen} as={Fragment}>
+        <Transition appear show={open} as={Fragment}>
             <Dialog
                 initialFocus={initialFocus}
                 as="div"
@@ -44,7 +44,7 @@ const Modal: FunctionComponent<Props> = ({
                     unbounded.variable,
                     monocraft.variable
                 )}
-                onClose={setClosed}
+                onClose={setOpen}
             >
                 <Transition.Child
                     as={Fragment}
