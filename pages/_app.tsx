@@ -26,6 +26,7 @@ const alternate = localFont({
 });
 
 // TODO Add header for preview mode
+// TODO Fix local storage resetting on refresh
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
