@@ -5,26 +5,42 @@ import { TbX as XIcon } from 'react-icons/tb';
 
 import Modal from '@components/ui/Modal';
 import {
+    ActionTypes as ModalActionTypes,
+    ModalsContext
+} from '@contexts/useModals';
+import {
     ActionTypes,
     SettingsContext,
-    SettingsModalContext,
     Settings as SettingsType // Rename to avoid issue with prettier formatting
 } from '@contexts/useSettings';
 
 const Settings = () => {
-    const { open, setOpen } = useContext(SettingsModalContext);
+    const {
+        modals: { settingsOpen = false },
+        dispatch: modalDispatch
+    } = useContext(ModalsContext);
     const { settings, dispatch } = useContext(SettingsContext);
 
     return (
         <Modal
-            open={open}
-            setOpen={(open) => setOpen(open)}
+            open={settingsOpen}
+            setOpen={(open) =>
+                modalDispatch({
+                    type: ModalActionTypes.SET_SETTINGS,
+                    payload: open
+                })
+            }
             className="h-lg flex flex-col"
         >
             <div className="p-6">
                 <button
                     className="text-gray-500 hover:text-gray-300 absolute top-6 right-6"
-                    onClick={() => setOpen(false)}
+                    onClick={() =>
+                        modalDispatch({
+                            type: ModalActionTypes.SET_SETTINGS,
+                            payload: false
+                        })
+                    }
                 >
                     <XIcon className="w-5 h-5" />
                 </button>

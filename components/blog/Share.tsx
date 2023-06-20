@@ -14,8 +14,8 @@ import {
 
 import CopyButton from '@components/blog/CopyButton';
 import Modal from '@components/ui/Modal';
-import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
-import { ArticleContext } from '@contexts/blog/useArticle';
+import { ArticleContext } from '@contexts/useArticle';
+import { ActionTypes, ModalsContext } from '@contexts/useModals';
 import { fetchShareLinks } from '@lib/fetch';
 
 interface ShareButtonsProps {
@@ -81,12 +81,12 @@ const Share = () => {
 
     const { article } = useContext(ArticleContext);
     const {
-        actionStates: { shareIsOpen = false }, // https://stackoverflow.com/a/74831821/9264137
+        modals: { shareOpen = false }, // https://stackoverflow.com/a/74831821/9264137
         dispatch
-    } = useContext(ActionStatesContext);
+    } = useContext(ModalsContext);
 
     useEffect(() => {
-        if (!shareIsOpen) return;
+        if (!shareOpen) return;
 
         const slug = router.asPath.split('/').pop();
         if (!slug) return;
@@ -95,11 +95,11 @@ const Share = () => {
             setLinks(links);
             setSelectedLink(links[0]);
         });
-    }, [shareIsOpen, router.asPath]);
+    }, [shareOpen, router.asPath]);
 
     return (
         <Modal
-            open={shareIsOpen}
+            open={shareOpen}
             setOpen={(open) =>
                 dispatch({ type: ActionTypes.SET_SHARE, payload: open })
             }

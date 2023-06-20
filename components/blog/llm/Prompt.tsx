@@ -21,7 +21,7 @@ import useLLM, { OpenAIMessage } from 'usellm';
 import Logo from '@assets/icons/Logo';
 import Message from '@components/blog/llm/Message';
 import Modal from '@components/ui/Modal';
-import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
+import { ActionTypes, ModalsContext } from '@contexts/useModals';
 
 const createPrompt = (paragraphs: string[], question: string) => `
 Read the following technical article and answer the question below.
@@ -43,9 +43,9 @@ Question: ${question}
 
 const Prompt: FunctionComponent = () => {
     const {
-        actionStates: { promptIsOpen = false },
+        modals: { promptOpen = false },
         dispatch
-    } = useContext(ActionStatesContext);
+    } = useContext(ModalsContext);
     const [input, setInput] = useState('');
     const [history, setHistory] = useState<OpenAIMessage[]>([]);
     const [typing, setTyping] = useState(false);
@@ -124,7 +124,7 @@ const Prompt: FunctionComponent = () => {
         messageFeedRef.current.scrollTop = scrollPosition;
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [promptIsOpen, messageFeedRef]);
+    }, [promptOpen, messageFeedRef]);
 
     useEffect(() => {
         const INIT_MESSAGE = 'Ask A.R.I. about this article.';
@@ -154,11 +154,11 @@ const Prompt: FunctionComponent = () => {
                 typed.destroy();
             };
         }, 300);
-    }, [initialMessageRef, promptIsOpen]);
+    }, [initialMessageRef, promptOpen]);
 
     return (
         <Modal
-            open={promptIsOpen}
+            open={promptOpen}
             setOpen={(open) =>
                 dispatch({ type: ActionTypes.SET_PROMPT, payload: open })
             }

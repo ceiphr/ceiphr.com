@@ -5,8 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import Icon from '@components/ui/Icon';
 import Tag from '@components/ui/Tag';
-import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
-import { ArticleContext } from '@contexts/blog/useArticle';
+import { ActionTypes, ArticleContext } from '@contexts/useArticle';
 import { ErrorContext, FetchError } from '@contexts/useError';
 import { fetchLikeCount, fetchSendLike } from '@lib/fetch';
 
@@ -20,8 +19,7 @@ import { fetchLikeCount, fetchSendLike } from '@lib/fetch';
  * @returns     The like button.
  */
 const LikeButton = () => {
-    const { actionStates, dispatch } = useContext(ActionStatesContext);
-    const { article } = useContext(ArticleContext);
+    const { article, dispatch } = useContext(ArticleContext);
     const { handleError } = useContext(ErrorContext);
     const [loading, setLoading] = useState(true);
     const slug = article.slug;
@@ -55,13 +53,13 @@ const LikeButton = () => {
 
     // Update local storage when the user likes a post
     useEffect(() => {
-        if (!actionStates.liked) return;
+        if (!article.liked) return;
 
         // Add slug to likes list in local storage
         const userLikes = JSON.parse(localStorage.getItem('likes') || '[]');
         userLikes.push(slug);
         localStorage.setItem('likes', JSON.stringify(userLikes));
-    }, [actionStates.liked, slug]);
+    }, [article.liked, slug]);
 
     const likePost = () => {
         // Optimistically update the like count and set the userLiked state
@@ -79,18 +77,18 @@ const LikeButton = () => {
     return (
         <button
             onClick={likePost}
-            className={classNames(actionStates.liked && 'pointer-events-none')}
+            className={classNames(article.liked && 'pointer-events-none')}
         >
             <Tag
                 className={classNames(
                     'duration-300',
-                    actionStates.liked &&
+                    article.liked &&
                         'bg-gradient-to-br from-red-800 to-red-900 text-red-400 !border-red-700'
                 )}
             >
                 <Icon name="heart" className="inline-block" />
                 <span>
-                    {loading ? <Skeleton width={10} /> : actionStates.likeCount}
+                    {loading ? <Skeleton width={10} /> : article.likeCount}
                 </span>
             </Tag>
         </button>

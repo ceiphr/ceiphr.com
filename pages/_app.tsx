@@ -8,6 +8,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-tooltip/dist/react-tooltip.css';
 
 import { ErrorProvider } from '@contexts/useError';
+import { ModalsProvider } from '@contexts/useModals';
 import { SettingsProvider } from '@contexts/useSettings';
 import '@styles/globals.css';
 
@@ -39,11 +40,16 @@ export default function App({ Component, pageProps }: AppProps) {
                     alternate.variable
                 )}
             >
-                <SettingsProvider>
-                    <SkeletonTheme baseColor="#111827" highlightColor="#1a2233">
-                        <Component {...pageProps} />
-                    </SkeletonTheme>
-                </SettingsProvider>
+                <ModalsProvider>
+                    <SettingsProvider>
+                        <SkeletonTheme
+                            baseColor="#111827"
+                            highlightColor="#1a2233"
+                        >
+                            <Component {...pageProps} />
+                        </SkeletonTheme>
+                    </SettingsProvider>
+                </ModalsProvider>
             </div>
         </ErrorProvider>
     );

@@ -6,7 +6,7 @@ import { TbSettings as Settings } from 'react-icons/tb';
 
 import Logo from '@assets/icons/Logo';
 import Search from '@components/Search';
-import { SettingsModalContext } from '@contexts/useSettings';
+import { ActionTypes, ModalsContext } from '@contexts/useModals';
 
 enum Pages {
     BLOG = 'Blog',
@@ -18,7 +18,7 @@ enum Pages {
 const Header = () => {
     const [active, setActive] = useState<Pages>();
     const router = useRouter();
-    const { setOpen } = useContext(SettingsModalContext);
+    const { dispatch } = useContext(ModalsContext);
 
     useEffect(() => {
         const path = router.pathname.split('/')[1];
@@ -50,7 +50,12 @@ const Header = () => {
             <div className="flex flex-row items-center w-80">
                 <Search />
                 <button
-                    onClick={() => setOpen(true)}
+                    onClick={() =>
+                        dispatch({
+                            type: ActionTypes.SET_SETTINGS,
+                            payload: true
+                        })
+                    }
                     className="text-md mr-4 ml-2 h-8 w-8 flex flex-col items-center justify-center rounded-lg border border-gray-800 duration-300 hover:bg-gray-900"
                 >
                     <Settings className="h-5 w-5 p-px text-gray-400" />

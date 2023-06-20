@@ -5,10 +5,10 @@ import classNames from 'classnames';
 import LikeButton from '@components/blog/LikeButton';
 import Icon from '@components/ui/Icon';
 import Tag from '@components/ui/Tag';
-import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
+import { ActionTypes, ModalsContext } from '@contexts/useModals';
 
 const Actions = () => {
-    const { actionStates, dispatch } = useContext(ActionStatesContext);
+    const { dispatch } = useContext(ModalsContext);
     const [scrollToTop, setScrollToTop] = useState(false);
     const Tools = {
         Share: {
@@ -25,7 +25,7 @@ const Actions = () => {
         },
         Shortcuts: {
             onClick: () =>
-                dispatch({ type: ActionTypes.SET_SHORTCUT, payload: true }),
+                dispatch({ type: ActionTypes.SET_SHORTCUTS, payload: true }),
             shortcut: 'Ctrl+Shift+S',
             Icon: () => <Icon name="keyboard" className="inline-block" />
         },

@@ -3,8 +3,7 @@ import {
     createContext,
     useCallback,
     useEffect,
-    useReducer,
-    useState
+    useReducer
 } from 'react';
 
 export enum ActionTypes {
@@ -35,14 +34,13 @@ const initialSettings: Settings = {
     shortcuts: true
 };
 
-function isDefaultSettings(settings: Settings) {
-    return (
-        settings.theme === initialSettings.theme &&
-        settings.motion === initialSettings.motion &&
-        settings.ads === initialSettings.ads &&
-        settings.shortcuts === initialSettings.shortcuts
+const isDefaultSettings = (settings: Settings) =>
+    // Deep comparison of settings object
+    Object.keys(settings).every(
+        (key) =>
+            settings[key as keyof Settings] ===
+            initialSettings[key as keyof Settings]
     );
-}
 
 function reducer(state: Settings, action: Action): Settings {
     const newSettings = { ...state };
@@ -77,17 +75,8 @@ export const SettingsContext = createContext<{
     dispatch: () => {}
 });
 
-export const SettingsModalContext = createContext<{
-    open: boolean;
-    setOpen: (open: boolean) => void;
-}>({
-    open: false,
-    setOpen: () => {}
-});
-
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, dispatch] = useReducer(reducer, initialSettings);
-    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem('settings');
@@ -131,9 +120,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <SettingsContext.Provider value={{ settings, dispatch }}>
-            <SettingsModalContext.Provider value={{ open, setOpen }}>
-                {children}
-            </SettingsModalContext.Provider>
+            {children}
         </SettingsContext.Provider>
     );
 }
