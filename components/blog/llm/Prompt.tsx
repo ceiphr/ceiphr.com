@@ -43,7 +43,7 @@ Question: ${question}
 
 const Prompt: FunctionComponent = () => {
     const {
-        modals: { promptOpen = false },
+        modals: { showPrompt = false },
         dispatch
     } = useContext(ModalsContext);
     const [input, setInput] = useState('');
@@ -97,7 +97,7 @@ const Prompt: FunctionComponent = () => {
                 e.preventDefault();
 
                 dispatch({
-                    type: ActionTypes.SET_PROMPT
+                    type: ActionTypes.OPEN_PROMPT
                 });
             }
         }
@@ -124,7 +124,7 @@ const Prompt: FunctionComponent = () => {
         messageFeedRef.current.scrollTop = scrollPosition;
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [promptOpen, messageFeedRef]);
+    }, [showPrompt, messageFeedRef]);
 
     useEffect(() => {
         const INIT_MESSAGE = 'Ask A.R.I. about this article.';
@@ -154,13 +154,13 @@ const Prompt: FunctionComponent = () => {
                 typed.destroy();
             };
         }, 300);
-    }, [initialMessageRef, promptOpen]);
+    }, [initialMessageRef, showPrompt]);
 
     return (
         <Modal
-            open={promptOpen}
-            setOpen={(open) =>
-                dispatch({ type: ActionTypes.SET_PROMPT, payload: open })
+            show={showPrompt}
+            onClose={() =>
+                dispatch({ type: ActionTypes.OPEN_PROMPT, payload: false })
             }
             className="h-2xl flex flex-col"
             initialFocus={inputRef}
@@ -182,7 +182,7 @@ const Prompt: FunctionComponent = () => {
                 </h3>
                 <button
                     className="duration-300 text-gray-500 hover:text-gray-300"
-                    onClick={() => dispatch({ type: ActionTypes.SET_PROMPT })}
+                    onClick={() => dispatch({ type: ActionTypes.OPEN_PROMPT })}
                 >
                     <XIcon className="w-5 h-5" />
                 </button>

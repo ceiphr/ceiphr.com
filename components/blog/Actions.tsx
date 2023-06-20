@@ -13,19 +13,19 @@ const Actions = () => {
     const Tools = {
         Share: {
             onClick: () =>
-                dispatch({ type: ActionTypes.SET_SHARE, payload: true }),
+                dispatch({ type: ActionTypes.OPEN_SHARE, payload: true }),
             shortcut: 'Ctrl+Shift+R',
             Icon: () => <Icon name="share" className="inline-block" />
         },
         'A.R.I.': {
             onClick: () =>
-                dispatch({ type: ActionTypes.SET_PROMPT, payload: true }),
+                dispatch({ type: ActionTypes.OPEN_PROMPT, payload: true }),
             shortcut: 'Ctrl+Shift+T',
             Icon: () => <Icon name="zap" className="inline-block" />
         },
         Shortcuts: {
             onClick: () =>
-                dispatch({ type: ActionTypes.SET_SHORTCUTS, payload: true }),
+                dispatch({ type: ActionTypes.OPEN_SHORTCUTS, payload: true }),
             shortcut: 'Ctrl+Shift+S',
             Icon: () => <Icon name="keyboard" className="inline-block" />
         },

@@ -52,7 +52,7 @@ const Header = () => {
                 <button
                     onClick={() =>
                         dispatch({
-                            type: ActionTypes.SET_SETTINGS,
+                            type: ActionTypes.OPEN_SETTINGS,
                             payload: true
                         })
                     }

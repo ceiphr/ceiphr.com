@@ -15,7 +15,7 @@ export enum ActionTypes {
     RESET_SETTINGS
 }
 
-interface Action {
+export interface Action {
     type: ActionTypes;
     payload?: any;
 }

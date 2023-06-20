@@ -77,16 +77,17 @@ const Share = () => {
     const canonicalUrl = `https://${process.env.NEXT_PUBLIC_DOMAIN}${router.asPath}`;
 
     const [selectedLink, setSelectedLink] = useState<string>(canonicalUrl);
+    // TODO Add option to switch between links
     const [links, setLinks] = useState<string[]>([canonicalUrl]);
 
     const { article } = useContext(ArticleContext);
     const {
-        modals: { shareOpen = false }, // https://stackoverflow.com/a/74831821/9264137
+        modals: { showShare = false }, // https://stackoverflow.com/a/74831821/9264137
         dispatch
     } = useContext(ModalsContext);
 
     useEffect(() => {
-        if (!shareOpen) return;
+        if (!showShare) return;
 
         const slug = router.asPath.split('/').pop();
         if (!slug) return;
@@ -95,13 +96,13 @@ const Share = () => {
             setLinks(links);
             setSelectedLink(links[0]);
         });
-    }, [shareOpen, router.asPath]);
+    }, [showShare, router.asPath]);
 
     return (
         <Modal
-            open={shareOpen}
-            setOpen={(open) =>
-                dispatch({ type: ActionTypes.SET_SHARE, payload: open })
+            show={showShare}
+            onClose={() =>
+                dispatch({ type: ActionTypes.OPEN_SHARE, payload: false })
             }
             className="h-lg flex flex-col"
         >
@@ -110,7 +111,7 @@ const Share = () => {
                     className="text-gray-500 hover:text-gray-300"
                     onClick={() =>
                         dispatch({
-                            type: ActionTypes.SET_SHARE,
+                            type: ActionTypes.OPEN_SHARE,
                             payload: false
                         })
                     }

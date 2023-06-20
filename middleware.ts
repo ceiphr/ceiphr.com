@@ -1,11 +1,12 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { ipAddress } from '@vercel/edge';
 
-import { REDIRECTS } from '@lib/link-shortener';
+import {
+    REDIRECTS,
+    domains as linkShortenerDomains
+} from '@lib/link-shortener';
 import { rateLimit } from '@lib/rate-limit';
-
-// TODO Rate limit should only apply to blog API routes that aren't GET requests.
 
 /**
  * @see https://github.com/steven-tey/dub/blob/fa74a85dda3868d532910f6054e9d23f03a6713e/middleware.ts
@@ -25,10 +26,10 @@ export const config = {
     ]
 };
 
-export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
+export default async function middleware(req: NextRequest) {
     // For rate limiting requests to the blog API routes (e.g. /api/blog/llm)
     const path = req.nextUrl.pathname;
-    if (path.startsWith('/api/blog/')) {
+    if (path.startsWith('/api/blog/') && req.method !== 'GET') {
         const ip =
             ipAddress(req) ||
             req.headers.get('x-real-ip') ||
@@ -53,9 +54,6 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
 
     // For handling redirects from the link shortener
     const domain = (req.headers.get('host') as string).replace('www.', '');
-    const linkShortenerDomains = new Set(
-        process.env.LINK_SHORTENER_DOMAINS?.split(',') ?? []
-    );
 
     if (
         req.nextUrl.pathname.startsWith('/link/') &&
@@ -63,7 +61,7 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
     )
         return NextResponse.redirect(REDIRECTS[path.replace('/link/', '')]);
 
-    if (linkShortenerDomains.has(domain)) {
+    if (linkShortenerDomains.includes(domain)) {
         if (REDIRECTS[path.replace('/', '')])
             return NextResponse.redirect(REDIRECTS[path.replace('/', '')]);
         else

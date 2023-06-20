@@ -3,10 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { kv } from '@vercel/kv';
 import { createHash } from 'crypto';
 
-import { REDIRECTS } from '@lib/link-shortener';
+import {
+    REDIRECTS,
+    domains as linkShortenerDomains
+} from '@lib/link-shortener';
 import { slugsSchema } from '@utils/schemas';
-
-// TODO Provide all the links that are available for the post.
 
 /**
  * handleGet will hash the post `slug` and return if there's a short link.
@@ -26,9 +27,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
     const shortLinks = await kv.get(`shortlink:${slug}`);
     if (shortLinks) return res.status(200).json({ links: shortLinks });
-
-    const linkShortenerDomains =
-        process.env.LINK_SHORTENER_DOMAINS?.split(',') ?? [];
 
     // Since hashing is deterministic and hashes are generated from the slug,
     // we can see if a short link exists for the slug by hashing it
