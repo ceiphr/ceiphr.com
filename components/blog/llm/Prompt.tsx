@@ -19,8 +19,8 @@ import Typed from 'typed.js';
 import useLLM, { OpenAIMessage } from 'usellm';
 
 import Logo from '@assets/icons/Logo';
-import Modal from '@components/Modal';
 import Message from '@components/blog/llm/Message';
+import Modal from '@components/ui/Modal';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 
 const createPrompt = (paragraphs: string[], question: string) => `

@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 
-import Icon from '@components/Icon';
-import Tag from '@components/Tag';
 import LikeButton from '@components/blog/LikeButton';
+import Icon from '@components/ui/Icon';
+import Tag from '@components/ui/Tag';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 
 const Actions = () => {

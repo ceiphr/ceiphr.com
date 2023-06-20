@@ -3,8 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import Skeleton from 'react-loading-skeleton';
 
-import Icon from '@components/Icon';
-import Tag from '@components/Tag';
+import Icon from '@components/ui/Icon';
+import Tag from '@components/ui/Tag';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 import { ArticleContext } from '@contexts/blog/useArticle';
 import { ErrorContext, FetchError } from '@contexts/useError';

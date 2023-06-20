@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Listbox, Switch } from '@headlessui/react';
 import { TbX as XIcon } from 'react-icons/tb';
 
-import Modal from '@components/Modal';
+import Modal from '@components/ui/Modal';
 import {
     ActionTypes,
     SettingsContext,

@@ -15,7 +15,7 @@ const unbounded = Unbounded({
     variable: '--font-unbounded'
 });
 const monocraft = localFont({
-    src: '../assets/fonts/Monocraft.ttf',
+    src: '../../assets/fonts/Monocraft.ttf',
     variable: '--font-monocraft'
 });
 

@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import classNames from 'classnames';
 import useClipboard from 'react-use-clipboard';
 
-import Icon from '@components/Icon';
+import Icon from '@components/ui/Icon';
 
 interface Props {
     value: string;

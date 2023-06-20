@@ -12,8 +12,8 @@ import {
     TbX as XIcon
 } from 'react-icons/tb';
 
-import Modal from '@components/Modal';
 import CopyButton from '@components/blog/CopyButton';
+import Modal from '@components/ui/Modal';
 import { ActionStatesContext, ActionTypes } from '@contexts/blog/useActions';
 import { ArticleContext } from '@contexts/blog/useArticle';
 import { fetchShareLinks } from '@lib/fetch';
