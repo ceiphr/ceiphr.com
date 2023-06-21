@@ -1,11 +1,7 @@
 import Image from 'next/image';
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import {
-    MarkGithubIcon as GitHubIcon,
-    LocationIcon,
-    OrganizationIcon
-} from '@primer/octicons-react';
+import { MarkGithubIcon as GitHubIcon } from '@primer/octicons-react';
 import {
     FaLinkedin as LinkedInIcon,
     FaMastodon as MastodonIcon
@@ -36,14 +32,16 @@ const Profile: FunctionComponent<Props> = ({ className }) => {
     const [profile, setProfile] = useState<GitHubProfile>();
 
     useEffect(() => {
-        fetchProfile().then((profile: GitHubProfile) => {
-            profile.socials.unshift({
-                provider: 'github',
-                url: profile.url
-            });
+        fetchProfile()
+            .then((profile: GitHubProfile) => {
+                profile.socials.unshift({
+                    provider: 'github',
+                    url: profile.url
+                });
 
-            setProfile(profile);
-        });
+                setProfile(profile);
+            })
+            .catch((error) => console.error(error));
     }, []);
 
     return (

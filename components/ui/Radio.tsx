@@ -25,31 +25,29 @@ const Radio: FunctionComponent<Props> = ({
     onChange
 }) => {
     return (
-        <RadioGroup
-            value={selected}
-            onChange={() => {
-                onChange(selected.value);
-            }}
-            className={classNames(
-                'bg-gray-900 rounded-xl p-1 w-fit flex flex-row items-center space-x-1',
-                className
-            )}
-        >
+        <RadioGroup value={selected.value} onChange={onChange}>
             <RadioGroup.Label className="sr-only">{srOnly}</RadioGroup.Label>
-            {options.map((option) => (
-                <RadioGroup.Option key={option.value} value={option.value}>
-                    {({ checked }) => (
-                        <span
-                            className={classNames(
-                                'rounded-lg px-3 py-1 text-sm font-semibold',
-                                checked && '!bg-gray-800'
-                            )}
-                        >
-                            {option.label}
-                        </span>
-                    )}
-                </RadioGroup.Option>
-            ))}
+            <div
+                className={classNames(
+                    'border border-gray-800 flex items-center w-fit leading-4 space-x-1 py-3 px-1.5 rounded-xl',
+                    className
+                )}
+            >
+                {options.map((option) => (
+                    <RadioGroup.Option key={option.value} value={option.value}>
+                        {({ checked }) => (
+                            <span
+                                className={classNames(
+                                    'cursor-pointer rounded-lg py-1 px-2',
+                                    checked && '!bg-gray-900 !cursor-default'
+                                )}
+                            >
+                                {option.label}
+                            </span>
+                        )}
+                    </RadioGroup.Option>
+                ))}
+            </div>
         </RadioGroup>
     );
 };

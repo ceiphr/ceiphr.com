@@ -78,7 +78,7 @@ const Modal: FunctionComponent<Props> = ({
                             >
                                 <div
                                     className={classNames(
-                                        'absolute top-0 left-0 right-0 h-14 flex flex-row justify-between px-6 items-center border-b border-transparent duration-300 bg-black',
+                                        'absolute z-20 top-0 left-0 right-0 h-14 flex flex-row justify-between px-6 items-center border-b border-transparent duration-300 bg-black',
                                         scrolled &&
                                             '!border-gray-800 !bg-black/75 backdrop-blur-lg'
                                     )}

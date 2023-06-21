@@ -1,7 +1,8 @@
-import { FunctionComponent } from 'react';
+import { Fragment, FunctionComponent } from 'react';
 
-import { Listbox } from '@headlessui/react';
+import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
+import { TbCheck as Check, TbSelector as Selector } from 'react-icons/tb';
 
 interface Props {
     options: {
@@ -23,23 +24,51 @@ const Select: FunctionComponent<Props> = ({
     className
 }) => {
     return (
-        <div className={classNames('w-full', className)}>
-            <Listbox
-                value={selected.value}
-                onChange={() => {
-                    onChange(selected.value);
-                }}
-            >
-                <Listbox.Button>{selected.label}</Listbox.Button>
-                <Listbox.Options>
-                    {options.map((option) => (
-                        <Listbox.Option key={option.value} value={option.value}>
-                            {option.label}
-                        </Listbox.Option>
-                    ))}
-                </Listbox.Options>
-            </Listbox>
-        </div>
+        <Listbox value={selected.value} onChange={onChange}>
+            {({ open }) => (
+                <div className={classNames('w-full relative', className)}>
+                    <Listbox.Button
+                        className={classNames(
+                            'px-2 py-1 duration-200 rounded-xl border border-gray-800 flex flex-row justify-between items-center w-28',
+                            open && '!rounded-b-none'
+                        )}
+                    >
+                        {selected.label}
+                        <Selector className="inline-block" />
+                    </Listbox.Button>
+                    <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <Listbox.Options className="absolute z-10 space-y-1 px-2 pt-1 pb-2 w-28 bg-black rounded-b-xl border-x border-b border-gray-800">
+                            {options.map((option) => (
+                                <Listbox.Option
+                                    key={option.value}
+                                    value={option.value}
+                                    className={({ selected }) =>
+                                        classNames(
+                                            'cursor-pointer w-full',
+                                            selected && '!cursor-default'
+                                        )
+                                    }
+                                >
+                                    {({ selected }) => (
+                                        <span className="flex flex-row items-center justify-between">
+                                            {option.label}
+                                            {selected && (
+                                                <Check className="inline-block" />
+                                            )}
+                                        </span>
+                                    )}
+                                </Listbox.Option>
+                            ))}
+                        </Listbox.Options>
+                    </Transition>
+                </div>
+            )}
+        </Listbox>
     );
 };
 

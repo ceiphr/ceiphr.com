@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 import { Inter, Unbounded } from 'next/font/google';
 import localFont from 'next/font/local';
 
-import classNames from 'classnames';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-tooltip/dist/react-tooltip.css';

@@ -116,7 +116,7 @@ const MotionSetting: FunctionComponent<SettingProps> = ({
     );
 };
 
-const AdvertisementsSetting: FunctionComponent<SettingProps> = ({
+const AdsSetting: FunctionComponent<SettingProps> = ({
     dispatch,
     settings
 }) => {
@@ -126,13 +126,41 @@ const AdvertisementsSetting: FunctionComponent<SettingProps> = ({
             <p className="text-sm">
                 Enable or disable advertisements. Because, <i>why not</i>?
             </p>
-            <p className="text-sm text-gray-300 flex flex-row items-center">
+            <p className="text-sm text-gray-400 flex flex-row items-center">
                 <Info className="inline-block mr-1" />
                 This may be inferred by your device&apos;s DNT setting, because
                 I respect your privacy.
             </p>
             <Toggle
-                className="mt-2"
+                className="mt-2 mb-1"
+                srOnly="Advertisements"
+                checked={settings.ads}
+                onChange={() =>
+                    dispatch({
+                        type: ActionTypes.SET_ADS,
+                        payload: !settings.ads
+                    })
+                }
+            />
+        </>
+    );
+};
+
+const AnalyticsSetting: FunctionComponent<SettingProps> = ({
+    dispatch,
+    settings
+}) => {
+    return (
+        <>
+            <h3 className="text-lg font-bold">Analytics</h3>
+            <p className="text-sm">Enable or disable anonymous analytics.</p>
+            <p className="text-sm text-gray-400 flex flex-row items-center">
+                <Info className="inline-block mr-1" />
+                This may be inferred by your device&apos;s DNT setting, because
+                I respect your privacy.
+            </p>
+            <Toggle
+                className="mt-2 mb-1"
                 srOnly="Advertisements"
                 checked={settings.ads}
                 onChange={() =>
@@ -196,15 +224,16 @@ const Settings = () => {
                     <MotionSetting dispatch={dispatch} settings={settings} />
                 </div>
                 <div className="py-4">
-                    <AdvertisementsSetting
-                        dispatch={dispatch}
-                        settings={settings}
-                    />
+                    <AdsSetting dispatch={dispatch} settings={settings} />
+                </div>
+                <div className="py-4">
+                    <AnalyticsSetting dispatch={dispatch} settings={settings} />
                 </div>
                 <div className="pt-4">
                     <ShortcutsSetting dispatch={dispatch} settings={settings} />
                 </div>
             </div>
+            <div className="pointer-events-none bg-gradient-to-t from-black to-transparent w-full h-12 absolute bottom-0 left-0" />
         </Modal>
     );
 };

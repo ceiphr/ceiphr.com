@@ -27,18 +27,18 @@ const Toggle: FunctionComponent<Props> = ({
                 checked={checked}
                 onChange={onChange}
                 className={classNames(
-                    'relative inline-flex items-center h-6 rounded-full w-11',
-                    checked ? 'bg-blue-600' : 'bg-gray-200'
+                    'relative inline-flex items-center h-6 rounded-full w-12',
+                    checked ? 'bg-blue-600' : 'bg-gray-800'
                 )}
             >
                 <span className="sr-only">{srOnly}</span>
                 <span
                     className={`${
-                        checked ? 'translate-x-6' : 'translate-x-1'
-                    } inline-block w-4 h-4 transform bg-white rounded-full`}
+                        checked ? 'translate-x-[26px]' : 'translate-x-0.5'
+                    } inline-block w-5 h-5 transform bg-black rounded-full`}
                 />
             </Switch>
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-gray-400">
                 {checked ? 'Enabled' : 'Disabled'}
             </p>
         </div>

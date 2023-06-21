@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import {
     Area,
@@ -11,7 +11,6 @@ import {
     YAxis
 } from 'recharts';
 
-import { ErrorContext, FetchError } from '@contexts/useError';
 import { fetchStats } from '@lib/fetch';
 import { formatThousands, numberWithCommas } from '@utils/numbers';
 
@@ -133,7 +132,6 @@ const Histogram: FunctionComponent<HistogramProps> = ({
     className,
     stats: providedStats
 }) => {
-    const { handleError } = useContext(ErrorContext);
     const [stats, setStats] = useState<SimpleAnalyticsStats | null>(null);
 
     // Page prop is mutually exclusive with stats
@@ -151,11 +149,8 @@ const Histogram: FunctionComponent<HistogramProps> = ({
 
         fetchStats(route ?? '')
             .then((data) => setStats(data))
-            .catch((error: FetchError) => {
-                console.error(error);
-                handleError(error.message);
-            });
-    }, [route, providedStats, handleError]);
+            .catch((error) => console.error(error));
+    }, [route, providedStats]);
 
     return (
         <div className={className}>
