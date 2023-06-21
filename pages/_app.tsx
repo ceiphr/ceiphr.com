@@ -32,25 +32,22 @@ const alternate = localFont({
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <ErrorProvider>
-            <div
-                className={classNames(
-                    inter.variable,
-                    unbounded.variable,
-                    monocraft.variable,
-                    alternate.variable
-                )}
-            >
-                <ModalsProvider>
-                    <SettingsProvider>
-                        <SkeletonTheme
-                            baseColor="#111827"
-                            highlightColor="#1a2233"
-                        >
-                            <Component {...pageProps} />
-                        </SkeletonTheme>
-                    </SettingsProvider>
-                </ModalsProvider>
-            </div>
+            <ModalsProvider>
+                <SettingsProvider>
+                    {/* https://github.com/vercel/next.js/issues/43674#issuecomment-1361664355 */}
+                    <style jsx global>{`
+                        :root {
+                            --font-inter: ${inter.style.fontFamily};
+                            --font-unbounded: ${unbounded.style.fontFamily};
+                            --font-monocraft: ${monocraft.style.fontFamily};
+                            --font-alternate: ${alternate.style.fontFamily};
+                        }
+                    `}</style>
+                    <SkeletonTheme baseColor="#111827" highlightColor="#1a2233">
+                        <Component {...pageProps} />
+                    </SkeletonTheme>
+                </SettingsProvider>
+            </ModalsProvider>
         </ErrorProvider>
     );
 }

@@ -1,6 +1,6 @@
 import { Dispatch, FunctionComponent, useContext } from 'react';
 
-import { TbX as XIcon } from 'react-icons/tb';
+import { TbInfoCircle as Info } from 'react-icons/tb';
 
 import Modal from '@components/ui/Modal';
 import Radio from '@components/ui/Radio';
@@ -45,7 +45,7 @@ const ThemeSetting: FunctionComponent<SettingProps> = ({
 
     return (
         <>
-            <h3 className="text-xl font-bold">Theme</h3>
+            <h3 className="text-lg font-bold">Theme</h3>
             <p className="text-sm">
                 Select a color scheme. The <code>`system`</code> theme will
                 follow your device&apos;s settings.
@@ -94,7 +94,7 @@ const MotionSetting: FunctionComponent<SettingProps> = ({
 
     return (
         <>
-            <h3 className="text-xl font-bold">Motion</h3>
+            <h3 className="text-lg font-bold">Motion</h3>
             <p className="text-sm">
                 Change animation behavior. The <code>`system`</code> preference
                 will follow your device&apos;s settings. Where as{' '}
@@ -122,12 +122,14 @@ const AdvertisementsSetting: FunctionComponent<SettingProps> = ({
 }) => {
     return (
         <>
-            <h3 className="text-xl font-bold">Advertisements</h3>
+            <h3 className="text-lg font-bold">Advertisements</h3>
             <p className="text-sm">
-                Enable or disable advertisements.
-                <span className="ml-2 text-sm text-gray-400">
-                    This may be inferred by your device&apos;s DNT setting.
-                </span>
+                Enable or disable advertisements. Because, <i>why not</i>?
+            </p>
+            <p className="text-sm text-gray-300 flex flex-row items-center">
+                <Info className="inline-block mr-1" />
+                This may be inferred by your device&apos;s DNT setting, because
+                I respect your privacy.
             </p>
             <Toggle
                 className="mt-2"
@@ -150,7 +152,7 @@ const ShortcutsSetting: FunctionComponent<SettingProps> = ({
 }) => {
     return (
         <>
-            <h3 className="text-xl font-bold">Shortcuts</h3>
+            <h3 className="text-lg font-bold">Shortcuts</h3>
             <p className="text-sm">Enable or disable keyboard shortcuts.</p>
             <Toggle
                 className="mt-2"
@@ -186,7 +188,7 @@ const Settings = () => {
             title="Settings"
             className="h-lg flex flex-col"
         >
-            <div className="mt-6 divide-y divide-gray-800">
+            <div className="divide-y divide-gray-800">
                 <div className="pb-4">
                     <ThemeSetting dispatch={dispatch} settings={settings} />
                 </div>

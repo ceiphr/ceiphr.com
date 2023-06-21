@@ -1,26 +1,15 @@
-import { Unbounded } from 'next/font/google';
-import localFont from 'next/font/local';
 import {
     Fragment,
     FunctionComponent,
     MutableRefObject,
     ReactNode,
+    useEffect,
     useState
 } from 'react';
 
 import { Dialog, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { TbX as XIcon } from 'react-icons/tb';
-import { Transform } from 'stream';
-
-const unbounded = Unbounded({
-    subsets: ['latin'],
-    variable: '--font-unbounded'
-});
-const monocraft = localFont({
-    src: '../../assets/fonts/Monocraft.ttf',
-    variable: '--font-monocraft'
-});
 
 interface Props {
     children?: ReactNode;
@@ -39,22 +28,24 @@ const Modal: FunctionComponent<Props> = ({
     className,
     initialFocus
 }) => {
-    const [scrollPos, setScrollPos] = useState(0);
-    const handleScroll = (e: HTMLDivElement) => setScrollPos(e.scrollTop);
-    const titleSize = 44 - scrollPos / 1.8;
-    const titleTransform = 44 - scrollPos / 1.2;
-    const scrolledHeader = scrollPos > 60;
+    const [scrolled, setScrolled] = useState(false);
+
+    const handleScroll = (e: HTMLDivElement) => {
+        const HEADER_OFFSET = 36;
+        if (e.scrollTop > HEADER_OFFSET) setScrolled(true);
+        else setScrolled(false);
+    };
+
+    useEffect(() => {
+        if (!show) setScrolled(false);
+    }, [show]);
 
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog
                 initialFocus={initialFocus}
                 as="div"
-                className={classNames(
-                    'relative z-10',
-                    unbounded.variable,
-                    monocraft.variable
-                )}
+                className="relative z-10"
                 onClose={onClose}
             >
                 <Transition.Child
@@ -87,30 +78,21 @@ const Modal: FunctionComponent<Props> = ({
                             >
                                 <div
                                     className={classNames(
-                                        'absolute top-0 left-0 right-0 h-14 z-10 flex flex-row justify-between px-6 items-center border-b border-transparent duration-200',
-                                        scrolledHeader &&
-                                            '!border-gray-800 bg-black/75 backdrop-blur-lg'
+                                        'absolute top-0 left-0 right-0 h-14 flex flex-row justify-between px-6 items-center border-b border-transparent duration-300 bg-black',
+                                        scrolled &&
+                                            '!border-gray-800 !bg-black/75 backdrop-blur-lg'
                                     )}
                                 >
                                     <Dialog.Title
-                                        className="font-heading"
-                                        style={{
-                                            fontSize:
-                                                titleSize < 18 ? 18 : titleSize,
-                                            transform:
-                                                titleTransform < 0
-                                                    ? 'translateY(0)'
-                                                    : `translateY(${titleTransform}px)`
-                                        }}
+                                        className={classNames(
+                                            'text-lg font-bold duration-300',
+                                            !scrolled && 'text-transparent'
+                                        )}
                                     >
                                         {title || 'Modal'}
                                     </Dialog.Title>
                                     <button
-                                        className={classNames(
-                                            'text-gray-500 hover:text-gray-300',
-                                            !scrolledHeader &&
-                                                'absolute top-0 right-0 h-14 px-6'
-                                        )}
+                                        className="text-gray-500 hover:text-gray-300"
                                         onClick={onClose}
                                     >
                                         <XIcon className="w-5 h-5" />
@@ -122,8 +104,11 @@ const Modal: FunctionComponent<Props> = ({
                                             e.currentTarget as HTMLDivElement
                                         )
                                     }
-                                    className="p-6 pt-20 overflow-y-auto"
+                                    className="p-6 pt-16 pb-12 overflow-y-auto"
                                 >
+                                    <h1 className="text-4xl font-heading mb-3">
+                                        {title || 'Modal'}
+                                    </h1>
                                     {children}
                                 </div>
                             </Dialog.Panel>
