@@ -38,9 +38,9 @@ const Select: FunctionComponent<Props> = ({
                     </Listbox.Button>
                     <Transition
                         as={Fragment}
-                        leave="transition ease-in duration-100"
+                        leave="transition ease-in duration-200"
                         leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
+                        leaveTo="opacity-0 transform translate-y-1"
                     >
                         <Listbox.Options className="absolute z-10 space-y-1 px-2 pt-1 pb-2 w-28 bg-black rounded-b-xl border-x border-b border-gray-800">
                             {options.map((option) => (

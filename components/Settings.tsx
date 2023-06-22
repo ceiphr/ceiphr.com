@@ -16,6 +16,7 @@ import {
     SettingsContext,
     Settings as SettingsType // Rename to avoid issue with prettier formatting
 } from '@contexts/useSettings';
+import { dntActive } from '@utils/dnt';
 
 interface SettingProps {
     dispatch: Dispatch<Action>;
@@ -128,8 +129,8 @@ const AdsSetting: FunctionComponent<SettingProps> = ({
             </p>
             <p className="text-sm text-gray-400 flex flex-row items-center">
                 <Info className="inline-block mr-1" />
-                This may be inferred by your device&apos;s DNT setting, because
-                I respect your privacy.
+                Inferred by your device&apos;s DNT setting, because I respect
+                your privacy.
             </p>
             <Toggle
                 className="mt-2 mb-1"
@@ -146,29 +147,22 @@ const AdsSetting: FunctionComponent<SettingProps> = ({
     );
 };
 
-const AnalyticsSetting: FunctionComponent<SettingProps> = ({
-    dispatch,
-    settings
-}) => {
+const AnalyticsSetting: FunctionComponent = () => {
     return (
         <>
             <h3 className="text-lg font-bold">Analytics</h3>
             <p className="text-sm">Enable or disable anonymous analytics.</p>
             <p className="text-sm text-gray-400 flex flex-row items-center">
                 <Info className="inline-block mr-1" />
-                This may be inferred by your device&apos;s DNT setting, because
-                I respect your privacy.
+                Based on your device&apos;s DNT setting. To change, visit your
+                browser&apos;s settings.
             </p>
             <Toggle
                 className="mt-2 mb-1"
+                disabled
                 srOnly="Advertisements"
-                checked={settings.ads}
-                onChange={() =>
-                    dispatch({
-                        type: ActionTypes.SET_ADS,
-                        payload: !settings.ads
-                    })
-                }
+                checked={!dntActive()}
+                onChange={() => {}}
             />
         </>
     );
@@ -227,7 +221,7 @@ const Settings = () => {
                     <AdsSetting dispatch={dispatch} settings={settings} />
                 </div>
                 <div className="py-4">
-                    <AnalyticsSetting dispatch={dispatch} settings={settings} />
+                    <AnalyticsSetting />
                 </div>
                 <div className="pt-4">
                     <ShortcutsSetting dispatch={dispatch} settings={settings} />

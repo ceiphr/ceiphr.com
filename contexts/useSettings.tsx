@@ -1,10 +1,4 @@
-import {
-    Dispatch,
-    createContext,
-    useCallback,
-    useEffect,
-    useReducer
-} from 'react';
+import { Dispatch, createContext, useEffect, useReducer } from 'react';
 
 export enum ActionTypes {
     SET_THEME,
@@ -93,30 +87,27 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('settings', JSON.stringify(settings));
     }, [settings]);
 
-    const systemThemeListener = useCallback(() => {
-        const documentClasses = document.documentElement.classList;
-        const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        darkQuery.addEventListener('change', (e) => {
-            documentClasses.toggle('dark', e.matches);
-        });
-        documentClasses.toggle('dark', darkQuery.matches);
-
-        return () => darkQuery.removeEventListener('change', () => {});
-    }, []);
-
     // Change theme based on system preference
     useEffect(() => {
         const documentClasses = document.documentElement.classList;
+        const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
         switch (settings.theme) {
             case 'system':
-                return systemThemeListener();
+                darkQuery.addEventListener('change', (e) => {
+                    documentClasses.toggle('dark', e.matches);
+                });
+                documentClasses.toggle('dark', darkQuery.matches);
+                return () => darkQuery.removeEventListener('change', () => {});
             case 'dark':
+                darkQuery.removeEventListener('change', () => {});
                 documentClasses.add('dark');
                 break;
             default:
+                darkQuery.removeEventListener('change', () => {});
                 documentClasses.remove('dark');
         }
-    }, [settings.theme, systemThemeListener]);
+    }, [settings.theme]);
 
     return (
         <SettingsContext.Provider value={{ settings, dispatch }}>
