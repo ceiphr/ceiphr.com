@@ -11,7 +11,7 @@ export default function Layout({ children }: Props) {
     return (
         <>
             <Header />
-            <div className="pt-14">{children}</div>
+            {children}
             <Settings />
         </>
     );

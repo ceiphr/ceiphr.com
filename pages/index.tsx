@@ -50,11 +50,6 @@ export default function Home() {
                 />
             </Head>
             <Layout>
-                <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden -z-10">
-                    <p className="absolute text-[100vh] text-gray-900 leading-none whitespace-nowrap font-alt">
-                        Ari
-                    </p>
-                </div>
                 <main className="flex min-h-screen flex-col items-center justify-center space-y-6 p-24">
                     <h1 className="text-8xl font-accent text-center">
                         {process.env.NEXT_PUBLIC_AUTHOR}

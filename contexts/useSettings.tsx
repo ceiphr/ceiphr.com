@@ -1,5 +1,7 @@
 import { Dispatch, createContext, useEffect, useReducer } from 'react';
 
+import { dntActive } from '@utils/dnt';
+
 export enum ActionTypes {
     SET_THEME,
     SET_MOTION,
@@ -79,11 +81,17 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                 type: ActionTypes.RESTORE_SETTINGS,
                 payload: JSON.parse(savedSettings)
             });
+        } else if (dntActive()) {
+            // Disable ads if DNT is active and no settings are saved
+            // This is for first-time users
+            dispatch({
+                type: ActionTypes.SET_ADS,
+                payload: false
+            });
         }
     }, []);
 
     useEffect(() => {
-        if (isDefaultSettings(settings)) return;
         localStorage.setItem('settings', JSON.stringify(settings));
     }, [settings]);
 
@@ -98,7 +106,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                     documentClasses.toggle('dark', e.matches);
                 });
                 documentClasses.toggle('dark', darkQuery.matches);
-                return () => darkQuery.removeEventListener('change', () => {});
             case 'dark':
                 darkQuery.removeEventListener('change', () => {});
                 documentClasses.add('dark');
@@ -107,6 +114,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                 darkQuery.removeEventListener('change', () => {});
                 documentClasses.remove('dark');
         }
+
+        return () => {
+            darkQuery.removeEventListener('change', () => {});
+        };
     }, [settings.theme]);
 
     return (

@@ -67,3 +67,26 @@ pre {
         animation: blink 1.5s steps(1) infinite;
     }
 }
+
+/* https://css-tricks.com/stripes-css/ */
+.bg-striped {
+    background: repeating-linear-gradient(
+        -55deg,
+        #ecbe2f,
+        #ecbe2f 20px,
+        #eab308 20px,
+        #eab308 40px
+    );
+}
+
+@media (prefers-color-scheme: dark) {
+    .bg-striped {
+        background: repeating-linear-gradient(
+            -55deg,
+            #ecbe2f,
+            #ecbe2f 20px,
+            #eab308 20px,
+            #eab308 40px
+        );
+    }
+}

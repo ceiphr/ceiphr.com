@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
     darkMode: 'class',
     content: [
@@ -15,8 +16,7 @@ module.exports = {
                 mono: ['var(--font-monocraft)'],
                 display: ['var(--font-unbounded)'],
                 heading: ['var(--font-unbounded)'],
-                accent: ['var(--font-monocraft)'],
-                alt: ['var(--font-alternate)']
+                accent: ['var(--font-monocraft)']
             },
             maxHeight: {
                 lg: '32rem',

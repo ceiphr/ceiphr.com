@@ -12,6 +12,7 @@
         "format": "prettier --write . --ignore-unknown --ignore-path .gitignore",
         "prepare": "husky install",
         "test": "playwright test",
+        "clean": "rm -rf .next",
         "check-types": "tsc --noemit",
         "analyze": "ANALYZE=true npm run build",
         "new-post": "bash scripts/new-post.sh",

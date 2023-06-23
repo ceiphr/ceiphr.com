@@ -14,18 +14,15 @@ import '@styles/globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const unbounded = Unbounded({
     subsets: ['latin'],
-    variable: '--font-unbounded'
+    variable: '--font-unbounded',
+    display: 'swap',
+    adjustFontFallback: false
 });
 const monocraft = localFont({
     src: '../assets/fonts/Monocraft.ttf',
     variable: '--font-monocraft'
 });
-const alternate = localFont({
-    src: '../assets/fonts/RubikPixels.ttf',
-    variable: '--font-alternate'
-});
 
-// TODO Add header for preview mode
 // TODO Fix local storage resetting on refresh
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -39,7 +36,6 @@ export default function App({ Component, pageProps }: AppProps) {
                             --font-inter: ${inter.style.fontFamily};
                             --font-unbounded: ${unbounded.style.fontFamily};
                             --font-monocraft: ${monocraft.style.fontFamily};
-                            --font-alternate: ${alternate.style.fontFamily};
                         }
                     `}</style>
                     <SkeletonTheme baseColor="#111827" highlightColor="#1a2233">
