@@ -13,6 +13,9 @@ export const REDIRECTS: Record<string, string> = {
     // Referrals
     do: 'https://m.do.co/c/b95c2a8a5568',
 
+    // Projects
+    dotfiles: 'https://github.com/ceiphr/dotfiles',
+
     // Articles
     hthypdp:
         'https://www.digitalocean.com/community/tutorials/how-to-harden-your-production-django-project',
